@@ -21,7 +21,7 @@ export function Nav() {
   }, []);
 
   return (
-    <header className={cn("fixed inset-x-0 top-10 z-40 transition-all duration-500", scrolled ? "py-3" : "py-5")}>
+    <header className={cn("fixed inset-x-0 top-10 sm:top-11 z-40 transition-all duration-500", scrolled ? "py-3" : "py-5")}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div
           className={cn(
