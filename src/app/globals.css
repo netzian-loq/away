@@ -1,26 +1,97 @@
 @import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-electric: var(--electric);
+  --color-electric-glow: var(--electric-glow);
+  --color-cyan-accent: var(--cyan-accent);
+
+  --shadow-glow: 0 0 40px -8px var(--electric-glow);
+  --shadow-glow-lg: 0 0 80px -12px var(--electric-glow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: oklch(0.08 0.025 300);
+  --foreground: oklch(0.97 0.012 300);
+  --muted-foreground: oklch(0.72 0.06 300);
+  --electric: oklch(0.62 0.25 300);
+  --electric-glow: oklch(0.62 0.27 300 / 0.45);
+  --cyan-accent: oklch(0.76 0.15 300);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+::selection {
+  background: var(--electric);
+  color: var(--background);
+}
+
+@utility glass {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, oklch(0.13 0.04 300) 86%, transparent),
+    color-mix(in oklab, oklch(0.13 0.04 300) 64%, transparent)
+  );
+  backdrop-filter: blur(10px) saturate(125%);
+  border: 1px solid color-mix(in oklab, white 8%, transparent);
+}
+
+@utility glass-strong {
+  background: color-mix(in oklab, oklch(0.11 0.038 300) 93%, transparent);
+  backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid color-mix(in oklab, white 10%, transparent);
+}
+
+@utility text-gradient {
+  background: linear-gradient(
+    110deg,
+    oklch(0.98 0.02 300) 0%,
+    oklch(0.84 0.15 305) 40%,
+    oklch(0.66 0.25 300) 100%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+@utility hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  &:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--electric) 40%, transparent);
+    box-shadow: 0 20px 50px -20px var(--electric-glow);
+  }
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--electric) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--electric) 7%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
