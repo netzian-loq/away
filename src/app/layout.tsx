@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { SITE } from "@/content/site";
+import { DiscordBanner } from "@/components/layout/discord-banner";
+import { Nav } from "@/components/layout/nav";
+import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -48,7 +51,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-background pt-10 text-foreground antialiased sm:pt-11">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
-        {children}
+        <DiscordBanner />
+        <Nav />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
