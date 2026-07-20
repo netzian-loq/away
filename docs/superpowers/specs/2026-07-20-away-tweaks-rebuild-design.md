@@ -31,8 +31,12 @@ polish, better performance and SEO.
   video showcase section's pinned scroll effect
 - **Resend** (or equivalent transactional email API) for the contact form,
   invoked from a Next.js Server Action
-- **shadcn/ui** (Radix-based) for form primitives, dialog, etc. — same
-  library family the current site already uses
+- **Custom lightweight UI primitives** (`Button`, `Input`, `Textarea`) built
+  with `class-variance-authority` + Tailwind, no Radix dependency. *(Amended
+  during planning: the rebuild no longer needs Dialog — services are shown
+  inline on the Services page instead of in a modal — so pulling in the full
+  Radix/shadcn stack for two form inputs and a button isn't justified against
+  the performance goal in §10.)*
 - Package manager: npm (default `create-next-app` tooling), unless told
   otherwise
 - Deployment target: Vercel
