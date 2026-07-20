@@ -1704,7 +1704,7 @@ export const contactFormSchema = z.object({
   discord: z.string().trim().min(2, "Enter your Discord username").max(100),
   specs: z.string().trim().max(500).optional().or(z.literal("")),
   message: z.string().trim().min(10, "Tell us a bit more about what you need").max(2000),
-  company: z.string().max(0).optional().or(z.literal("")),
+  company: z.string().optional().or(z.literal("")),
   startedAt: z.coerce.number(),
 });
 
@@ -1752,6 +1752,13 @@ Create `.env.local.example`:
 RESEND_API_KEY=re_your_key_here
 ```
 
+The scaffold's `.gitignore` (from Task 1) has a blanket `.env*` rule, which would also swallow this example file. Add a negation line right after the `.env*` line in `.gitignore` so the example stays tracked:
+
+```
+.env*
+!.env.local.example
+```
+
 - [ ] **Step 6: Write the failing server action tests**
 
 Create `src/actions/contact.test.ts`:
@@ -1759,7 +1766,7 @@ Create `src/actions/contact.test.ts`:
 ```ts
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-const sendContactEmail = vi.fn();
+const { sendContactEmail } = vi.hoisted(() => ({ sendContactEmail: vi.fn() }));
 vi.mock("@/lib/email", () => ({ sendContactEmail }));
 
 import { submitContactForm, type ContactActionState } from "./contact";
