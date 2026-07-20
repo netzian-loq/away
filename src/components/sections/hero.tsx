@@ -1,0 +1,78 @@
+import Link from "next/link";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
+import { Counter } from "@/components/motion/counter";
+import { SITE } from "@/content/site";
+
+export function Hero() {
+  return (
+    <section className="relative flex min-h-screen items-center overflow-hidden pt-32 pb-24">
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.16_0.09_300)_0%,oklch(0.09_0.03_300)_60%,oklch(0.07_0.025_300)_100%)]" />
+        <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
+        <div className="absolute -top-32 -left-20 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,var(--electric-glow)_0%,transparent_60%)] blur-3xl" />
+        <div className="absolute -bottom-40 -right-20 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,oklch(0.5_0.2_300_/_0.3)_0%,transparent_60%)] blur-3xl" />
+      </div>
+
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <div className="flex flex-col items-center text-center">
+          <Reveal>
+            <span className="inline-grid h-24 w-24 place-items-center overflow-hidden rounded-3xl ring-1 ring-electric/40 shadow-glow sm:h-32 sm:w-32">
+              <img src="/logo.svg" alt="Away Tweaks" className="h-full w-full object-cover" />
+            </span>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <h1 className="mt-8 font-display text-[clamp(2.5rem,8vw,6rem)] font-bold leading-[0.95] tracking-tight">
+              <span className="text-gradient">Away Tweaks.</span>
+            </h1>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <p className="mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Professional PC optimization for maximum gaming performance. FPS boost, latency
+              reduction, and system tweaks engineered for competitive play.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+              <Link href="/contact">
+                <Button size="lg">
+                  Contact now <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/services">
+                <Button size="lg" variant="outline">
+                  View PRO tweaks
+                </Button>
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.4}>
+            <div className="mt-20 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
+              {SITE.stats.map((stat) => (
+                <div key={stat.label} className="glass rounded-2xl border border-white/5 p-4 text-center sm:p-5">
+                  <div className="font-display text-2xl font-bold text-gradient sm:text-3xl">
+                    <Counter to={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="mt-1 text-xs text-muted-foreground sm:text-sm">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      <a
+        href="#services-teaser"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground/60 hover:text-electric"
+        aria-label="Scroll to services"
+      >
+        <ChevronDown className="h-6 w-6 animate-bounce" />
+      </a>
+    </section>
+  );
+}
