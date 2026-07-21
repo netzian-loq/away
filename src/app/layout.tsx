@@ -4,6 +4,8 @@ import { SITE } from "@/content/site";
 import { DiscordBanner } from "@/components/layout/discord-banner";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
+import { AmbientBackground } from "@/components/layout/ambient-background";
+import { CursorGlow } from "@/components/motion/cursor-glow";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -60,6 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="bg-background pt-10 text-foreground antialiased sm:pt-11">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
+        <AmbientBackground />
+        <CursorGlow />
         <DiscordBanner />
         <Nav />
         <main>{children}</main>

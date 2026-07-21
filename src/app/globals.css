@@ -18,7 +18,7 @@
 }
 
 :root {
-  --background: oklch(0.08 0.025 300);
+  --background: oklch(0.1 0.05 300);
   --foreground: oklch(0.97 0.012 300);
   --muted-foreground: oklch(0.72 0.06 300);
   --electric: oklch(0.62 0.25 300);
@@ -86,6 +86,26 @@ h1, h2, h3, h4, h5, h6 {
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+/* Sitewide ambient purple wash — a few large, blurred, transform-only
+   blobs behind all content. Cheap (GPU-composited translate, no layout
+   or paint work per frame) even while animating. */
+@keyframes aurora-drift-a {
+  0%, 100% { transform: translate3d(-4%, -4%, 0); }
+  50% { transform: translate3d(6%, 5%, 0); }
+}
+@keyframes aurora-drift-b {
+  0%, 100% { transform: translate3d(5%, 3%, 0); }
+  50% { transform: translate3d(-7%, -5%, 0); }
+}
+@keyframes aurora-drift-c {
+  0%, 100% { transform: translate3d(0, 4%, 0); }
+  50% { transform: translate3d(6%, -6%, 0); }
+}
+
+.perf-lite .aurora-blob {
+  animation: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
