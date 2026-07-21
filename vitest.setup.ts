@@ -39,6 +39,17 @@ class MockIntersectionObserver implements IntersectionObserver {
 // jsdom doesn't implement IntersectionObserver — several components use it.
 global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
+class MockResizeObserver implements ResizeObserver {
+  constructor(_callback: ResizeObserverCallback) {}
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+
+// jsdom doesn't implement ResizeObserver — framer-motion's useScroll(target)
+// measures the target element's size via ResizeObserver internally.
+global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
+
 // jsdom doesn't implement matchMedia either — video-showcase.tsx checks
 // prefers-reduced-motion before starting its GSAP effect. Default to
 // "not matched" (i.e. motion allowed) so tests exercise the normal path.
