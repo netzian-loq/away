@@ -20,7 +20,7 @@ export function Hero() {
         <div className="flex flex-col items-center text-center">
           <Reveal>
             <span className="inline-grid h-24 w-24 place-items-center overflow-hidden rounded-3xl ring-1 ring-electric/40 shadow-glow sm:h-32 sm:w-32">
-              <Image src="/logo.svg" alt="Away Tweaks" width={200} height={200} className="h-full w-full object-cover" />
+              <Image src="/logo.png" alt="Away Tweaks" width={1024} height={1024} className="h-full w-full object-cover" />
             </span>
           </Reveal>
 
