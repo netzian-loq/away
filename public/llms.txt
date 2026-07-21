@@ -1,0 +1,28 @@
+# Away Tweaks
+
+> Private, professional PC optimization for competitive gamers — custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.
+
+Away Tweaks is a private PC tuning and optimization service for competitive players. We tune every layer of the system — from the operating system down to the hardware — to maximize in-game performance and minimize input latency. Every change is reversible, stability-tested, and benchmarked before and after.
+
+## Pages
+- Home: https://awaytweaks.com/
+- Services & pricing: https://awaytweaks.com/services
+- About: https://awaytweaks.com/about
+- Contact: https://awaytweaks.com/contact
+
+## Services
+- Windows Tuning (25€): Custom Gaming OS (AwayOS) + deep Windows tune — bloat/telemetry/ad removal, dxgkrnl + kernel registry tuning, scheduler/services trim, driver configuration, devices configuration, peripherals registry configuration, game configuration.
+- GPU Overclocking (15€): core/memory offsets, power and voltage limits, fan curves, sustained-boost validation.
+- RAM Overclocking (45€): tight primary/sub-timings, stable high-frequency profiles, die-specific tuning (B-die, D-die, Hynix, Micron).
+- CPU Overclocking (25€): per-core curves, PBO + Curve Optimizer (AMD) or voltage/frequency scaling (Intel).
+- Network Tuning (10€): NIC/driver/QoS/DNS tuning, ISR/DPC latency reduction.
+- BIOS Tuning (12€): hidden + visible settings, Resizable BAR / Above 4G, XMP/EXPO, C-states, PCIe/chipset tuning.
+
+## Discount bundles
+- Standard 35€ (Windows + BIOS), Entry Level 45€ (+ GPU OC), High Entry 52€ (+ CPU OC), Pro 65€ (CPU + GPU OC), Extreme 90€ (CPU + GPU + RAM OC).
+
+## Contact
+- Email: Mattiaarminante77@gmail.com
+- Discord (server): https://discord.gg/saKde8DD9
+- Discord (read client vouches): https://discord.gg/29Swpe8rM
+- Website: https://awaytweaks.com/
