@@ -11,7 +11,7 @@ export interface NavLink {
 
 export const SITE = {
   name: "Away Tweaks",
-  url: "https://awaytweaks.com",
+  url: "https://www.awaytweaks.com",
   description:
     "Private, professional PC optimization for competitive gamers — custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
   email: "Mattiaarminante77@gmail.com",

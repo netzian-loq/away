@@ -4,18 +4,29 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
 import { buttonVariants } from "@/components/ui/button";
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { ABOUT } from "@/content/about";
 import { SITE } from "@/content/site";
 
+const TITLE = "About";
+const DESCRIPTION =
+  "Away Tweaks is a private PC optimization service for competitive gamers — our mission, method, and results.";
+
 export const metadata: Metadata = {
-  title: "About",
-  description: "Away Tweaks is a private PC optimization service for competitive gamers — our mission, method, and results.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/about` },
+  openGraph: {
+    title: `${TITLE} — ${SITE.name}`,
+    description: DESCRIPTION,
+    url: `${SITE.url}/about`,
+  },
 };
 
 export default function AboutPage() {
   return (
     <>
+      <BreadcrumbJsonLd crumbs={[{ name: "About", path: "/about" }]} />
       <section className="relative pt-40 pb-16 sm:pt-48">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>

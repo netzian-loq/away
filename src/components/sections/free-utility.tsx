@@ -14,6 +14,7 @@ export function FreeUtility() {
     videoId: FREE_UTILITY.video.videoId,
     start: FREE_UTILITY.video.start,
     end: FREE_UTILITY.video.end,
+    muted: false,
   });
 
   return (

@@ -30,6 +30,11 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   authors: [{ name: SITE.name }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
   openGraph: {
     type: "website",
     siteName: SITE.name,

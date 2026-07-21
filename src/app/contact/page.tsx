@@ -2,17 +2,29 @@ import type { Metadata } from "next";
 import { Mail, Disc, HardDrive } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { ContactForm } from "@/components/sections/contact-form";
+import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { SITE } from "@/content/site";
 
+const TITLE = "Contact";
+const DESCRIPTION =
+  "Tell Away Tweaks about your rig and what you play — get a tailored PC optimization plan within 24 hours.";
+
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Tell Away Tweaks about your rig and what you play — get a tailored PC optimization plan within 24 hours.",
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/contact` },
+  openGraph: {
+    title: `${TITLE} — ${SITE.name}`,
+    description: DESCRIPTION,
+    url: `${SITE.url}/contact`,
+  },
 };
 
 export default function ContactPage() {
   return (
-    <section className="relative pt-40 pb-24 sm:pt-48">
+    <>
+      <BreadcrumbJsonLd crumbs={[{ name: "Contact", path: "/contact" }]} />
+      <section className="relative pt-40 pb-24 sm:pt-48">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal className="glass-strong rounded-3xl border border-white/10 p-8 sm:p-14">
           <div className="grid gap-10 lg:grid-cols-5">
@@ -50,6 +62,7 @@ export default function ContactPage() {
           </div>
         </Reveal>
       </div>
-    </section>
+      </section>
+    </>
   );
 }

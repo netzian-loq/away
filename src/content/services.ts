@@ -47,8 +47,16 @@ export const SERVICES: Service[] = [
     highlight:
       "Combines our Custom Gaming OS and Windows Tweaks into one package — same flat price. Includes the AwayOS Setup app for drivers, tweaks, game fixes and wallpapers.",
     images: [
-      { src: "/awayos-desktop.svg", alt: "AwayOS desktop", caption: "AwayOS desktop — clean, dark, distraction-free" },
-      { src: "/awayos-setup.svg", alt: "AwayOS Setup app", caption: "Built-in AwayOS Setup tuning app" },
+      {
+        src: "/awayos-desktop.svg",
+        alt: "AwayOS custom gaming OS desktop — clean, dark, distraction-free interface",
+        caption: "AwayOS desktop — clean, dark, distraction-free",
+      },
+      {
+        src: "/awayos-setup.svg",
+        alt: "AwayOS Setup app — the free PC tweaking and optimization tool included with every Windows Tuning order",
+        caption: "Built-in AwayOS Setup tuning app",
+      },
     ],
   },
   {

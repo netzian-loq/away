@@ -14,16 +14,24 @@ interface YouTubeLoopOptions {
   videoId: string;
   start: number;
   end: number;
+  /**
+   * Whether the embed starts muted. Defaults to true, since most browsers
+   * block autoplay-with-sound outright — an unmuted player will still try
+   * to autoplay, but on browsers that block it, the viewer sees a paused
+   * frame and has to press play themselves (standard, unavoidable browser
+   * behavior, not a bug in this hook).
+   */
+  muted?: boolean;
 }
 
 /**
  * Lazy-loads the YouTube IFrame API once a container scrolls near the
- * viewport, then autoplays/mutes/loops the given [start, end) range —
- * shared by every section that embeds a looping product-demo clip.
+ * viewport, then autoplays/loops the given [start, end) range — shared by
+ * every section that embeds a looping product-demo clip.
  */
 export function useYouTubeLoopPlayer(
   containerRef: React.RefObject<HTMLDivElement | null>,
-  { videoId, start, end }: YouTubeLoopOptions,
+  { videoId, start, end, muted = true }: YouTubeLoopOptions,
 ) {
   useEffect(() => {
     let cancelled = false;
@@ -58,7 +66,7 @@ export function useYouTubeLoopPlayer(
         host: "https://www.youtube-nocookie.com",
         playerVars: {
           autoplay: 1,
-          mute: 1,
+          mute: muted ? 1 : 0,
           controls: 0,
           rel: 0,
           modestbranding: 1,
@@ -72,7 +80,11 @@ export function useYouTubeLoopPlayer(
         events: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any -- untyped YouTube IFrame API event
           onReady: (e: any) => {
-            e.target.mute();
+            if (muted) {
+              e.target.mute();
+            } else {
+              e.target.unMute();
+            }
             e.target.seekTo(start, true);
             e.target.playVideo();
             interval = setInterval(() => {
@@ -109,5 +121,5 @@ export function useYouTubeLoopPlayer(
       if (interval) clearInterval(interval);
       player?.destroy?.();
     };
-  }, [containerRef, videoId, start, end]);
+  }, [containerRef, videoId, start, end, muted]);
 }
