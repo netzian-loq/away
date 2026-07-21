@@ -11,5 +11,5 @@ export const FREE_UTILITY = {
     "Search across every tweak",
   ],
   ctaCaption: "Free with any Windows Tuning order.",
-  image: { src: "/awayos-setup-real.png", alt: "AwayOS Setup — the free Away Tweaks optimizer app" },
+  video: { videoId: "pRylLsqizLA", start: 31, end: 50 },
 };

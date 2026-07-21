@@ -1,11 +1,21 @@
-import Image from "next/image";
+"use client";
+
+import { useRef } from "react";
 import { Sparkles, Check, Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
+import { useYouTubeLoopPlayer } from "@/lib/use-youtube-loop-player";
 import { FREE_UTILITY } from "@/content/free-utility";
 import { SITE } from "@/content/site";
 
 export function FreeUtility() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useYouTubeLoopPlayer(containerRef, {
+    videoId: FREE_UTILITY.video.videoId,
+    start: FREE_UTILITY.video.start,
+    end: FREE_UTILITY.video.end,
+  });
+
   return (
     <section id="utility" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -50,15 +60,12 @@ export function FreeUtility() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <figure className="glass shadow-glow-lg overflow-hidden rounded-2xl border border-white/10">
-                <Image
-                  src={FREE_UTILITY.image.src}
-                  alt={FREE_UTILITY.image.alt}
-                  width={1308}
-                  height={589}
-                  className="block h-auto w-full"
-                />
-              </figure>
+              <div className="relative overflow-hidden rounded-2xl bg-black shadow-glow-lg">
+                <div className="relative aspect-video w-full">
+                  <div ref={containerRef} className="pointer-events-none absolute inset-0 h-full w-full" />
+                  <div className="absolute inset-0 z-10 cursor-default" aria-hidden="true" />
+                </div>
+              </div>
             </Reveal>
           </div>
         </div>
