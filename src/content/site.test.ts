@@ -8,8 +8,14 @@ describe("SITE", () => {
     expect(SITE.discordVouchesUrl).toBe("https://discord.gg/29Swpe8rM");
   });
 
-  it("has exactly 4 nav links matching the site's 4 pages", () => {
-    expect(SITE.nav.map((n) => n.href)).toEqual(["/", "/services", "/about", "/contact"]);
+  it("has nav links for the 4 pages plus the free-tool anchor", () => {
+    expect(SITE.nav.map((n) => n.href)).toEqual([
+      "/",
+      "/services",
+      "/about",
+      "/#utility",
+      "/contact",
+    ]);
   });
 
   it("has 4 hero stats", () => {

@@ -7,6 +7,7 @@ import { ServicesTeaser } from "@/components/sections/services-teaser";
 import { WhyUs } from "@/components/sections/why-us";
 import { PricingTable } from "@/components/sections/pricing-table";
 import { VouchesCTA } from "@/components/sections/vouches-cta";
+import { FreeUtility } from "@/components/sections/free-utility";
 import { FinalCTA } from "@/components/sections/final-cta";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SITE } from "@/content/site";
@@ -34,6 +35,7 @@ export default function HomePage() {
       <WhyUs />
       <PricingTable />
       <VouchesCTA />
+      <FreeUtility />
       <FinalCTA />
     </>
   );
