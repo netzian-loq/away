@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { PRICING_TIERS } from "@/content/pricing";
 
 export function PricingTable() {
@@ -38,10 +38,14 @@ export function PricingTable() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/contact" className="mt-7">
-                  <Button variant={tier.featured ? "primary" : "outline"} className="w-full">
-                    Choose
-                  </Button>
+                <Link
+                  href="/contact"
+                  className={buttonVariants({
+                    variant: tier.featured ? "primary" : "outline",
+                    className: "mt-7 w-full",
+                  })}
+                >
+                  Choose
                 </Link>
               </div>
             </Reveal>

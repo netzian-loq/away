@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Disc } from "lucide-react";
 import { SITE } from "@/content/site";
 import { SERVICES } from "@/content/services";
@@ -11,7 +12,7 @@ export function Footer() {
           <div className="col-span-2">
             <div className="flex items-center gap-2.5">
               <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl ring-1 ring-electric/40">
-                <img src="/logo.svg" alt="Away Tweaks logo" className="h-full w-full object-cover" />
+                <Image src="/logo.svg" alt="Away Tweaks logo" width={200} height={200} className="h-full w-full object-cover" />
               </span>
               <span className="font-display text-lg font-bold">
                 Away<span className="text-electric"> Tweaks</span>

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { SERVICES } from "@/content/services";
@@ -32,7 +33,13 @@ export function ServicesFull() {
                 <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {service.images.map((image) => (
                     <figure key={image.src} className="glass overflow-hidden rounded-xl border border-white/10">
-                      <img src={image.src} alt={image.alt} className="block h-auto w-full" loading="lazy" />
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={1280}
+                        height={800}
+                        className="w-full h-auto block"
+                      />
                       <figcaption className="px-3 py-2 font-mono text-xs text-muted-foreground">{image.caption}</figcaption>
                     </figure>
                   ))}

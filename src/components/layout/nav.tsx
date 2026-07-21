@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/content/site";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ export function Nav() {
         >
           <Link href="/" className="flex shrink-0 items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl ring-1 ring-electric/40 shadow-glow">
-              <img src="/logo.svg" alt="Away Tweaks logo" className="h-full w-full object-cover" />
+              <Image src="/logo.svg" alt="Away Tweaks logo" width={200} height={200} className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-lg font-bold tracking-tight">
               Away<span className="text-electric"> Tweaks</span>
@@ -54,10 +55,8 @@ export function Nav() {
           </nav>
 
           <div className="hidden lg:block">
-            <Link href="/contact">
-              <Button size="lg">
-                Get Optimized <ArrowRight className="h-4 w-4" />
-              </Button>
+            <Link href="/contact" className={buttonVariants({ size: "lg" })}>
+              Get Optimized <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -82,8 +81,12 @@ export function Nav() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/contact" onClick={() => setOpen(false)}>
-              <Button className="mt-2 w-full">Get Optimized</Button>
+            <Link
+              href="/contact"
+              onClick={() => setOpen(false)}
+              className={buttonVariants({ className: "mt-2 w-full" })}
+            >
+              Get Optimized
             </Link>
           </div>
         )}

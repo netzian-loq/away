@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 
 export function FinalCTA() {
   return (
@@ -13,10 +13,8 @@ export function FinalCTA() {
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Join the players who stopped blaming their hardware. Get your rig tuned by Away Tweaks.
             </p>
-            <Link href="/contact" className="mt-8 inline-block">
-              <Button size="lg">
-                Get Optimized <ArrowRight className="h-4 w-4" />
-              </Button>
+            <Link href="/contact" className={buttonVariants({ size: "lg", className: "mt-8" })}>
+              Get Optimized <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </Reveal>

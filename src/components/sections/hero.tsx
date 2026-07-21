@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Reveal } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
 import { SITE } from "@/content/site";
@@ -19,7 +20,7 @@ export function Hero() {
         <div className="flex flex-col items-center text-center">
           <Reveal>
             <span className="inline-grid h-24 w-24 place-items-center overflow-hidden rounded-3xl ring-1 ring-electric/40 shadow-glow sm:h-32 sm:w-32">
-              <img src="/logo.svg" alt="Away Tweaks" className="h-full w-full object-cover" />
+              <Image src="/logo.svg" alt="Away Tweaks" width={200} height={200} className="h-full w-full object-cover" />
             </span>
           </Reveal>
 
@@ -38,15 +39,11 @@ export function Hero() {
 
           <Reveal delay={0.3}>
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
-              <Link href="/contact">
-                <Button size="lg">
-                  Contact now <ArrowRight className="h-4 w-4" />
-                </Button>
+              <Link href="/contact" className={buttonVariants({ size: "lg" })}>
+                Contact now <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/services">
-                <Button size="lg" variant="outline">
-                  View PRO tweaks
-                </Button>
+              <Link href="/services" className={buttonVariants({ size: "lg", variant: "outline" })}>
+                View PRO tweaks
               </Link>
             </div>
           </Reveal>

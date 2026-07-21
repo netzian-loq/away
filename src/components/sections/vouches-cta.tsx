@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/content/site";
 
 export function VouchesCTA() {
@@ -18,15 +18,16 @@ export function VouchesCTA() {
         </Reveal>
         <Reveal delay={0.1}>
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a href={SITE.discordVouchesUrl} target="_blank" rel="noopener noreferrer">
-              <Button size="lg">
-                <Disc className="h-4 w-4" /> Read the vouches
-              </Button>
+            <a
+              href={SITE.discordVouchesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ size: "lg" })}
+            >
+              <Disc className="h-4 w-4" /> Read the vouches
             </a>
-            <Link href="/contact">
-              <Button size="lg" variant="outline">
-                Get optimized
-              </Button>
+            <Link href="/contact" className={buttonVariants({ size: "lg", variant: "outline" })}>
+              Get optimized
             </Link>
           </div>
         </Reveal>

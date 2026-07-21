@@ -48,7 +48,11 @@ const PERF_LITE_INIT = `(function(){try{var r=document.documentElement;if(window
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body className="bg-background pt-10 text-foreground antialiased sm:pt-11">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
         <DiscordBanner />

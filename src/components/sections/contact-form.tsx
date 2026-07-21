@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { submitContactForm, type ContactActionState } from "@/actions/contact";
+import { SITE } from "@/content/site";
 
 const initialState: ContactActionState = { status: "idle" };
 
@@ -87,8 +88,8 @@ export function ContactForm() {
         <div className="sm:col-span-2">
           <p className="text-sm text-red-400">
             {state.message} You can also email{" "}
-            <a href="mailto:Mattiaarminante77@gmail.com" className="underline">
-              Mattiaarminante77@gmail.com
+            <a href={`mailto:${SITE.email}`} className="underline">
+              {SITE.email}
             </a>{" "}
             directly.
           </p>

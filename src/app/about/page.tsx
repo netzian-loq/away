@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { Counter } from "@/components/motion/counter";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { ABOUT } from "@/content/about";
 import { SITE } from "@/content/site";
 
@@ -73,10 +73,8 @@ export default function AboutPage() {
             <div className="glass-strong rounded-3xl border border-white/10 p-10 sm:p-14">
               <h2 className="font-display text-3xl font-bold text-gradient">{ABOUT.ctaTitle}</h2>
               <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{ABOUT.ctaBody}</p>
-              <Link href="/contact" className="mt-8 inline-block">
-                <Button size="lg">
-                  Get Optimized <ArrowRight className="h-4 w-4" />
-                </Button>
+              <Link href="/contact" className={buttonVariants({ size: "lg", className: "mt-8" })}>
+                Get Optimized <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </Reveal>
