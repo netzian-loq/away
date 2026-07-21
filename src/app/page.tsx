@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/hero";
 import { AppPreviewScroll } from "@/components/sections/app-preview-scroll";
+import { TuningBenchmark } from "@/components/sections/tuning-benchmark";
 import { TrustMarquee } from "@/components/sections/trust-marquee";
 import { Manifesto } from "@/components/sections/manifesto";
 import { VideoShowcase } from "@/components/sections/video-showcase";
@@ -30,6 +31,7 @@ export default function HomePage() {
       <JsonLd />
       <Hero />
       <AppPreviewScroll />
+      <TuningBenchmark />
       <TrustMarquee />
       <Manifesto />
       <VideoShowcase />

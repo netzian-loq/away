@@ -40,14 +40,14 @@ export function AppPreviewScroll() {
 
   return (
     <section ref={wrapperRef} className="relative h-[200vh]">
-      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden pt-28 sm:pt-32">
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-1/2 left-1/2 h-[36rem] w-[36rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,var(--electric-glow)_0%,transparent_65%)] blur-3xl" />
         </div>
 
         <motion.div
           style={reducedMotion ? { opacity: 0 } : { opacity: hintOpacity }}
-          className="absolute top-20 flex flex-col items-center gap-2 sm:top-24"
+          className="absolute top-28 flex flex-col items-center gap-2 sm:top-32"
         >
           <span className="font-mono text-[11px] uppercase tracking-[0.3em] text-electric">Scroll to tune</span>
           <ChevronDown className="h-4 w-4 animate-bounce text-electric" />
