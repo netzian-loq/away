@@ -9,11 +9,12 @@ import { SITE } from "@/content/site";
 export function Hero() {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden pt-32 pb-24">
+      {/* No opaque background layer here on purpose — the sitewide
+          AmbientBackground (rendered once in the root layout) shows through
+          behind Hero the same way it does on the rest of the page. Just a
+          light grid texture on top of it. */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.16_0.09_300)_0%,oklch(0.09_0.03_300)_60%,oklch(0.07_0.025_300)_100%)]" />
         <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-        <div className="absolute -top-32 -left-20 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,var(--electric-glow)_0%,transparent_60%)] blur-3xl" />
-        <div className="absolute -bottom-40 -right-20 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,oklch(0.5_0.2_300_/_0.3)_0%,transparent_60%)] blur-3xl" />
       </div>
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">

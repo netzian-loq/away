@@ -3,7 +3,8 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
-const SIZE = 520;
+const OUTER_SIZE = 640;
+const CORE_SIZE = 220;
 
 function getEnabledSnapshot() {
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -23,10 +24,12 @@ function subscribe() {
 }
 
 /**
- * A soft violet glow that trails the cursor with spring easing — desktop
- * only (skips touch/coarse pointers), off for prefers-reduced-motion and
- * perf-lite. Uses motion values, not React state, so the mousemove handler
- * never triggers a re-render — only a compositor-only transform update.
+ * A violet glow that trails the cursor with spring easing — desktop only
+ * (skips touch/coarse pointers), off for prefers-reduced-motion and
+ * perf-lite. Two layers (a big soft outer glow + a smaller, brighter core)
+ * for more visual punch than a single flat blob. Uses motion values, not
+ * React state, so the mousemove handler never triggers a re-render — only
+ * compositor-only transform updates.
  *
  * `enabled` is read via useSyncExternalStore (not useState+useEffect) so
  * this browser-only check is safe under SSR without ever calling setState
@@ -37,10 +40,19 @@ export function CursorGlow() {
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const springX = useSpring(x, { damping: 26, stiffness: 90, mass: 0.6 });
-  const springY = useSpring(y, { damping: 26, stiffness: 90, mass: 0.6 });
-  const translateX = useTransform(springX, (v) => v - SIZE / 2);
-  const translateY = useTransform(springY, (v) => v - SIZE / 2);
+
+  // Core tracks the cursor closely (snappy); the outer glow lags slightly
+  // behind it (softer trail) — the gap between the two is what reads as
+  // "extreme" energy rather than a static blob sitting under the pointer.
+  const coreX = useSpring(x, { damping: 22, stiffness: 260, mass: 0.4 });
+  const coreY = useSpring(y, { damping: 22, stiffness: 260, mass: 0.4 });
+  const outerX = useSpring(x, { damping: 24, stiffness: 90, mass: 0.7 });
+  const outerY = useSpring(y, { damping: 24, stiffness: 90, mass: 0.7 });
+
+  const coreTranslateX = useTransform(coreX, (v) => v - CORE_SIZE / 2);
+  const coreTranslateY = useTransform(coreY, (v) => v - CORE_SIZE / 2);
+  const outerTranslateX = useTransform(outerX, (v) => v - OUTER_SIZE / 2);
+  const outerTranslateY = useTransform(outerY, (v) => v - OUTER_SIZE / 2);
 
   useEffect(() => {
     if (!enabled) return;
@@ -55,16 +67,29 @@ export function CursorGlow() {
   if (!enabled) return null;
 
   return (
-    <motion.div
-      aria-hidden="true"
-      className="pointer-events-none fixed top-0 left-0 -z-10 rounded-full opacity-30 mix-blend-screen blur-[110px]"
-      style={{
-        width: SIZE,
-        height: SIZE,
-        x: translateX,
-        y: translateY,
-        background: "radial-gradient(circle, var(--electric-glow) 0%, transparent 70%)",
-      }}
-    />
+    <>
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 left-0 -z-10 rounded-full opacity-50 mix-blend-screen blur-[120px]"
+        style={{
+          width: OUTER_SIZE,
+          height: OUTER_SIZE,
+          x: outerTranslateX,
+          y: outerTranslateY,
+          background: "radial-gradient(circle, var(--electric-glow) 0%, transparent 70%)",
+        }}
+      />
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 left-0 -z-10 rounded-full opacity-70 mix-blend-screen blur-[60px]"
+        style={{
+          width: CORE_SIZE,
+          height: CORE_SIZE,
+          x: coreTranslateX,
+          y: coreTranslateY,
+          background: "radial-gradient(circle, var(--electric) 0%, transparent 70%)",
+        }}
+      />
+    </>
   );
 }
