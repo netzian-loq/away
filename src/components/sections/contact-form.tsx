@@ -25,7 +25,8 @@ export function ContactForm() {
   }, [state.status]);
 
   const handleAction = (formData: FormData) => {
-    formData.set("startedAt", String(startedAtRef.current));
+    const startedAt = startedAtRef.current || Date.now();
+    formData.set("startedAt", String(startedAt));
     return formAction(formData);
   };
 
