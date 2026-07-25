@@ -1,11 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
-
-vi.mock("gsap", () => ({
-  gsap: { registerPlugin: vi.fn(), fromTo: vi.fn(() => ({ scrollTrigger: { kill: vi.fn() }, kill: vi.fn() })) },
-}));
-vi.mock("gsap/ScrollTrigger", () => ({ ScrollTrigger: {} }));
-
+import { describe, expect, it } from "vitest";
 import HomePage from "./page";
 
 describe("HomePage", () => {

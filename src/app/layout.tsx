@@ -6,6 +6,7 @@ import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { AmbientBackground } from "@/components/layout/ambient-background";
 import { CursorGlow } from "@/components/motion/cursor-glow";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -48,9 +49,9 @@ export const metadata: Metadata = {
 };
 
 // Runs before first paint: flags reduced-motion preference or software
-// rendering (no real GPU) so the video showcase's GSAP pin-and-scale effect
-// (Task 9) can skip itself instead of janking on a machine that can't
-// afford it.
+// rendering (no real GPU) so the heavier motion layers (Lenis smooth
+// scroll, the cursor glow, ambient drift) can skip themselves instead of
+// janking on a machine that can't afford them.
 const PERF_LITE_INIT = `(function(){try{var r=document.documentElement;if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('perf-lite');return;}var c=document.createElement('canvas');var gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(!gl){r.classList.add('perf-lite');return;}var e=gl.getExtension('WEBGL_debug_renderer_info');var n=e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):'';if(/swiftshader|llvmpipe|software|microsoft basic render/i.test(String(n))){r.classList.add('perf-lite');}}catch(_){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -62,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="bg-background pt-10 text-foreground antialiased sm:pt-11">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
+        <SmoothScroll />
         <AmbientBackground />
         <CursorGlow />
         <DiscordBanner />

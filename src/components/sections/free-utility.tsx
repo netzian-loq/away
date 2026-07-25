@@ -1,22 +1,10 @@
-"use client";
-
-import { useRef } from "react";
 import { Sparkles, Check, Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
-import { useYouTubeLoopPlayer } from "@/lib/use-youtube-loop-player";
 import { FREE_UTILITY } from "@/content/free-utility";
 import { SITE } from "@/content/site";
 
 export function FreeUtility() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  useYouTubeLoopPlayer(containerRef, {
-    videoId: FREE_UTILITY.video.videoId,
-    start: FREE_UTILITY.video.start,
-    end: FREE_UTILITY.video.end,
-    muted: false,
-  });
-
   return (
     <section id="utility" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -61,10 +49,17 @@ export function FreeUtility() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <div className="relative overflow-hidden rounded-2xl bg-black shadow-glow-lg">
+              <div className="relative overflow-hidden rounded-2xl border border-electric/20 bg-black shadow-glow-lg">
                 <div className="relative aspect-video w-full">
-                  <div ref={containerRef} className="pointer-events-none absolute inset-0 h-full w-full" />
-                  <div className="absolute inset-0 z-10 cursor-default" aria-hidden="true" />
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${FREE_UTILITY.video.videoId}`}
+                    title="AwayOS Setup — the free utility, in action"
+                    className="absolute inset-0 h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                  />
                 </div>
               </div>
             </Reveal>

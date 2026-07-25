@@ -11,5 +11,5 @@ export const FREE_UTILITY = {
     "Search across every tweak",
   ],
   ctaCaption: "Free with any Windows Tuning order.",
-  video: { videoId: "pRylLsqizLA", start: 31, end: 50 },
+  video: { videoId: "pRylLsqizLA" },
 };

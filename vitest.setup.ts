@@ -50,9 +50,9 @@ class MockResizeObserver implements ResizeObserver {
 // measures the target element's size via ResizeObserver internally.
 global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
 
-// jsdom doesn't implement matchMedia either — video-showcase.tsx checks
-// prefers-reduced-motion before starting its GSAP effect. Default to
-// "not matched" (i.e. motion allowed) so tests exercise the normal path.
+// jsdom doesn't implement matchMedia either — several motion components
+// check prefers-reduced-motion / pointer capabilities before animating.
+// Default to "not matched" so tests exercise the normal path.
 Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({

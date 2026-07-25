@@ -30,6 +30,22 @@ body {
   overflow-x: hidden;
 }
 
+/* Lenis smooth scroll (engine ported from slowertweaks.com) — the library's
+   recommended companion CSS. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
@@ -76,10 +92,9 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Soft radial highlight that follows the cursor within a card on hover.
-   CursorGlow writes --mx/--my (in px, relative to the card) while the
-   pointer is over an element carrying this class; the pool stays hidden
-   otherwise via the opacity transition below. */
+/* Cursor-tracking card highlight (ported from xnettweaks.com): CursorGlow
+   updates --mx/--my on the hovered .spotlight-card, and this ::after layer
+   renders a soft purple pool under the pointer. */
 @utility spotlight-card {
   position: relative;
   &::after {
@@ -91,9 +106,9 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transition: opacity 0.35s ease;
     background: radial-gradient(
-      240px circle at var(--mx, 50%) var(--my, 50%),
-      color-mix(in oklab, var(--electric) 20%, transparent),
-      transparent 70%
+      220px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(0.7 0.2 305 / 0.16),
+      transparent 65%
     );
   }
   &:hover::after {
