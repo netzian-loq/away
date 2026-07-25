@@ -101,7 +101,7 @@ export function TuningBenchmark() {
           </div>
 
           <div className="mt-10 grid w-full grid-cols-2 gap-4">
-            <div className="glass rounded-2xl border border-white/5 p-5">
+            <div className="glass spotlight-card rounded-2xl border border-white/5 p-5">
               <div className="flex items-center justify-center gap-1 text-xs font-semibold text-emerald-400">
                 <ArrowUp className="h-3 w-3" /> FPS
               </div>
@@ -109,7 +109,7 @@ export function TuningBenchmark() {
                 <span ref={fpsRef}>{FPS_FROM}</span>
               </div>
             </div>
-            <div className="glass rounded-2xl border border-white/5 p-5">
+            <div className="glass spotlight-card rounded-2xl border border-white/5 p-5">
               <div className="flex items-center justify-center gap-1 text-xs font-semibold text-emerald-400">
                 <ArrowDown className="h-3 w-3" /> Latency
               </div>

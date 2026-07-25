@@ -17,7 +17,7 @@ export function WhyUs() {
             const Icon = reason.icon;
             return (
               <Reveal key={reason.title} delay={i * 0.05}>
-                <div className="hover-lift glass flex h-full gap-4 rounded-2xl border border-white/5 p-6">
+                <div className="hover-lift glass spotlight-card flex h-full gap-4 rounded-2xl border border-white/5 p-6">
                   <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-electric/30 bg-electric/10">
                     <Icon className="h-5 w-5 text-electric" strokeWidth={2} />
                   </div>

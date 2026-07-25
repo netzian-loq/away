@@ -18,9 +18,9 @@
 }
 
 :root {
-  --background: oklch(0.1 0.05 300);
+  --background: oklch(0.115 0.065 302);
   --foreground: oklch(0.97 0.012 300);
-  --muted-foreground: oklch(0.72 0.06 300);
+  --muted-foreground: oklch(0.74 0.06 300);
   --electric: oklch(0.62 0.25 300);
   --electric-glow: oklch(0.62 0.27 300 / 0.45);
   --cyan-accent: oklch(0.76 0.15 300);
@@ -73,6 +73,31 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-4px);
     border-color: color-mix(in oklab, var(--electric) 40%, transparent);
     box-shadow: 0 20px 50px -20px var(--electric-glow);
+  }
+}
+
+/* Soft radial highlight that follows the cursor within a card on hover.
+   CursorGlow writes --mx/--my (in px, relative to the card) while the
+   pointer is over an element carrying this class; the pool stays hidden
+   otherwise via the opacity transition below. */
+@utility spotlight-card {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      240px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklab, var(--electric) 20%, transparent),
+      transparent 70%
+    );
+  }
+  &:hover::after {
+    opacity: 1;
   }
 }
 

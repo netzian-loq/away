@@ -6,6 +6,18 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "darlinghill-dev",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["run", "--cwd=C:\\websites\\darlinghill-retreat", "dev"],
+      "port": 8080
+    },
+    {
+      "name": "vinylgutterworks-dev",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "C:\\websites\\away\\.claude\\run-vgw-dev.cmd"],
+      "port": 3020
     }
   ]
 }

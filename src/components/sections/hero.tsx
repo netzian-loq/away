@@ -52,7 +52,7 @@ export function Hero() {
           <Reveal delay={0.4}>
             <div className="mt-20 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
               {SITE.stats.map((stat) => (
-                <div key={stat.label} className="glass rounded-2xl border border-white/5 p-4 text-center sm:p-5">
+                <div key={stat.label} className="glass spotlight-card rounded-2xl border border-white/5 p-4 text-center sm:p-5">
                   <div className="font-display text-2xl font-bold text-gradient sm:text-3xl">
                     <Counter to={stat.value} suffix={stat.suffix} />
                   </div>

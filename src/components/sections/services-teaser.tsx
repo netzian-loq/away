@@ -17,7 +17,7 @@ export function ServicesTeaser() {
             const Icon = service.icon;
             return (
               <Reveal key={service.slug} delay={i * 0.05}>
-                <div className="hover-lift glass h-full rounded-2xl border border-white/5 p-6">
+                <div className="hover-lift glass spotlight-card h-full rounded-2xl border border-white/5 p-6">
                   <div className="grid h-11 w-11 place-items-center rounded-xl border border-electric/30 bg-electric/10">
                     <Icon className="h-5 w-5 text-electric" strokeWidth={2} />
                   </div>

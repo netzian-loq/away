@@ -18,7 +18,7 @@ export function PricingTable() {
           {PRICING_TIERS.map((tier, i) => (
             <Reveal key={tier.name} delay={i * 0.06}>
               <div
-                className={`hover-lift relative flex h-full flex-col rounded-3xl p-6 ${
+                className={`hover-lift spotlight-card relative flex h-full flex-col rounded-3xl p-6 ${
                   tier.featured ? "glass-strong border border-electric/40" : "glass border border-white/5"
                 }`}
               >

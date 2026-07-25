@@ -34,6 +34,11 @@ function subscribe() {
  * `enabled` is read via useSyncExternalStore (not useState+useEffect) so
  * this browser-only check is safe under SSR without ever calling setState
  * inside an effect body.
+ *
+ * The same mousemove listener also drives the per-card spotlight effect:
+ * while the pointer is over an element carrying the `spotlight-card`
+ * utility, its --mx/--my custom properties are updated so that card's own
+ * CSS-driven radial highlight follows the cursor (see globals.css).
  */
 export function CursorGlow() {
   const enabled = useSyncExternalStore(subscribe, getEnabledSnapshot, getServerSnapshot);
@@ -59,6 +64,13 @@ export function CursorGlow() {
     const onMove = (e: MouseEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
+
+      const card = (e.target as Element | null)?.closest?.(".spotlight-card");
+      if (card instanceof HTMLElement) {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+        card.style.setProperty("--my", `${e.clientY - rect.top}px`);
+      }
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
