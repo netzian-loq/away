@@ -53,16 +53,21 @@ global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver;
 // jsdom doesn't implement matchMedia either — several motion components
 // check prefers-reduced-motion / pointer capabilities before animating.
 // Default to "not matched" so tests exercise the normal path.
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
-  value: vi.fn().mockImplementation((query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+//
+// Guarded because route-handler tests opt into the `node` environment
+// (`// @vitest-environment node`), where there is no `window` at all.
+if (typeof window !== "undefined") {
+  Object.defineProperty(window, "matchMedia", {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+}

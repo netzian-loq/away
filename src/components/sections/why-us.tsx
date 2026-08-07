@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/motion/reveal";
+import { MaskRevealLines } from "@/components/motion/mask-reveal";
 import { WHY_REASONS } from "@/content/why";
 
 export function WhyUs() {
@@ -7,8 +8,11 @@ export function WhyUs() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Why Away Tweaks</span>
-          <h2 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">
-            Deep professional knowledge. Delivered fast.
+          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+            <MaskRevealLines
+              lines={["Deep professional knowledge.", "Delivered fast."]}
+              innerClassName="text-gradient"
+            />
           </h2>
         </Reveal>
 

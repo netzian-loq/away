@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal } from "@/components/motion/mask-reveal";
 import { SERVICES } from "@/content/services";
 
 export function ServicesTeaser() {
@@ -9,7 +10,11 @@ export function ServicesTeaser() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Services</span>
-          <h2 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">Every layer, tuned.</h2>
+          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+            <MaskReveal as="span" innerClassName="text-gradient">
+              Every layer, tuned.
+            </MaskReveal>
+          </h2>
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">

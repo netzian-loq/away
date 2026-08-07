@@ -1,5 +1,7 @@
 import { Sparkles, Check, Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal } from "@/components/motion/mask-reveal";
+import { ScrollScale } from "@/components/motion/scroll-scale";
 import { buttonVariants } from "@/components/ui/button";
 import { FREE_UTILITY } from "@/content/free-utility";
 import { SITE } from "@/content/site";
@@ -20,8 +22,10 @@ export function FreeUtility() {
                 <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-electric">
                   <Sparkles className="h-3 w-3" /> {FREE_UTILITY.eyebrow}
                 </span>
-                <h2 className="mt-5 font-display text-3xl font-bold leading-tight text-gradient sm:text-4xl md:text-5xl">
-                  {FREE_UTILITY.title}
+                <h2 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+                  <MaskReveal as="span" innerClassName="text-gradient">
+                    {FREE_UTILITY.title}
+                  </MaskReveal>
                 </h2>
                 <p className="mt-5 leading-relaxed text-muted-foreground">{FREE_UTILITY.body}</p>
                 <ul className="mt-8 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -48,12 +52,12 @@ export function FreeUtility() {
               </div>
             </Reveal>
 
-            <Reveal delay={0.1}>
+            <ScrollScale className="overflow-hidden rounded-2xl">
               <div className="relative overflow-hidden rounded-2xl border border-electric/20 bg-black shadow-glow-lg">
                 <div className="relative aspect-video w-full">
                   <iframe
                     src={`https://www.youtube-nocookie.com/embed/${FREE_UTILITY.video.videoId}`}
-                    title="AwayOS Setup — the free utility, in action"
+                    title="Away Free Utility, in action"
                     className="absolute inset-0 h-full w-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
@@ -62,7 +66,7 @@ export function FreeUtility() {
                   />
                 </div>
               </div>
-            </Reveal>
+            </ScrollScale>
           </div>
         </div>
       </div>

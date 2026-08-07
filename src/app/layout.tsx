@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { SITE } from "@/content/site";
-import { DiscordBanner } from "@/components/layout/discord-banner";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { AmbientBackground } from "@/components/layout/ambient-background";
@@ -61,12 +60,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-background pt-10 text-foreground antialiased sm:pt-11">
+      <body className="bg-background text-foreground antialiased">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
         <SmoothScroll />
         <AmbientBackground />
         <CursorGlow />
-        <DiscordBanner />
         <Nav />
         <main>{children}</main>
         <Footer />

@@ -30,7 +30,7 @@ export const SERVICES: Service[] = [
     summary:
       "Custom Gaming OS and complete Windows tuning — bloat stripped, kernel and dxgkrnl configured, scheduler and services tuned for an unreal gaming experience.",
     description:
-      "Our flagship service. We deliver a Custom Gaming OS (AwayOS) and a deep Windows tune in one — configuring dxgkrnl, the kernel and registry, stripping unnecessary scheduled tasks, services, devices and drivers. Ships with the AwayOS Setup tuning app pre-installed so you control drivers, wallpapers, game fixes and system tools from one clean interface.",
+      "Our flagship service. We deliver a Custom Gaming OS (AwayOS) and a deep Windows tune in one — configuring dxgkrnl, the kernel and registry, stripping unnecessary scheduled tasks, services, devices and drivers. Ships with the Away Free Utility pre-installed so you control drivers, wallpapers, game fixes and system tools from one clean interface.",
     features: [
       "Custom Gaming OS (AwayOS) install option",
       "Bloat, telemetry and ad removal",
@@ -41,11 +41,11 @@ export const SERVICES: Service[] = [
       "Peripherals registry configuration",
       "Game configuration",
       "Unreal performance achievement",
-      "AwayOS Setup tuning app built in",
+      "Away Free Utility built in",
       "Custom AwayOS wallpapers + dark UI theme",
     ],
     highlight:
-      "Combines our Custom Gaming OS and Windows Tweaks into one package — same flat price. Includes the AwayOS Setup app for drivers, tweaks, game fixes and wallpapers.",
+      "Combines our Custom Gaming OS and Windows Tweaks into one package — same flat price. Includes the Away Free Utility for drivers, tweaks, game fixes and wallpapers.",
     images: [
       {
         src: "/awayos-desktop.svg",
@@ -54,8 +54,8 @@ export const SERVICES: Service[] = [
       },
       {
         src: "/awayos-setup.svg",
-        alt: "AwayOS Setup app — the free PC tweaking and optimization tool included with every Windows Tuning order",
-        caption: "Built-in AwayOS Setup tuning app",
+        alt: "Away Free Utility — the free PC tweaking and optimization tool included with every Windows Tuning order",
+        caption: "Built-in Away Free Utility",
       },
     ],
   },

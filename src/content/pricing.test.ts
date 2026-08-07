@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PRICING_TIERS } from "./pricing";
+import { CURRENCY, findTier, PRICING_TIERS } from "./pricing";
 
 describe("PRICING_TIERS", () => {
   it("has exactly 5 tiers with the preserved prices", () => {
@@ -22,5 +22,29 @@ describe("PRICING_TIERS", () => {
   it("Extreme Level includes RAM Overclocking", () => {
     const extreme = PRICING_TIERS.find((t) => t.name === "Extreme Level");
     expect(extreme?.features).toContain("RAM Overclocking");
+  });
+
+  it("gives every tier a unique slug for the checkout", () => {
+    const slugs = PRICING_TIERS.map((t) => t.slug);
+    expect(slugs).toEqual([
+      "standard",
+      "entry-level",
+      "high-entry-level",
+      "pro-level",
+      "extreme-level",
+    ]);
+    expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("looks tiers up by slug and rejects unknown ones", () => {
+    expect(findTier("pro-level")?.price).toBe(65);
+    expect(findTier(" PRO-LEVEL ")?.price).toBe(65);
+    expect(findTier("free-please")).toBeNull();
+    expect(findTier("")).toBeNull();
+    expect(findTier(undefined)).toBeNull();
+  });
+
+  it("prices everything in euros", () => {
+    expect(CURRENCY).toBe("EUR");
   });
 });

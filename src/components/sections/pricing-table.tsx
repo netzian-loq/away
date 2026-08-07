@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { PRICING_TIERS } from "@/content/pricing";
 
@@ -10,7 +11,11 @@ export function PricingTable() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Discount Packages</span>
-          <h2 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">Bundles that save you more.</h2>
+          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+            <MaskReveal as="span" innerClassName="text-gradient">
+              Bundles that save you more.
+            </MaskReveal>
+          </h2>
           <p className="mt-4 text-muted-foreground">Stack services and pay less. Need something custom? Just ask — we build to spec.</p>
         </Reveal>
 
@@ -39,7 +44,7 @@ export function PricingTable() {
                   ))}
                 </ul>
                 <Link
-                  href="/contact"
+                  href={`/checkout?tier=${tier.slug}`}
                   className={buttonVariants({
                     variant: tier.featured ? "primary" : "outline",
                     className: "mt-7 w-full",

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
 
 export function FinalCTA() {
@@ -9,7 +10,11 @@ export function FinalCTA() {
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
         <Reveal>
           <div className="glass-strong spotlight-card rounded-3xl border border-white/10 p-10 sm:p-16">
-            <h2 className="font-display text-3xl font-bold text-gradient sm:text-4xl">Ready to dominate?</h2>
+            <h2 className="font-display text-3xl font-bold sm:text-4xl">
+              <MaskReveal as="span" innerClassName="text-gradient">
+                Ready to dominate?
+              </MaskReveal>
+            </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Join the players who stopped blaming their hardware. Get your rig tuned by Away Tweaks.
             </p>

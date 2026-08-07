@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef } from "react";
-import { motion } from "framer-motion";
 import { Reveal } from "@/components/motion/reveal";
+import { MaskReveal } from "@/components/motion/mask-reveal";
+import { ScrollScale } from "@/components/motion/scroll-scale";
 import { useYouTubeLoopPlayer } from "@/lib/use-youtube-loop-player";
 
 const VIDEO_ID = "YdQl1PbTqRs";
@@ -23,27 +24,23 @@ export function VideoShowcase() {
             AwayOS Preview
           </div>
           <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">
-            See <span className="text-gradient">AwayOS</span> in action
+            <MaskReveal as="span">
+              See <span className="text-gradient">AwayOS</span> in action
+            </MaskReveal>
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
             A 25-second look at the custom gaming OS — stripped, tuned, and built for frames.
           </p>
         </Reveal>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.92 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="relative"
-        >
+        <ScrollScale className="relative overflow-hidden rounded-2xl">
           <div className="relative overflow-hidden rounded-2xl border border-electric/20 bg-black shadow-2xl">
             <div className="relative aspect-video w-full">
               <div ref={containerRef} className="pointer-events-none absolute inset-0 h-full w-full" />
               <div className="absolute inset-0 z-10 cursor-default" aria-hidden="true" />
             </div>
           </div>
-        </motion.div>
+        </ScrollScale>
       </div>
     </section>
   );

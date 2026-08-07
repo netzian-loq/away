@@ -1,6 +1,6 @@
 export const FREE_UTILITY = {
   eyebrow: "Free Utility",
-  title: "The AwayOS Setup app — free with every tune.",
+  title: "Away Free Utility — free with every tune.",
   body: "A clean control panel for your rig — live hardware monitoring, one-click tweaks, debloat, drivers, network and privacy, all from one dark, distraction-free interface.",
   points: [
     "Live CPU, GPU & RAM monitoring",
