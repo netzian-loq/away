@@ -2,6 +2,7 @@ import { Sparkles, Check, Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { ScrollScale } from "@/components/motion/scroll-scale";
+import { VideoFacade } from "@/components/motion/video-facade";
 import { buttonVariants } from "@/components/ui/button";
 import { FREE_UTILITY } from "@/content/free-utility";
 import { SITE } from "@/content/site";
@@ -19,7 +20,7 @@ export function FreeUtility() {
           <div className="grid items-center gap-10 p-8 sm:p-12 lg:grid-cols-2 lg:gap-12 lg:p-16">
             <Reveal>
               <div>
-                <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-mono uppercase tracking-[0.18em] text-electric">
+                <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-mono uppercase tracking-[0.18em] text-electric">
                   <Sparkles className="h-3 w-3" /> {FREE_UTILITY.eyebrow}
                 </span>
                 <h2 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
@@ -55,14 +56,11 @@ export function FreeUtility() {
             <ScrollScale className="overflow-hidden rounded-2xl">
               <div className="relative overflow-hidden rounded-2xl border border-electric/20 bg-black shadow-glow-lg">
                 <div className="relative aspect-video w-full">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${FREE_UTILITY.video.videoId}`}
-                    title="Away Free Utility, in action"
-                    className="absolute inset-0 h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
+                  {/* Poster until tapped — the embed itself is ~2MB of player
+                      script nobody needs before pressing play. */}
+                  <VideoFacade
+                    videoId={FREE_UTILITY.video.videoId}
+                    title="Away Utility, in action"
                   />
                 </div>
               </div>

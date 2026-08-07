@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
-import { CURRENCY, findTier } from "@/content/pricing";
+import { findPurchasable } from "@/content/catalog";
+import { CURRENCY } from "@/content/pricing";
 import { applyDiscount, findDiscount, formatAmount } from "@/lib/discounts";
 import { createPayPalOrder, PayPalApiError, PayPalConfigError } from "@/lib/paypal";
 import { createOrderSchema } from "@/lib/validations";
 
 /**
- * Creates a PayPal order for one package. The client sends a tier slug and an
- * optional discount code — never a price. The amount is derived here from
- * PRICING_TIERS so a tampered request can't buy an Extreme tune for €1.
+ * Creates a PayPal order for one bundle or single service. The client sends a
+ * catalog slug and an optional discount code — never a price. The amount is
+ * derived here from CATALOG so a tampered request can't buy an Extreme tune
+ * for €1.
  */
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -17,20 +19,20 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const tier = findTier(parsed.data.tier);
-  if (!tier) {
+  const item = findPurchasable(parsed.data.tier);
+  if (!item) {
     return Response.json({ error: "Unknown package." }, { status: 400 });
   }
 
   const discount = findDiscount(parsed.data.code);
-  const amount = formatAmount(applyDiscount(tier.price, discount));
+  const amount = formatAmount(applyDiscount(item.price, discount));
 
   try {
     const order = await createPayPalOrder({
       amount,
       currency: CURRENCY,
-      description: `Away Tweaks — ${tier.name}`,
-      referenceId: tier.slug,
+      description: `Away Tweaks — ${item.name}`,
+      referenceId: item.slug,
       customId: discount?.partner ?? "direct",
     });
 

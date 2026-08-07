@@ -16,7 +16,7 @@ export function Manifesto() {
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         <Reveal>
-          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-electric">The Away method</span>
+          <span className="font-mono text-xs uppercase tracking-[0.2em] text-electric">The Away method</span>
         </Reveal>
         <ScrollWordReveal
           text={MANIFESTO_TEXT}

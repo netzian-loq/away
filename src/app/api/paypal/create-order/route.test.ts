@@ -43,6 +43,24 @@ describe("POST /api/paypal/create-order", () => {
     );
   });
 
+  it("sells a single service at its own price, not a bundle price", async () => {
+    await POST(post({ tier: "network-tuning" }));
+    expect(createPayPalOrder).toHaveBeenCalledWith(
+      expect.objectContaining({
+        amount: "10.00",
+        referenceId: "network-tuning",
+        description: "Away Tweaks — Network Tuning",
+      }),
+    );
+  });
+
+  it("applies the partner code to a single service too", async () => {
+    await POST(post({ tier: "bios-tuning", code: "COSMO10" }));
+    expect(createPayPalOrder).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: "10.80", customId: "cosmo" }),
+    );
+  });
+
   it("ignores any price the client tries to send", async () => {
     await POST(post({ tier: "extreme-level", price: 1, amount: "1.00", total: 1 }));
     expect(createPayPalOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: "90.00" }));

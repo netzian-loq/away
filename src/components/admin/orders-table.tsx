@@ -45,7 +45,7 @@ export function OrdersTable({ orders }: { orders: OrderRecord[] }) {
               </Td>
               <Td>
                 {order.discountCode ? (
-                  <span className="rounded-full bg-electric/15 px-2 py-0.5 font-mono text-[11px] text-electric">
+                  <span className="rounded-full bg-electric/15 px-2 py-0.5 font-mono text-xs text-electric">
                     {order.discountCode}
                   </span>
                 ) : (
@@ -77,7 +77,7 @@ export function OrdersTable({ orders }: { orders: OrderRecord[] }) {
                   />
                   <span
                     className={cn(
-                      "whitespace-nowrap rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider",
+                      "whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold uppercase tracking-wider",
                       order.status === "paid"
                         ? "bg-cyan-accent/15 text-cyan-accent"
                         : "bg-amber-400/15 text-amber-300",
@@ -87,7 +87,7 @@ export function OrdersTable({ orders }: { orders: OrderRecord[] }) {
                   </span>
                   <button
                     type="submit"
-                    className="whitespace-nowrap rounded-lg border border-white/10 px-2 py-1 text-[11px] text-muted-foreground transition-colors hover:border-electric/50 hover:text-foreground"
+                    className="whitespace-nowrap rounded-lg border border-white/10 px-2 py-1 text-xs text-muted-foreground transition-colors hover:border-electric/50 hover:text-foreground"
                   >
                     {order.status === "paid" ? "Undo" : "Mark paid"}
                   </button>
@@ -103,7 +103,7 @@ export function OrdersTable({ orders }: { orders: OrderRecord[] }) {
 
 function Th({ children }: { children: React.ReactNode }) {
   return (
-    <th className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+    <th className="px-4 py-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
       {children}
     </th>
   );

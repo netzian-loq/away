@@ -29,7 +29,7 @@ export default function ContactPage() {
         <Reveal className="glass-strong rounded-3xl border border-white/10 p-8 sm:p-14">
           <div className="grid gap-10 lg:grid-cols-5">
             <div className="lg:col-span-2">
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Contact</span>
+              <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Contact</span>
               <h1 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">
                 Ready to maximize your gaming performance?
               </h1>
@@ -40,13 +40,13 @@ export default function ContactPage() {
               <div className="mt-8 space-y-3 text-sm">
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Mail className="h-4 w-4 text-electric" />
-                  <a href={`mailto:${SITE.email}`} className="break-all hover:text-electric">
+                  <a href={`mailto:${SITE.email}`} className="tap-target break-all hover:text-electric">
                     {SITE.email}
                   </a>
                 </div>
                 <div className="flex items-center gap-3 text-muted-foreground">
                   <Disc className="h-4 w-4 text-electric" />
-                  <a href={SITE.discordServerUrl} target="_blank" rel="noopener noreferrer" className="hover:text-electric">
+                  <a href={SITE.discordServerUrl} target="_blank" rel="noopener noreferrer" className="tap-target hover:text-electric">
                     Join our Discord
                   </a>
                 </div>

@@ -1,6 +1,7 @@
 "use server";
 
-import { CURRENCY, findTier } from "@/content/pricing";
+import { findPurchasable } from "@/content/catalog";
+import { CURRENCY } from "@/content/pricing";
 import { applyDiscount, describeDiscount, findDiscount, formatAmount } from "@/lib/discounts";
 import {
   sendBankTransferEmail,
@@ -47,17 +48,17 @@ export async function submitBankTransferOrder(
   if (company) return { status: "success", reference };
   if (Date.now() - startedAt < MIN_FILL_TIME_MS) return { status: "success", reference };
 
-  const tier = findTier(tierSlug);
-  if (!tier) {
+  const item = findPurchasable(tierSlug);
+  if (!item) {
     return { status: "error", message: "That package doesn't exist." };
   }
 
   const discount = findDiscount(code);
-  const amount = formatAmount(applyDiscount(tier.price, discount));
+  const amount = formatAmount(applyDiscount(item.price, discount));
 
   const input: BankTransferEmailInput = {
     buyerEmail: email,
-    tierName: tier.name,
+    tierName: item.name,
     amount,
     currency: CURRENCY,
     reference,
@@ -88,8 +89,8 @@ export async function submitBankTransferOrder(
     id: reference,
     source: "bank-transfer",
     status: "pending",
-    tierSlug: tier.slug,
-    tierName: tier.name,
+    tierSlug: item.slug,
+    tierName: item.name,
     amount,
     currency: CURRENCY,
     partner: discount?.partner ?? "direct",
@@ -110,5 +111,5 @@ export async function submitBankTransferOrder(
     };
   }
 
-  return { status: "success", reference, amount, tierName: tier.name };
+  return { status: "success", reference, amount, tierName: item.name };
 }

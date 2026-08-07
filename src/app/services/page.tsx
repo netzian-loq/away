@@ -28,7 +28,7 @@ export default function ServicesPage() {
       <section className="relative pt-40 pb-16 sm:pt-48">
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Services</span>
+            <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Services</span>
             <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">
               Every tune we run, in detail.
             </h1>

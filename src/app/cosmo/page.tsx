@@ -59,7 +59,7 @@ export default function CosmoPage() {
       <section className="relative pt-40 pb-16 sm:pt-48">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-electric">
+            <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">
               {COSMO.eyebrow}
             </span>
             <h1 className="mt-6 font-display text-4xl font-bold sm:text-5xl">

@@ -25,4 +25,22 @@ describe("SERVICES", () => {
       expect(service.features.length).toBeGreaterThan(0);
     }
   });
+
+  it("gives every service a slug that checkout can price", () => {
+    for (const service of SERVICES) {
+      expect(service.slug).toMatch(/^[a-z0-9-]+$/);
+      expect(service.priceValue).toBeGreaterThan(0);
+    }
+  });
+
+  it("calls the free tool Away Utility, never Away Free Utility or Away Setup", () => {
+    const copy = JSON.stringify(SERVICES.map(({ description, features, highlight }) => ({
+      description,
+      features,
+      highlight,
+    })));
+    expect(copy).toContain("Away Utility");
+    expect(copy).not.toMatch(/Away Free Utility/);
+    expect(copy).not.toMatch(/Away Setup/i);
+  });
 });

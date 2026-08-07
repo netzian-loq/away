@@ -30,7 +30,7 @@ export function Nav() {
             scrolled ? "glass-strong shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]" : "bg-transparent",
           )}
         >
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
+          <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-xl ring-1 ring-electric/40 shadow-glow">
               <Image src="/logo.png" alt="Away Tweaks logo" width={1024} height={1024} className="h-full w-full object-cover" />
             </span>
@@ -61,7 +61,7 @@ export function Nav() {
           </div>
 
           <button
-            className="glass grid h-10 w-10 place-items-center rounded-xl lg:hidden"
+            className="glass grid h-11 w-11 place-items-center rounded-xl lg:hidden"
             onClick={() => setOpen((v) => !v)}
             aria-label="Toggle menu"
           >
@@ -76,7 +76,7 @@ export function Nav() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-3 text-sm text-foreground/90 hover:bg-white/5"
+                className="flex min-h-11 items-center rounded-lg px-3 py-3 text-sm text-foreground/90 hover:bg-white/5"
               >
                 {item.label}
               </Link>

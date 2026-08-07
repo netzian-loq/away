@@ -148,6 +148,35 @@ h1, h2, h3, h4, h5, h6 {
   animation: none;
 }
 
+/* Phones: hold the ambient wash still. Each blob is a ~700px layer with a
+   large blur, and animating four of them means the compositor re-blurs them
+   every frame — the second-biggest source of scroll jank on mobile after
+   smooth-scroll hijacking. The gradient itself stays; only the drift stops. */
+@media (max-width: 640px) {
+  .aurora-blob {
+    animation: none !important;
+  }
+}
+
+/* Lenis handles eased anchor scrolling on desktop, but it's disabled on touch
+   (see SmoothScroll), so hand in-page links back to the browser's own smooth
+   scrolling there. */
+@media (pointer: coarse) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Touch targets: interactive elements need ~44px of tappable height on a
+   phone. Applied where a control is otherwise sized by its text alone. */
+@utility tap-target {
+  @media (pointer: coarse) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

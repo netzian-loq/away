@@ -38,7 +38,7 @@ export default async function CheckoutPage({
       <section className="relative pt-40 pb-10 sm:pt-48">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">
+            <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">
               Secure checkout
             </span>
             <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">
@@ -54,8 +54,10 @@ export default async function CheckoutPage({
 
       <section className="relative pb-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          {/* `item` is the current name; `tier` is still honoured so links
+              shared before single services became buyable keep working. */}
           <CheckoutClient
-            initialTier={first(params.tier)}
+            initialTier={first(params.item) || first(params.tier)}
             initialCode={first(params.code)}
             reference={generateOrderReference()}
           />

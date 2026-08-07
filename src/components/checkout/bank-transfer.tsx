@@ -5,7 +5,8 @@ import { ArrowRight, Check, Copy, Landmark } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { submitBankTransferOrder, type BankTransferState } from "@/actions/bank-transfer";
-import { CURRENCY, type PricingTier } from "@/content/pricing";
+import { type Purchasable } from "@/content/catalog";
+import { CURRENCY } from "@/content/pricing";
 import { SITE } from "@/content/site";
 import { PURCHASE_THANK_YOU } from "@/lib/email-copy";
 import { useCopyToClipboard } from "@/lib/use-copy-to-clipboard";
@@ -14,7 +15,7 @@ import { cn } from "@/lib/utils";
 const initialState: BankTransferState = { status: "idle" };
 
 interface BankTransferProps {
-  tier: PricingTier;
+  tier: Purchasable;
   /** Fixed-2 total after any discount. */
   amount: string;
   code: string;
@@ -143,7 +144,7 @@ function CopyRow({
 
   return (
     <div>
-      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
+      <span className="text-xs uppercase tracking-wider text-muted-foreground">{label}</span>
       <button
         type="button"
         onClick={() => copy(target)}

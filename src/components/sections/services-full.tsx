@@ -1,6 +1,8 @@
 import Image from "next/image";
-import { Check } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
+import { buttonVariants } from "@/components/ui/button";
 import { SERVICES } from "@/content/services";
 
 export function ServicesFull() {
@@ -54,6 +56,18 @@ export function ServicesFull() {
                   </li>
                 ))}
               </ul>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-white/5 pt-6">
+                <Link
+                  href={`/checkout?item=${service.slug}`}
+                  className={buttonVariants({ size: "lg" })}
+                >
+                  Buy {service.priceLabel} <ArrowRight className="h-4 w-4" />
+                </Link>
+                <span className="text-xs text-muted-foreground">
+                  Pay with PayPal or bank transfer — no ticket needed.
+                </span>
+              </div>
             </article>
           </Reveal>
         );

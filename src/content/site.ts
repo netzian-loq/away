@@ -29,7 +29,8 @@ export const SITE = {
    *
    * `accountHolder` MUST match the name on the account exactly — most banking
    * apps (and SEPA's Verification of Payee check) compare it against the IBAN
-   * and warn or reject the transfer on a mismatch.
+   * and warn or reject the transfer on a mismatch. Assumed from the PayPal
+   * handle; correct it here if the account is in a different name.
    */
   bank: {
     accountHolder: "Carmela Bazzi",

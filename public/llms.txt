@@ -11,15 +11,20 @@ Away Tweaks is a private PC tuning and optimization service for competitive play
 - Contact: https://awaytweaks.com/contact
 
 ## Services
-- Windows Tuning (25€): Custom Gaming OS (AwayOS) + deep Windows tune — bloat/telemetry/ad removal, dxgkrnl + kernel registry tuning, scheduler/services trim, driver configuration, devices configuration, peripherals registry configuration, game configuration.
+- Windows Tuning (25€): Custom Gaming OS (AwayOS) + deep Windows tune — bloat/telemetry/ad removal, dxgkrnl + kernel registry tuning, scheduler/services trim, driver configuration, devices configuration, peripherals registry configuration, game configuration. Ships with Away Utility pre-installed.
 - GPU Overclocking (15€): core/memory offsets, power and voltage limits, fan curves, sustained-boost validation.
 - RAM Overclocking (45€): tight primary/sub-timings, stable high-frequency profiles, die-specific tuning (B-die, D-die, Hynix, Micron).
 - CPU Overclocking (25€): per-core curves, PBO + Curve Optimizer (AMD) or voltage/frequency scaling (Intel).
 - Network Tuning (10€): NIC/driver/QoS/DNS tuning, ISR/DPC latency reduction.
 - BIOS Tuning (12€): hidden + visible settings, Resizable BAR / Above 4G, XMP/EXPO, C-states, PCIe/chipset tuning.
 
+Every service above can be bought on its own, or as part of a bundle below. Payment is by PayPal or SEPA bank transfer directly on the site.
+
 ## Discount bundles
 - Standard 35€ (Windows + BIOS), Entry Level 45€ (+ GPU OC), High Entry 52€ (+ CPU OC), Pro 65€ (CPU + GPU OC), Extreme 90€ (CPU + GPU + RAM OC).
+
+## Free software
+- Away Utility: a free PC control panel — live CPU/GPU/RAM monitoring, one-click tweaks, debloat and privacy controls, driver/network/GPU tools, game fixes and wallpapers. Included free with any Windows Tuning order.
 
 ## Contact
 - Email: Mattiaarminante77@gmail.com

@@ -30,7 +30,7 @@ export default function AboutPage() {
       <section className="relative pt-40 pb-16 sm:pt-48">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">{ABOUT.eyebrow}</span>
+            <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">{ABOUT.eyebrow}</span>
             <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">{ABOUT.heroTitle}</h1>
             <p className="mt-5 leading-relaxed text-muted-foreground">{ABOUT.heroBody}</p>
           </Reveal>

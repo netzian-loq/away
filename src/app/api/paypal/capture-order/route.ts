@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { findTier } from "@/content/pricing";
+import { findPurchasable } from "@/content/catalog";
 import { describeDiscount, DISCOUNTS } from "@/lib/discounts";
 import {
   sendPurchaseEmail,
@@ -37,13 +37,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const tier = findTier(capture.tierSlug);
+    const item = findPurchasable(capture.tierSlug);
     const discount = DISCOUNTS.find((entry) => entry.partner === capture.partner) ?? null;
 
     const emailInput: PurchaseEmailInput = {
       buyerEmail: capture.buyerEmail,
       buyerName: capture.buyerName,
-      tierName: tier?.name ?? capture.tierSlug,
+      tierName: item?.name ?? capture.tierSlug,
       amount: capture.amount,
       currency: capture.currency,
       orderId: capture.orderId,

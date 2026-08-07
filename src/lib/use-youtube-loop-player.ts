@@ -22,6 +22,12 @@ interface YouTubeLoopOptions {
    * behavior, not a bug in this hook).
    */
   muted?: boolean;
+  /**
+   * Set false to skip loading the player entirely. Used to keep the ~2MB
+   * YouTube player and a continuously decoding video off phones, where it
+   * costs data and battery for a decorative background loop.
+   */
+  enabled?: boolean;
 }
 
 /**
@@ -31,9 +37,10 @@ interface YouTubeLoopOptions {
  */
 export function useYouTubeLoopPlayer(
   containerRef: React.RefObject<HTMLDivElement | null>,
-  { videoId, start, end, muted = true }: YouTubeLoopOptions,
+  { videoId, start, end, muted = true, enabled = true }: YouTubeLoopOptions,
 ) {
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     let interval: ReturnType<typeof setInterval> | null = null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- untyped YouTube IFrame API player instance
@@ -121,5 +128,5 @@ export function useYouTubeLoopPlayer(
       if (interval) clearInterval(interval);
       player?.destroy?.();
     };
-  }, [containerRef, videoId, start, end, muted]);
+  }, [containerRef, videoId, start, end, muted, enabled]);
 }

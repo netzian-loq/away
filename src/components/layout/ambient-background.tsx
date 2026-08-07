@@ -37,14 +37,17 @@ export function AmbientBackground() {
         }}
       />
       <div
-        className="aurora-blob absolute -bottom-1/4 left-1/3 h-[46rem] w-[46rem] rounded-full blur-3xl"
+        className="aurora-blob absolute -bottom-1/4 left-1/3 hidden h-[46rem] w-[46rem] rounded-full blur-3xl sm:block"
         style={{
           background: "radial-gradient(circle, oklch(0.42 0.23 270 / 0.38) 0%, transparent 70%)",
           animation: "aurora-drift-c 48s ease-in-out infinite",
         }}
       />
+      {/* Fourth and third blobs are desktop-only: on a phone they overlap the
+          other two almost entirely at that size, so they cost two more large
+          blurred layers for a difference nobody can see. */}
       <div
-        className="aurora-blob absolute top-1/4 left-1/4 h-[38rem] w-[38rem] rounded-full blur-3xl"
+        className="aurora-blob absolute top-1/4 left-1/4 hidden h-[38rem] w-[38rem] rounded-full blur-3xl sm:block"
         style={{
           background: "radial-gradient(circle, oklch(0.5 0.22 315 / 0.28) 0%, transparent 70%)",
           animation: "aurora-drift-b 54s ease-in-out infinite reverse",

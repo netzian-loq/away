@@ -6,9 +6,16 @@ import Link from "next/link";
 import { AlertTriangle, ArrowRight, Check, Landmark, Loader2, ShieldCheck, Tag } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BankTransfer } from "@/components/checkout/bank-transfer";
-import { CURRENCY, PRICING_TIERS, type PricingTier } from "@/content/pricing";
+import {
+  BUNDLES,
+  DEFAULT_PURCHASE,
+  findPurchasable,
+  SINGLE_SERVICES,
+  type Purchasable,
+} from "@/content/catalog";
+import { CURRENCY } from "@/content/pricing";
 import { SITE } from "@/content/site";
-import { applyDiscount, findDiscount, formatAmount } from "@/lib/discounts";
+import { applyDiscount, findDiscount, formatAmount, type Discount } from "@/lib/discounts";
 import { cn } from "@/lib/utils";
 
 /** Minimal shape of the bits of the PayPal JS SDK we actually call. */
@@ -52,8 +59,8 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
   const [method, setMethod] = useState<PaymentMethod>("paypal");
 
-  const [tier, setTier] = useState<PricingTier>(
-    () => PRICING_TIERS.find((entry) => entry.slug === initialTier) ?? PRICING_TIERS[3],
+  const [tier, setTier] = useState<Purchasable>(
+    () => findPurchasable(initialTier) ?? DEFAULT_PURCHASE,
   );
   const [codeInput, setCodeInput] = useState(initialCode.toUpperCase());
   const [discord, setDiscord] = useState("");
@@ -170,51 +177,24 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
 
       <div className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:gap-10">
         <div>
-          <h2 className="font-display text-lg font-semibold">1. Choose your package</h2>
-          <div className="mt-5 space-y-3">
-            {PRICING_TIERS.map((entry) => {
-              const selected = entry.slug === tier.slug;
-              const entryTotal = applyDiscount(entry.price, discount);
-              return (
-                <button
-                  key={entry.slug}
-                  type="button"
-                  onClick={() => setTier(entry)}
-                  aria-pressed={selected}
-                  className={cn(
-                    "flex w-full items-center justify-between gap-4 rounded-2xl border p-5 text-left transition-all duration-300",
-                    selected
-                      ? "glass-strong border-electric/50 shadow-glow"
-                      : "glass border-white/5 hover:border-white/15",
-                  )}
-                >
-                  <span className="min-w-0">
-                    <span className="flex items-center gap-2">
-                      <span className="font-display font-semibold">{entry.name}</span>
-                      {entry.featured && (
-                        <span className="rounded-full bg-electric/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-electric">
-                          Popular
-                        </span>
-                      )}
-                    </span>
-                    <span className="mt-1 block truncate text-sm text-muted-foreground">
-                      {entry.features.join(" · ")}
-                    </span>
-                  </span>
-                  <span className="shrink-0 text-right">
-                    {discount && (
-                      <span className="block text-xs text-muted-foreground line-through">
-                        {entry.price}€
-                      </span>
-                    )}
-                    <span className="font-display text-xl font-bold text-gradient">
-                      {formatAmount(entryTotal)}€
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <h2 className="font-display text-lg font-semibold">1. Choose what you want</h2>
+
+          <Group
+            heading="Bundles"
+            note="Stack services and pay less."
+            items={BUNDLES}
+            selectedSlug={tier.slug}
+            onSelect={setTier}
+            discount={discount}
+          />
+          <Group
+            heading="Single services"
+            note="Just need one thing? Buy it on its own."
+            items={SINGLE_SERVICES}
+            selectedSlug={tier.slug}
+            onSelect={setTier}
+            discount={discount}
+          />
         </div>
 
         <div className="lg:sticky lg:top-28 lg:self-start">
@@ -231,7 +211,7 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
                 onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
                 placeholder="COSMO10"
                 aria-label="Discount code"
-                className="w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 font-mono text-sm tracking-wider outline-none transition-colors focus:border-electric/60"
+                className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 font-mono text-sm tracking-wider outline-none transition-colors focus:border-electric/60"
               />
             </div>
             {codeInput.trim() !== "" && (
@@ -252,7 +232,7 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
               onChange={(event) => setDiscord(event.target.value)}
               placeholder="yourname"
               aria-label="Discord username"
-              className="mt-2 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-sm outline-none transition-colors focus:border-electric/60"
+              className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm outline-none transition-colors focus:border-electric/60"
             />
 
             <dl className="mt-6 space-y-2 border-t border-white/10 pt-5 text-sm">
@@ -290,7 +270,7 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
                   aria-selected={method === option.id}
                   onClick={() => setMethod(option.id)}
                   className={cn(
-                    "rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300",
+                    "flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300",
                     method === option.id
                       ? "bg-electric/20 text-foreground"
                       : "text-muted-foreground hover:text-foreground",
@@ -350,6 +330,78 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
         </div>
       </div>
     </>
+  );
+}
+
+function Group({
+  heading,
+  note,
+  items,
+  selectedSlug,
+  onSelect,
+  discount,
+}: {
+  heading: string;
+  note: string;
+  items: Purchasable[];
+  selectedSlug: string;
+  onSelect: (item: Purchasable) => void;
+  discount: Discount | null;
+}) {
+  return (
+    <div className="mt-7 first:mt-5">
+      <div className="flex items-baseline gap-3">
+        <h3 className="font-mono text-xs uppercase tracking-[0.18em] text-electric">
+          {heading}
+        </h3>
+        <span className="text-xs text-muted-foreground">{note}</span>
+      </div>
+
+      <div className="mt-3 space-y-3">
+        {items.map((item) => {
+          const selected = item.slug === selectedSlug;
+          const total = applyDiscount(item.price, discount);
+          return (
+            <button
+              key={item.slug}
+              type="button"
+              onClick={() => onSelect(item)}
+              aria-pressed={selected}
+              className={cn(
+                "flex w-full items-center justify-between gap-4 rounded-2xl border p-5 text-left transition-all duration-300",
+                selected
+                  ? "glass-strong border-electric/50 shadow-glow"
+                  : "glass border-white/5 hover:border-white/15",
+              )}
+            >
+              <span className="min-w-0">
+                <span className="flex items-center gap-2">
+                  <span className="font-display font-semibold">{item.name}</span>
+                  {item.featured && (
+                    <span className="rounded-full bg-electric/15 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-electric">
+                      Popular
+                    </span>
+                  )}
+                </span>
+                <span className="mt-1 block truncate text-sm text-muted-foreground">
+                  {item.blurb}
+                </span>
+              </span>
+              <span className="shrink-0 text-right">
+                {discount && (
+                  <span className="block text-xs text-muted-foreground line-through">
+                    {item.price}€
+                  </span>
+                )}
+                <span className="font-display text-xl font-bold text-gradient">
+                  {formatAmount(total)}€
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -431,7 +483,7 @@ function SuccessPanel({ receipt }: { receipt: Receipt }) {
           Back to site
         </Link>
       </div>
-      <p className="mt-6 font-mono text-[11px] text-muted-foreground">Order {receipt.orderId}</p>
+      <p className="mt-6 font-mono text-xs text-muted-foreground">Order {receipt.orderId}</p>
     </div>
   );
 }

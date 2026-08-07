@@ -9,7 +9,7 @@ export function VouchesCTA() {
     <section id="vouches" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <Reveal>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Private Vouches</span>
+          <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Private Vouches</span>
           <h2 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">The proof is in the Discord.</h2>
           <p className="mt-4 text-muted-foreground">
             No staged testimonials here. Every vouch is written by a real client in our server —

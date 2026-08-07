@@ -13,6 +13,20 @@ describe("FreeUtility", () => {
     }
   });
 
+  it("is named Away Utility, never Away Free Utility or Away Setup", () => {
+    render(<FreeUtility />);
+    const text = document.body.textContent ?? "";
+    expect(text).toContain("Away Utility");
+    expect(text).not.toMatch(/Away Free Utility/);
+    expect(text).not.toMatch(/Away Setup/i);
+  });
+
+  it("presents itself as free with a Windows Tuning order", () => {
+    render(<FreeUtility />);
+    expect(screen.getByText(FREE_UTILITY.ctaCaption)).toBeInTheDocument();
+    expect(document.body.textContent).toMatch(/free with any .* order/i);
+  });
+
   it("links to the Discord server", () => {
     render(<FreeUtility />);
     expect(screen.getByRole("link", { name: /Get it on Discord/i })).toHaveAttribute(

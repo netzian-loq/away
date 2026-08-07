@@ -66,7 +66,7 @@ export function Hero() {
 
       <a
         href="#services-teaser"
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 text-muted-foreground/60 hover:text-electric"
+        className="absolute bottom-3 left-1/2 grid h-11 w-11 -translate-x-1/2 place-items-center text-muted-foreground/60 hover:text-electric"
         aria-label="Scroll to services"
       >
         <ChevronDown className="h-6 w-6 animate-bounce" />

@@ -27,7 +27,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Away Tweaks Discord"
-              className="glass mt-5 grid h-9 w-9 place-items-center rounded-lg hover:border-electric/50 hover:text-electric"
+              className="glass mt-5 grid h-11 w-11 place-items-center rounded-lg hover:border-electric/50 hover:text-electric sm:h-9 sm:w-9"
             >
               <Disc className="h-4 w-4" />
             </a>
@@ -38,7 +38,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {SITE.nav.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="hover:text-electric">
+                  <Link href={item.href} className="tap-target hover:text-electric">
                     {item.label}
                   </Link>
                 </li>
@@ -51,7 +51,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               {SERVICES.map((service) => (
                 <li key={service.slug}>
-                  <Link href="/services" className="hover:text-electric">
+                  <Link href="/services" className="tap-target hover:text-electric">
                     {service.title}
                   </Link>
                 </li>
@@ -65,9 +65,9 @@ export function Footer() {
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </div>
           <div className="flex items-center gap-5">
-            <Link href="/services" className="hover:text-electric">Services</Link>
-            <Link href="/#pricing" className="hover:text-electric">Pricing</Link>
-            <Link href="/contact" className="hover:text-electric">Contact</Link>
+            <Link href="/services" className="tap-target hover:text-electric">Services</Link>
+            <Link href="/#pricing" className="tap-target hover:text-electric">Pricing</Link>
+            <Link href="/contact" className="tap-target hover:text-electric">Contact</Link>
           </div>
         </div>
       </div>

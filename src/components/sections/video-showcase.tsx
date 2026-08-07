@@ -4,6 +4,8 @@ import { useRef } from "react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { ScrollScale } from "@/components/motion/scroll-scale";
+import { VideoFacade } from "@/components/motion/video-facade";
+import { useCoarsePointer } from "@/lib/use-coarse-pointer";
 import { useYouTubeLoopPlayer } from "@/lib/use-youtube-loop-player";
 
 const VIDEO_ID = "YdQl1PbTqRs";
@@ -12,8 +14,17 @@ const END = 75;
 
 export function VideoShowcase() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const coarse = useCoarsePointer();
 
-  useYouTubeLoopPlayer(containerRef, { videoId: VIDEO_ID, start: START, end: END });
+  // The silent autoplay loop is a desktop flourish. On touch it would cost a
+  // couple of megabytes and constant video decode for something nobody asked
+  // to watch, so phones get a tappable poster instead.
+  useYouTubeLoopPlayer(containerRef, {
+    videoId: VIDEO_ID,
+    start: START,
+    end: END,
+    enabled: coarse === false,
+  });
 
   return (
     <section className="relative py-20 sm:py-28">
@@ -36,8 +47,17 @@ export function VideoShowcase() {
         <ScrollScale className="relative overflow-hidden rounded-2xl">
           <div className="relative overflow-hidden rounded-2xl border border-electric/20 bg-black shadow-2xl">
             <div className="relative aspect-video w-full">
-              <div ref={containerRef} className="pointer-events-none absolute inset-0 h-full w-full" />
-              <div className="absolute inset-0 z-10 cursor-default" aria-hidden="true" />
+              {coarse ? (
+                <VideoFacade videoId={VIDEO_ID} title="AwayOS in action" start={START} />
+              ) : (
+                <>
+                  <div
+                    ref={containerRef}
+                    className="pointer-events-none absolute inset-0 h-full w-full"
+                  />
+                  <div className="absolute inset-0 z-10 cursor-default" aria-hidden="true" />
+                </>
+              )}
             </div>
           </div>
         </ScrollScale>

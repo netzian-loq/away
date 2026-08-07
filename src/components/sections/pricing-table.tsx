@@ -10,7 +10,7 @@ export function PricingTable() {
     <section id="pricing" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-electric">Discount Packages</span>
+          <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Discount Packages</span>
           <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
             <MaskReveal as="span" innerClassName="text-gradient">
               Bundles that save you more.
@@ -28,7 +28,7 @@ export function PricingTable() {
                 }`}
               >
                 {tier.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-electric to-cyan-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-background">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-electric to-cyan-accent px-3 py-1 text-xs font-semibold uppercase tracking-wider text-background">
                     Most popular
                   </span>
                 )}
@@ -44,7 +44,7 @@ export function PricingTable() {
                   ))}
                 </ul>
                 <Link
-                  href={`/checkout?tier=${tier.slug}`}
+                  href={`/checkout?item=${tier.slug}`}
                   className={buttonVariants({
                     variant: tier.featured ? "primary" : "outline",
                     className: "mt-7 w-full",
