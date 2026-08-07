@@ -34,7 +34,7 @@ describe("CATALOG", () => {
   it("still carries the bundle prices", () => {
     expect(findPurchasable("standard")?.price).toBe(35);
     expect(findPurchasable("pro-level")?.price).toBe(65);
-    expect(findPurchasable("extreme-level")?.price).toBe(90);
+    expect(findPurchasable("extreme-level")?.price).toBe(95);
   });
 
   it("never disagrees with the source content on price", () => {

@@ -63,7 +63,7 @@ describe("POST /api/paypal/create-order", () => {
 
   it("ignores any price the client tries to send", async () => {
     await POST(post({ tier: "extreme-level", price: 1, amount: "1.00", total: 1 }));
-    expect(createPayPalOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: "90.00" }));
+    expect(createPayPalOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: "95.00" }));
   });
 
   it("ignores unknown discount codes instead of trusting them", async () => {

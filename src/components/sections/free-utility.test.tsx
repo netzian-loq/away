@@ -21,10 +21,10 @@ describe("FreeUtility", () => {
     expect(text).not.toMatch(/Away Setup/i);
   });
 
-  it("presents itself as free with a Windows Tuning order", () => {
+  it("presents itself as free outright, not free with a purchase", () => {
     render(<FreeUtility />);
     expect(screen.getByText(FREE_UTILITY.ctaCaption)).toBeInTheDocument();
-    expect(document.body.textContent).toMatch(/free with any .* order/i);
+    expect(document.body.textContent).not.toMatch(/free with any .* order/i);
   });
 
   it("links to the Discord server", () => {

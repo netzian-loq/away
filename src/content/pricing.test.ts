@@ -10,7 +10,7 @@ describe("PRICING_TIERS", () => {
       "Entry Level": 45,
       "High Entry Level": 52,
       "Pro Level": 65,
-      "Extreme Level": 90,
+      "Extreme Level": 95,
     });
   });
 

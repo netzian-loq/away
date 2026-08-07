@@ -27,9 +27,9 @@ describe("ServicesFull", () => {
     }
   });
 
-  it("renders Windows Tuning's product screenshots", () => {
+  it("shows no placeholder screenshots", () => {
     render(<ServicesFull />);
     expect(screen.queryByText(/placeholder/i)).not.toBeInTheDocument();
-    expect(document.querySelectorAll("figure")).toHaveLength(2);
+    expect(document.querySelector("figure")).toBeNull();
   });
 });

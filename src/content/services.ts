@@ -46,18 +46,9 @@ export const SERVICES: Service[] = [
     ],
     highlight:
       "Combines our Custom Gaming OS and Windows Tweaks into one package — same flat price. Includes Away Utility for drivers, tweaks, game fixes and wallpapers.",
-    images: [
-      {
-        src: "/awayos-desktop.svg",
-        alt: "AwayOS custom gaming OS desktop — clean, dark, distraction-free interface",
-        caption: "AwayOS desktop — clean, dark, distraction-free",
-      },
-      {
-        src: "/awayos-setup.svg",
-        alt: "Away Utility — the free PC tweaking and optimization tool included with every Windows Tuning order",
-        caption: "Built-in Away Utility",
-      },
-    ],
+    // `images` is intentionally unset until real screenshots exist — the
+    // component still renders them, so dropping a couple of files in and
+    // listing them here is all it takes.
   },
   {
     slug: "gpu-overclocking",

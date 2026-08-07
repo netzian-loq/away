@@ -21,10 +21,10 @@ Away Tweaks is a private PC tuning and optimization service for competitive play
 Every service above can be bought on its own, or as part of a bundle below. Payment is by PayPal or SEPA bank transfer directly on the site.
 
 ## Discount bundles
-- Standard 35€ (Windows + BIOS), Entry Level 45€ (+ GPU OC), High Entry 52€ (+ CPU OC), Pro 65€ (CPU + GPU OC), Extreme 90€ (CPU + GPU + RAM OC).
+- Standard 35€ (Windows + BIOS), Entry Level 45€ (+ GPU OC), High Entry 52€ (+ CPU OC), Pro 65€ (CPU + GPU OC), Extreme 95€ (CPU + GPU + RAM OC).
 
 ## Free software
-- Away Utility: a free PC control panel — live CPU/GPU/RAM monitoring, one-click tweaks, debloat and privacy controls, driver/network/GPU tools, game fixes and wallpapers. Included free with any Windows Tuning order.
+- Away Utility: a free PC control panel — live CPU/GPU/RAM monitoring, one-click tweaks, debloat and privacy controls, driver/network/GPU tools, game fixes and wallpapers. Completely free, no purchase required. Available from the Discord server.
 
 ## Contact
 - Email: Mattiaarminante77@gmail.com

@@ -41,7 +41,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     slug: "extreme-level",
     name: "Extreme Level",
-    price: 90,
+    price: 95,
     description: "Maximum performance with full CPU, GPU and RAM overclocking.",
     features: ["Windows Tuning", "BIOS Tuning", "CPU Overclocking", "GPU Overclocking", "RAM Overclocking"],
   },

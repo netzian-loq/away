@@ -15,9 +15,15 @@ describe("SERVICES", () => {
     });
   });
 
-  it("gives Windows Tuning its two product screenshots", () => {
-    const windowsTuning = SERVICES.find((s) => s.title === "Windows Tuning");
-    expect(windowsTuning?.images).toHaveLength(2);
+  it("ships no placeholder screenshots", () => {
+    // The `images` field still exists and still renders — it's just empty
+    // until real screenshots replace the placeholders that used to be here.
+    for (const service of SERVICES) {
+      for (const image of service.images ?? []) {
+        expect(image.src).not.toMatch(/awayos-(desktop|setup)\.svg/);
+        expect(image.caption).not.toMatch(/placeholder/i);
+      }
+    }
   });
 
   it("every service has at least one feature bullet", () => {
