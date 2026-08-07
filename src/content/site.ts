@@ -17,28 +17,23 @@ export const SITE = {
   email: "Mattiaarminante77@gmail.com",
   discordServerUrl: "https://discord.gg/saKde8DD9",
   discordVouchesUrl: "https://discord.gg/29Swpe8rM",
-  /**
-   * Where buyers open a ticket after paying — linked from the receipt email.
-   * PLACEHOLDER: not yet confirmed with the site owner, do not ship as-is.
-   */
-  discordSupportUrl: "PLACEHOLDER_CONFIRM_DISCORD_SUPPORT_URL",
+  /** Where buyers open a ticket after paying — linked from the receipt email. */
+  discordSupportUrl: "https://discord.gg/md6hAnSrBE",
   /**
    * PayPal.Me handle, used as the manual fallback on /checkout until the
    * PayPal API credentials are set (see .env.local.example).
-   * PLACEHOLDER: not yet confirmed with the site owner, do not ship as-is.
    */
-  paypalMeHandle: "PLACEHOLDER_CONFIRM_PAYPAL_HANDLE",
+  paypalMeHandle: "CarmelaBazzi",
   /**
    * Bank transfer details shown on /checkout.
    *
    * `accountHolder` MUST match the name on the account exactly — most banking
    * apps (and SEPA's Verification of Payee check) compare it against the IBAN
    * and warn or reject the transfer on a mismatch.
-   * PLACEHOLDER: not yet confirmed with the site owner, do not ship as-is.
    */
   bank: {
-    accountHolder: "PLACEHOLDER_CONFIRM_ACCOUNT_HOLDER",
-    iban: "PLACEHOLDER_CONFIRM_IBAN",
+    accountHolder: "Carmela Bazzi",
+    iban: "IT52G3608105138219694619732",
   },
   stats: [
     { value: 40, suffix: "+", label: "Rigs tuned" },
