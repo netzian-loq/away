@@ -29,20 +29,3 @@ export interface OrderRecord {
   buyerEmail: string;
   discord: string;
 }
-
-/** Column order for the CSV — also the header row. */
-export const ORDER_CSV_COLUMNS: (keyof OrderRecord)[] = [
-  "createdAt",
-  "id",
-  "status",
-  "source",
-  "tierName",
-  "amount",
-  "currency",
-  "discountCode",
-  "partner",
-  "commissionRate",
-  "commission",
-  "buyerEmail",
-  "discord",
-];

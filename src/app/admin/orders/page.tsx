@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { AlertTriangle, FolderOpen } from "lucide-react";
+import { AlertTriangle, Database } from "lucide-react";
 import { AdminLogin } from "@/components/admin/admin-login";
 import { OrdersTable } from "@/components/admin/orders-table";
 import { adminLogout } from "@/actions/admin";
 import { DISCOUNTS, findPartner } from "@/lib/discounts";
 import { isAdminConfigured, isSignedIn } from "@/lib/admin-auth";
-import { listOrders, ordersDir } from "@/lib/orders/store";
+import { listOrders } from "@/lib/orders/store";
 import { summariseOrders } from "@/lib/orders/summary";
 import type { OrderRecord } from "@/lib/orders/types";
 
@@ -64,8 +64,8 @@ export default async function AdminOrdersPage() {
         <div>
           <h1 className="font-display text-2xl font-bold text-gradient">Orders</h1>
           <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <FolderOpen className="h-3.5 w-3.5" aria-hidden="true" />
-            <span className="break-all font-mono">{ordersDir()}</span>
+            <Database className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="font-mono">Neon Postgres</span>
           </p>
         </div>
         <form action={adminLogout}>
@@ -85,8 +85,8 @@ export default async function AdminOrdersPage() {
             Couldn&apos;t read the ledger
           </div>
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            {readError}. On a serverless host (Vercel) there is no persistent disk — see the notes
-            in <code className="font-mono">.env.local.example</code>.
+            {readError}. Check that <code className="font-mono">DATABASE_URL</code> is set for
+            this environment.
           </p>
         </div>
       )}
