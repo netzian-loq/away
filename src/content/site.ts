@@ -15,7 +15,7 @@ export const SITE = {
   description:
     "Private, professional PC optimization for competitive gamers — custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
   email: "Mattiaarminante77@gmail.com",
-  discordServerUrl: "https://discord.gg/saKde8DD9",
+  discordServerUrl: "https://discord.gg/w9EzVaN9UZ",
   discordVouchesUrl: "https://discord.gg/29Swpe8rM",
   /** Where buyers open a ticket after paying — linked from the receipt email. */
   discordSupportUrl: "https://discord.gg/md6hAnSrBE",

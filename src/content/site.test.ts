@@ -4,7 +4,7 @@ import { SITE } from "./site";
 describe("SITE", () => {
   it("preserves the exact contact information", () => {
     expect(SITE.email).toBe("Mattiaarminante77@gmail.com");
-    expect(SITE.discordServerUrl).toBe("https://discord.gg/saKde8DD9");
+    expect(SITE.discordServerUrl).toBe("https://discord.gg/w9EzVaN9UZ");
     expect(SITE.discordVouchesUrl).toBe("https://discord.gg/29Swpe8rM");
   });
 

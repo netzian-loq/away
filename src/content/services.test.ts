@@ -26,12 +26,6 @@ describe("SERVICES", () => {
     }
   });
 
-  it("every service has at least one feature bullet", () => {
-    for (const service of SERVICES) {
-      expect(service.features.length).toBeGreaterThan(0);
-    }
-  });
-
   it("gives every service a slug that checkout can price", () => {
     for (const service of SERVICES) {
       expect(service.slug).toMatch(/^[a-z0-9-]+$/);
@@ -48,5 +42,11 @@ describe("SERVICES", () => {
     expect(copy).toContain("Away Utility");
     expect(copy).not.toMatch(/Away Free Utility/);
     expect(copy).not.toMatch(/Away Setup/i);
+  });
+
+  it("every service has at least one feature bullet", () => {
+    for (const service of SERVICES) {
+      expect(service.features.length).toBeGreaterThan(0);
+    }
   });
 });

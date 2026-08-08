@@ -62,24 +62,28 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
   const [tier, setTier] = useState<Purchasable>(
     () => findPurchasable(initialTier) ?? DEFAULT_PURCHASE,
   );
-  const [codeInput, setCodeInput] = useState(initialCode.toUpperCase());
   const [discord, setDiscord] = useState("");
   const [sdkReady, setSdkReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
 
-  const discount = findDiscount(codeInput);
+  // Partner discounts arrive in the URL and nowhere else. There is no code
+  // box: one would advertise the existence of a discount to every visitor
+  // (and its placeholder used to spell the code out), letting anyone who
+  // arrived through the front door claim a partner's rate. Reaching this page
+  // with `?code=` means following the link the partner shared.
+  const discount = findDiscount(initialCode);
   const total = applyDiscount(tier.price, discount);
   const saving = Math.round((tier.price - total) * 100) / 100;
 
   // PayPal's Buttons are rendered once and are expensive to tear down, so the
   // live selection is mirrored into a ref that createOrder reads at click
-  // time — that way changing package or code never needs a re-render.
-  const orderRef = useRef({ tier: tier.slug, code: codeInput, discord });
+  // time — that way changing package never needs a re-render.
+  const orderRef = useRef({ tier: tier.slug, code: discount?.code ?? "", discord });
   useEffect(() => {
-    orderRef.current = { tier: tier.slug, code: codeInput, discord };
-  }, [tier, codeInput, discord]);
+    orderRef.current = { tier: tier.slug, code: discount?.code ?? "", discord };
+  }, [tier, discount, discord]);
 
   // Set on page load, not when the bank panel mounts — see BankTransfer.
   const startedAtRef = useRef(0);
@@ -201,27 +205,20 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
           <div className="glass-strong rounded-3xl border border-white/10 p-6">
             <h2 className="font-display text-lg font-semibold">2. Pay</h2>
 
-            <label className="mt-5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Discount code
-            </label>
-            <div className="mt-2 flex items-center gap-2">
-              <Tag className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-              <input
-                value={codeInput}
-                onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
-                placeholder="COSMO10"
-                aria-label="Discount code"
-                className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 font-mono text-sm tracking-wider outline-none transition-colors focus:border-electric/60"
-              />
-            </div>
-            {codeInput.trim() !== "" && (
-              <p
-                className={cn("mt-2 text-xs", discount ? "text-cyan-accent" : "text-muted-foreground")}
-              >
-                {discount
-                  ? `${discount.partnerLabel} — ${discount.percentOff}% off applied.`
-                  : "That code isn't recognised."}
-              </p>
+            {/* Shown only to visitors who followed a partner link. Everyone
+                else sees no mention of a discount at all. */}
+            {discount && (
+              <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-cyan-accent/30 bg-cyan-accent/[0.07] p-3">
+                <Tag className="mt-0.5 h-4 w-4 shrink-0 text-cyan-accent" aria-hidden="true" />
+                <div className="text-xs leading-relaxed">
+                  <div className="font-semibold text-cyan-accent">
+                    {discount.partnerLabel} — {discount.percentOff}% off applied
+                  </div>
+                  <div className="mt-0.5 text-muted-foreground">
+                    Your partner discount is already on this order.
+                  </div>
+                </div>
+              </div>
             )}
 
             <label className="mt-5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
