@@ -1,76 +1,95 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
-import { Reveal } from "@/components/motion/reveal";
-import { Counter } from "@/components/motion/counter";
 import { SITE } from "@/content/site";
 
+/**
+ * Asymmetric 7/5 split rather than the centred stack this used to be.
+ *
+ * The old version put the logo, an H1 that just said "Away Tweaks.", a generic
+ * subhead and four glass stat cards down the middle of the page — the exact
+ * shape of every AI-generated hero. Nothing about it argued for the service.
+ *
+ * This one leads with the claim the whole business rests on (your hardware is
+ * fine, the software is what's slow), states concretely what a session does,
+ * and demotes the numbers to a quiet typographic rail on the right where they
+ * support the claim instead of competing with it.
+ */
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-32 pb-24">
-      {/* No opaque background layer here on purpose — the sitewide
-          AmbientBackground (rendered once in the root layout) shows through
-          behind Hero the same way it does on the rest of the page. Just a
-          light grid texture on top of it. */}
+    <section className="relative flex min-h-screen items-center overflow-hidden pt-36 pb-24">
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
+        <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_30%_40%,black_20%,transparent_70%)]" />
       </div>
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <div className="flex flex-col items-center text-center">
-          <Reveal>
-            <span className="inline-grid h-24 w-24 place-items-center overflow-hidden rounded-3xl ring-1 ring-electric/40 shadow-glow sm:h-32 sm:w-32">
-              <Image src="/logo.png" alt="Away Tweaks" width={1024} height={1024} className="h-full w-full object-cover" />
+        <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
+          {/* 7 of 12 — the argument. */}
+          <div className="lg:col-span-7">
+            <span className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
+              PC optimization · booked on Discord
             </span>
-          </Reveal>
 
-          <Reveal delay={0.1}>
-            <h1 className="mt-8 font-display text-[clamp(2.5rem,8vw,6rem)] font-bold leading-[0.95] tracking-tight">
-              <span className="text-gradient">Away Tweaks.</span>
+            {/* Deliberately about the reader's problem, not the method. The
+                Manifesto section directly below already opens with "Your rig
+                is capable of more. We strip Windows down to the metal…" — an
+                earlier draft of this headline made the same argument in the
+                same words one scroll earlier. The hero states the pain; the
+                manifesto answers it. */}
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,7vw,5.25rem)] leading-[0.95] font-bold tracking-[-0.03em] text-balance">
+              Stop losing fights to your own PC.
             </h1>
-          </Reveal>
 
-          <Reveal delay={0.2}>
-            <p className="mt-7 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-              Professional PC optimization for maximum gaming performance. FPS boost, latency
-              reduction, and system tweaks engineered for competitive play.
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-pretty text-muted-foreground sm:text-lg">
+              A one-to-one tuning session for competitive players. You keep your install, every
+              change is backed up and reversible, and nothing is signed off until it has held
+              stable under load.
             </p>
-          </Reveal>
 
-          <Reveal delay={0.3}>
-            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
-              <Link href="/contact" className={buttonVariants({ size: "lg" })}>
-                Contact now <ArrowRight className="h-4 w-4" />
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <Link href="/checkout" className={buttonVariants({ size: "lg" })}>
+                See packages and prices <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/services" className={buttonVariants({ size: "lg", variant: "outline" })}>
-                View PRO tweaks
+              <Link
+                href="/contact"
+                className="tap-target text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline sm:ml-2"
+              >
+                Or tell us your specs first
               </Link>
             </div>
-          </Reveal>
+          </div>
 
-          <Reveal delay={0.4}>
-            <div className="mt-20 grid w-full max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-6">
+          {/* 5 of 12 — supporting evidence, deliberately quieter. */}
+          <div className="lg:col-span-5 lg:pl-10">
+            <span className="inline-grid h-16 w-16 place-items-center overflow-hidden rounded-2xl ring-1 ring-white/10">
+              <Image
+                src="/logo.png"
+                alt="Away Tweaks"
+                width={1024}
+                height={1024}
+                className="h-full w-full object-cover"
+                priority
+                fetchPriority="high"
+              />
+            </span>
+
+            {/* A rule-separated list, not a card grid. No count-up: the numbers
+                are the point, the animation was decoration. */}
+            <dl className="mt-8 divide-y divide-white/8 border-y border-white/8">
               {SITE.stats.map((stat) => (
-                <div key={stat.label} className="glass spotlight-card rounded-2xl border border-white/5 p-4 text-center sm:p-5">
-                  <div className="font-display text-2xl font-bold text-gradient sm:text-3xl">
-                    <Counter to={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground sm:text-sm">{stat.label}</div>
+                <div key={stat.label} className="flex items-baseline justify-between gap-6 py-4">
+                  <dt className="text-sm text-muted-foreground">{stat.label}</dt>
+                  <dd className="font-display text-2xl font-bold tabular-nums">
+                    {stat.value}
+                    <span className="text-muted-foreground">{stat.suffix}</span>
+                  </dd>
                 </div>
               ))}
-            </div>
-          </Reveal>
+            </dl>
+          </div>
         </div>
       </div>
-
-      <a
-        href="#services-teaser"
-        className="absolute bottom-3 left-1/2 grid h-11 w-11 -translate-x-1/2 place-items-center text-muted-foreground/60 hover:text-electric"
-        aria-label="Scroll to services"
-      >
-        <ChevronDown className="h-6 w-6 animate-bounce" />
-      </a>
     </section>
   );
 }

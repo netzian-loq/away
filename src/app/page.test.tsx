@@ -9,7 +9,9 @@ describe("HomePage", () => {
       ...screen.getAllByRole("heading", { level: 1 }),
       ...screen.getAllByRole("heading", { level: 2 }),
     ];
-    const heroIndex = headings.findIndex((h) => h.textContent === "Away Tweaks.");
+    const heroIndex = headings.findIndex((h) =>
+      /Stop losing fights to your own PC/i.test(h.textContent ?? ""),
+    );
     const pricingIndex = headings.findIndex((h) => h.textContent === "Bundles that save you more.");
     expect(heroIndex).toBeGreaterThanOrEqual(0);
     expect(pricingIndex).toBeGreaterThan(heroIndex);

@@ -4,10 +4,11 @@ import { CheckoutClient } from "@/components/checkout/checkout-client";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { SITE } from "@/content/site";
 import { generateOrderReference } from "@/lib/order-reference";
+import { isStripeConfigured } from "@/lib/stripe";
 
 const TITLE = "Checkout";
 const DESCRIPTION =
-  "Pick your Away Tweaks optimization package and pay securely with PayPal — no ticket needed.";
+  "Pick your Away Tweaks optimization package and pay securely by card, PayPal or bank transfer — no ticket needed.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -45,8 +46,8 @@ export default async function CheckoutPage({
               Get optimized
             </h1>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              Choose a package, apply your partner code, and pay with PayPal. We&apos;ll email your
-              receipt and pick it up from there on Discord.
+              Choose a package, apply your partner code, and pay by card, PayPal or bank transfer.
+              We&apos;ll email your receipt and pick it up from there on Discord.
             </p>
           </Reveal>
         </div>
@@ -60,6 +61,7 @@ export default async function CheckoutPage({
             initialTier={first(params.item) || first(params.tier)}
             initialCode={first(params.code)}
             reference={generateOrderReference()}
+            stripeEnabled={isStripeConfigured()}
           />
         </div>
       </section>

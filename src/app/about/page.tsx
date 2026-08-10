@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
-import { Counter } from "@/components/motion/counter";
 import { buttonVariants } from "@/components/ui/button";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { ABOUT } from "@/content/about";
@@ -65,16 +64,22 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Same rule-separated treatment as the hero: no glass cards, no
+          count-up. The numbers read the same whether or not you happened to
+          be looking when they scrolled into view. */}
       <section className="relative py-16">
-        <div className="mx-auto grid max-w-3xl grid-cols-2 gap-3 px-4 sm:grid-cols-4 sm:gap-6 sm:px-6">
-          {SITE.stats.map((stat) => (
-            <div key={stat.label} className="glass rounded-2xl border border-white/5 p-5 text-center">
-              <div className="font-display text-2xl font-bold text-gradient sm:text-3xl">
-                <Counter to={stat.value} suffix={stat.suffix} />
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <dl className="grid grid-cols-2 gap-x-10 border-y border-white/8 sm:grid-cols-4">
+            {SITE.stats.map((stat) => (
+              <div key={stat.label} className="py-6">
+                <dd className="font-display text-3xl font-bold tabular-nums">
+                  {stat.value}
+                  <span className="text-muted-foreground">{stat.suffix}</span>
+                </dd>
+                <dt className="mt-1 text-sm text-muted-foreground">{stat.label}</dt>
               </div>
-              <div className="mt-1 text-xs text-muted-foreground sm:text-sm">{stat.label}</div>
-            </div>
-          ))}
+            ))}
+          </dl>
         </div>
       </section>
 

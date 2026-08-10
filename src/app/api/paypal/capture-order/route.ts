@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       discountCode: discount?.code,
       discountSummary: describeDiscount(discount),
       discord: parsed.data.discord || undefined,
+      source: "PayPal",
     };
 
     // The money has already moved, so no mail failure may read as a failed

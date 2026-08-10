@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
-import Link from "next/link";
-import { AlertTriangle, ArrowRight, Check, Landmark, Loader2, ShieldCheck, Tag } from "lucide-react";
+import { AlertTriangle, ArrowRight, Loader2, ShieldCheck, Tag } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BankTransfer } from "@/components/checkout/bank-transfer";
+import { PurchaseSuccess, type PurchaseReceipt } from "@/components/checkout/purchase-success";
 import {
   BUNDLES,
   DEFAULT_PURCHASE,
@@ -38,26 +38,27 @@ declare global {
   }
 }
 
-interface Receipt {
-  orderId: string;
-  amount: string;
-  currency: string;
-  tierName: string;
-  buyerEmail: string;
-}
-
-type PaymentMethod = "paypal" | "bank";
+type PaymentMethod = "card" | "paypal" | "bank";
 
 interface CheckoutClientProps {
   initialTier: string;
   initialCode: string;
   /** Server-generated payment reference for the bank transfer path. */
   reference: string;
+  /** Whether STRIPE_SECRET_KEY is set — resolved on the server. */
+  stripeEnabled: boolean;
 }
 
-export function CheckoutClient({ initialTier, initialCode, reference }: CheckoutClientProps) {
+export function CheckoutClient({
+  initialTier,
+  initialCode,
+  reference,
+  stripeEnabled,
+}: CheckoutClientProps) {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-  const [method, setMethod] = useState<PaymentMethod>("paypal");
+  // Card is the default when it's available: it's the only path that takes a
+  // plain card without a PayPal account.
+  const [method, setMethod] = useState<PaymentMethod>(stripeEnabled ? "card" : "paypal");
 
   const [tier, setTier] = useState<Purchasable>(
     () => findPurchasable(initialTier) ?? DEFAULT_PURCHASE,
@@ -65,8 +66,9 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
   const [discord, setDiscord] = useState("");
   const [sdkReady, setSdkReady] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [receipt, setReceipt] = useState<PurchaseReceipt | null>(null);
 
   // Partner discounts arrive in the URL and nowhere else. There is no code
   // box: one would advertise the existence of a discount to every visitor
@@ -130,7 +132,11 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error ?? "Could not confirm the payment.");
-            setReceipt(result as Receipt);
+            setReceipt({
+              orderId: result.orderId,
+              tierName: result.tierName,
+              buyerEmail: result.buyerEmail,
+            });
           } catch (captureError) {
             setError(
               captureError instanceof Error
@@ -164,8 +170,44 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
     };
   }, [sdkReady, method]);
 
+  /**
+   * Hands off to Stripe's hosted page. The server derives the price from the
+   * catalog slug, so nothing about the amount travels from here.
+   *
+   * `redirecting` is never cleared on success — the tab is navigating away and
+   * clearing it would flash the button back to its idle label mid-redirect.
+   */
+  async function payWithCard() {
+    setError(null);
+    setRedirecting(true);
+    try {
+      const response = await fetch("/api/stripe/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tier: orderRef.current.tier,
+          code: orderRef.current.code,
+          discord: orderRef.current.discord,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Could not start the checkout.");
+      }
+      window.location.assign(data.url as string);
+    } catch (stripeError) {
+      console.error("[stripe] could not start checkout", stripeError);
+      setError(
+        stripeError instanceof Error
+          ? stripeError.message
+          : "Could not start the card checkout.",
+      );
+      setRedirecting(false);
+    }
+  }
+
   if (receipt) {
-    return <SuccessPanel receipt={receipt} />;
+    return <PurchaseSuccess receipt={receipt} />;
   }
 
   return (
@@ -252,37 +294,65 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
             <div
               role="tablist"
               aria-label="Payment method"
-              className="mt-6 grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1"
+              className={cn(
+                "mt-6 grid gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1",
+                stripeEnabled ? "grid-cols-3" : "grid-cols-2",
+              )}
             >
+              {/* Text only. Three tabs leave no room for an icon, and a
+                  landmark glyph beside "Bank transfer" was never carrying
+                  information the word didn't already. */}
               {(
                 [
-                  { id: "paypal", label: "PayPal" },
-                  { id: "bank", label: "Bank transfer" },
+                  { id: "card", label: "Card", enabled: stripeEnabled },
+                  { id: "paypal", label: "PayPal", enabled: true },
+                  { id: "bank", label: "Bank transfer", enabled: true },
                 ] as const
-              ).map((option) => (
-                <button
-                  key={option.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={method === option.id}
-                  onClick={() => setMethod(option.id)}
-                  className={cn(
-                    "flex min-h-11 items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300",
-                    method === option.id
-                      ? "bg-electric/20 text-foreground"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {option.id === "bank" && (
-                    <Landmark className="mr-1.5 inline h-3.5 w-3.5" aria-hidden="true" />
-                  )}
-                  {option.label}
-                </button>
-              ))}
+              )
+                .filter((option) => option.enabled)
+                .map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={method === option.id}
+                    onClick={() => setMethod(option.id)}
+                    className={cn(
+                      "flex min-h-11 items-center justify-center rounded-lg px-2 py-2 text-center text-sm font-medium transition-all duration-300",
+                      method === option.id
+                        ? "bg-electric/20 text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
             </div>
 
             <div className="mt-5">
-              {method === "bank" ? (
+              {method === "card" ? (
+                <button
+                  type="button"
+                  onClick={payWithCard}
+                  disabled={redirecting}
+                  className={buttonVariants({
+                    size: "lg",
+                    className: "w-full disabled:cursor-not-allowed disabled:opacity-60",
+                  })}
+                >
+                  {redirecting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                      Taking you to Stripe…
+                    </>
+                  ) : (
+                    <>
+                      Pay {formatAmount(total)}€ by card
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              ) : method === "bank" ? (
                 <BankTransfer
                   tier={tier}
                   amount={formatAmount(total)}
@@ -321,7 +391,9 @@ export function CheckoutClient({ initialTier, initialCode, reference }: Checkout
               <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-electric" aria-hidden="true" />
               {method === "bank"
                 ? "You pay from your own banking app — Away Tweaks never asks for your bank login or card details."
-                : "Payment is handled entirely by PayPal — Away Tweaks never sees your card details."}
+                : method === "card"
+                  ? "Your card is handled entirely on Stripe's own checkout page — Away Tweaks never sees your card details."
+                  : "Payment is handled entirely by PayPal — Away Tweaks never sees your card details."}
             </p>
           </div>
         </div>
@@ -452,35 +524,3 @@ function ManualPayPalFallback({ amount, tierName }: { amount: string; tierName: 
   );
 }
 
-function SuccessPanel({ receipt }: { receipt: Receipt }) {
-  return (
-    <div className="glass-strong mx-auto max-w-xl rounded-3xl border border-electric/30 p-10 text-center">
-      <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-electric/15 text-electric">
-        <Check className="h-7 w-7" aria-hidden="true" />
-      </span>
-      <h2 className="mt-6 font-display text-2xl font-bold text-gradient">Payment received</h2>
-      <p className="mt-4 leading-relaxed text-muted-foreground">
-        Thanks for purchasing the <span className="text-foreground">{receipt.tierName}</span>{" "}
-        package. A receipt is on its way
-        {receipt.buyerEmail ? ` to ${receipt.buyerEmail}` : ""}.
-      </p>
-      <p className="mt-4 text-sm text-muted-foreground">
-        Next step: open a ticket on our Discord and we&apos;ll get your session booked.
-      </p>
-      <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-        <a
-          href={SITE.discordSupportUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={buttonVariants({ size: "lg" })}
-        >
-          Open a ticket <ArrowRight className="h-4 w-4" />
-        </a>
-        <Link href="/" className={buttonVariants({ variant: "outline", size: "lg" })}>
-          Back to site
-        </Link>
-      </div>
-      <p className="mt-6 font-mono text-xs text-muted-foreground">Order {receipt.orderId}</p>
-    </div>
-  );
-}

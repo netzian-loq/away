@@ -1,13 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SITE } from "@/content/site";
 
 vi.mock("next/script", () => ({ default: () => null }));
 
 import { CheckoutClient } from "./checkout-client";
 
-const PROPS = { initialTier: "pro-level", initialCode: "COSMO10", reference: "AWAY-K7P2QM" };
+const PROPS = {
+  initialTier: "pro-level",
+  initialCode: "COSMO10",
+  reference: "AWAY-K7P2QM",
+  stripeEnabled: false,
+};
 
 // With no NEXT_PUBLIC_PAYPAL_CLIENT_ID in the test env, the component renders
 // the PayPal.Me path — the one that's actually live today.
@@ -46,7 +51,12 @@ describe("CheckoutClient (manual PayPal path)", () => {
 });
 
 describe("CheckoutClient partner discount gating", () => {
-  const direct = { initialTier: "pro-level", initialCode: "", reference: "AWAY-K7P2QM" };
+  const direct = {
+    initialTier: "pro-level",
+    initialCode: "",
+    reference: "AWAY-K7P2QM",
+    stripeEnabled: false,
+  };
 
   it("never mentions a discount to someone who arrived without a partner link", () => {
     render(<CheckoutClient {...direct} />);
@@ -92,5 +102,79 @@ describe("CheckoutClient partner discount gating", () => {
   it("accepts the code however the link cased it", () => {
     render(<CheckoutClient {...direct} initialCode=" cosmo10 " />);
     expect(screen.getByText(/Cosmo eSports — 10% off applied/i)).toBeInTheDocument();
+  });
+});
+
+describe("CheckoutClient card path (Stripe)", () => {
+  const withStripe = { ...PROPS, stripeEnabled: true };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("hides the card tab entirely when Stripe isn't configured", () => {
+    render(<CheckoutClient {...PROPS} />);
+    expect(screen.queryByRole("tab", { name: /^Card$/i })).not.toBeInTheDocument();
+  });
+
+  it("defaults to card when Stripe is configured", () => {
+    render(<CheckoutClient {...withStripe} />);
+    expect(screen.getByRole("tab", { name: /^Card$/i })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  });
+
+  it("names the discounted amount on the pay button", () => {
+    render(<CheckoutClient {...withStripe} />);
+    expect(screen.getByRole("button", { name: /Pay 58\.50€ by card/i })).toBeInTheDocument();
+  });
+
+  it("sends the slug and code — never a price — then redirects to Stripe", async () => {
+    const user = userEvent.setup();
+    const assign = vi.fn();
+    vi.stubGlobal("location", { assign });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ id: "cs_test_1", url: "https://checkout.stripe.com/c/pay/cs_test_1" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<CheckoutClient {...withStripe} />);
+    await user.click(screen.getByRole("button", { name: /Pay 58\.50€ by card/i }));
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe("/api/stripe/create-session");
+    const sent = JSON.parse(init.body);
+    expect(sent).toEqual({ tier: "pro-level", code: "COSMO10", discord: "" });
+    // The browser must never get to name its own price.
+    expect(init.body).not.toMatch(/58\.50|amount|price/i);
+    expect(assign).toHaveBeenCalledWith("https://checkout.stripe.com/c/pay/cs_test_1");
+  });
+
+  it("surfaces the server's error and stays on the page", async () => {
+    const user = userEvent.setup();
+    const assign = vi.fn();
+    vi.stubGlobal("location", { assign });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        json: async () => ({ error: "Card payments aren't switched on yet." }),
+      }),
+    );
+
+    render(<CheckoutClient {...withStripe} />);
+    await user.click(screen.getByRole("button", { name: /Pay 58\.50€ by card/i }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Card payments aren't switched on yet.",
+    );
+    expect(assign).not.toHaveBeenCalled();
+  });
+
+  it("promises Stripe handles the card, not Away Tweaks", () => {
+    render(<CheckoutClient {...withStripe} />);
+    expect(screen.getByText(/never sees your card details/i)).toBeInTheDocument();
   });
 });

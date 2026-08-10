@@ -14,8 +14,12 @@ export const SITE = {
   url: "https://www.awaytweaks.com",
   description:
     "Private, professional PC optimization for competitive gamers — custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
-  email: "Mattiaarminante77@gmail.com",
-  discordServerUrl: "https://discord.gg/w9EzVaN9UZ",
+  // Lowercase deliberately. Resend's pre-domain-verification check ("you can
+  // only send to your own address") compares the recipient byte-for-byte
+  // against the account address, so a capitalised local part is rejected even
+  // though it's the same mailbox.
+  email: "mattiaarminante77@gmail.com",
+  discordServerUrl: "https://discord.gg/de5aXtGJ9a",
   discordVouchesUrl: "https://discord.gg/29Swpe8rM",
   /** Where buyers open a ticket after paying — linked from the receipt email. */
   discordSupportUrl: "https://discord.gg/md6hAnSrBE",

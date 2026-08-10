@@ -1,15 +1,18 @@
 /** One sale, as recorded the moment it happens. */
 export interface OrderRecord {
-  /** Bank transfer reference (AWAY-XXXXXX) or the PayPal order id. */
+  /**
+   * Bank transfer reference (AWAY-XXXXXX), the PayPal order id, or the Stripe
+   * Checkout session id (cs_…).
+   */
   id: string;
   /** ISO timestamp of when the order was placed. */
   createdAt: string;
-  source: "bank-transfer" | "paypal";
+  source: "bank-transfer" | "paypal" | "stripe";
   /**
-   * PayPal captures are money already moved, so they land as "paid".
-   * Bank transfers land as "pending" until the money is seen in the account
-   * and the order is marked paid on the dashboard — commission is only owed
-   * on paid orders.
+   * PayPal captures and completed Stripe sessions are money already moved, so
+   * they land as "paid". Bank transfers land as "pending" until the money is
+   * seen in the account and the order is marked paid on the dashboard —
+   * commission is only owed on paid orders.
    */
   status: "pending" | "paid";
   tierSlug: string;

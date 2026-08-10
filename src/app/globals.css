@@ -123,11 +123,6 @@ h1, h2, h3, h4, h5, h6 {
   background-size: 56px 56px;
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 /* Sitewide ambient purple wash — a few large, blurred, transform-only
    blobs behind all content. Cheap (GPU-composited translate, no layout
    or paint work per frame) even while animating. */

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Hero } from "@/components/sections/hero";
-import { TrustMarquee } from "@/components/sections/trust-marquee";
 import { Manifesto } from "@/components/sections/manifesto";
 import { VideoShowcase } from "@/components/sections/video-showcase";
 import { ServicesTeaser } from "@/components/sections/services-teaser";
@@ -28,7 +27,9 @@ export default function HomePage() {
     <>
       <JsonLd />
       <Hero />
-      <TrustMarquee />
+      {/* The keyword marquee that used to sit here was removed: an infinite
+          26s scroll of "FPS BOOST · LOW LATENCY · …" repeated the services
+          section's content as decoration, and never stopped moving. */}
       <Manifesto />
       <VideoShowcase />
       <ServicesTeaser />

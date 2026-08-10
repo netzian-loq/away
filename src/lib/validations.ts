@@ -28,8 +28,21 @@ export const captureOrderSchema = z.object({
   discord: z.string().trim().max(100).optional().or(z.literal("")),
 });
 
+/**
+ * Stripe hosted Checkout. Same rule as the PayPal path: a slug and an optional
+ * code go up, the server decides what that costs. The Discord handle rides
+ * along here (rather than being collected after payment) because the buyer
+ * leaves the site for Stripe's page and may never come back to it.
+ */
+export const createStripeSessionSchema = z.object({
+  tier: z.string().trim().min(1, "Choose a package").max(64),
+  code: z.string().trim().max(40).optional().or(z.literal("")),
+  discord: z.string().trim().max(100).optional().or(z.literal("")),
+});
+
 export type CreateOrderValues = z.infer<typeof createOrderSchema>;
 export type CaptureOrderValues = z.infer<typeof captureOrderSchema>;
+export type CreateStripeSessionValues = z.infer<typeof createStripeSessionSchema>;
 
 /**
  * Bank transfer order. Like the contact form this is an unauthenticated
