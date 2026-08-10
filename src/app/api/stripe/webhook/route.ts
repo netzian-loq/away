@@ -28,6 +28,34 @@ import type Stripe from "stripe";
  *
  * Because it retries, the handler has to be idempotent — see the guard below.
  */
+/**
+ * TEMPORARY diagnostic. Reports whether the runtime can see each secret, and a
+ * truncated SHA-256 of the webhook secret so it can be compared against the
+ * value in the Stripe dashboard without either side ever transmitting it.
+ *
+ * A 16-hex-character hash prefix of a 38-character random string is not
+ * reversible, so this leaks nothing usable — but it is still diagnostic
+ * scaffolding and should come out once the webhook is confirmed working.
+ */
+export async function GET() {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET ?? "";
+  const { createHash } = await import("node:crypto");
+
+  return Response.json({
+    webhookSecret: {
+      present: Boolean(secret),
+      length: secret.length,
+      fingerprint: secret ? createHash("sha256").update(secret).digest("hex").slice(0, 16) : null,
+      hasSurroundingWhitespace: secret !== secret.trim(),
+    },
+    stripeKeyPresent: Boolean(process.env.STRIPE_SECRET_KEY),
+    stripeKeyMode: (process.env.STRIPE_SECRET_KEY ?? "").slice(0, 8) || null,
+    resendKeyPresent: Boolean(process.env.RESEND_API_KEY),
+    resendFrom: process.env.RESEND_FROM ?? null,
+    databaseUrlPresent: Boolean(process.env.DATABASE_URL),
+  });
+}
+
 export async function POST(request: NextRequest) {
   const signature = request.headers.get("stripe-signature");
   if (!signature) {

@@ -213,8 +213,14 @@ export function constructWebhookEvent(rawBody: string, signature: string): Strip
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secret) throw new StripeConfigError();
 
+  // Built outside the try on purpose. stripeClient() throws StripeConfigError
+  // when STRIPE_SECRET_KEY is missing, and catching that below would report a
+  // configuration problem as "Invalid signature" — sending whoever debugs it
+  // hunting for a secret mismatch that doesn't exist.
+  const stripe = stripeClient();
+
   try {
-    return stripeClient().webhooks.constructEvent(rawBody, signature, secret);
+    return stripe.webhooks.constructEvent(rawBody, signature, secret);
   } catch (error) {
     // A bad signature is the caller's problem, not ours: 400, never 500.
     throw new StripeApiError(
