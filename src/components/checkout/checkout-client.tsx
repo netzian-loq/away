@@ -221,8 +221,19 @@ export function CheckoutClient({
         />
       )}
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_24rem] lg:gap-10">
-        <div>
+      {/* `minmax(0,1fr)` and `min-w-0`, not `1fr` and nothing.
+          ------------------------------------------------------------------
+          Grid items floor at `min-width: auto` — their min-content size — and
+          each package button holds a `truncate`d blurb, which is
+          `white-space: nowrap`, so its min-content is the *entire* sentence.
+          The longest one is about 1080px wide, which is what the column
+          inflated to: at any viewport narrower than that the panel laid out
+          past the right edge and `body { overflow-x: hidden }` quietly clipped
+          it, so the price, the total and the pay button were cut off with no
+          way to scroll to them. Letting the tracks shrink below min-content is
+          what lets the truncation do its job instead of dictating the layout. */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-10">
+        <div className="min-w-0">
           <h2 className="font-display text-lg font-semibold">1. Choose what you want</h2>
 
           <Group
@@ -243,8 +254,8 @@ export function CheckoutClient({
           />
         </div>
 
-        <div className="lg:sticky lg:top-28 lg:self-start">
-          <div className="glass-strong rounded-3xl border border-white/10 p-6">
+        <div className="min-w-0 lg:sticky lg:top-28 lg:self-start">
+          <div className="glass-strong rounded-3xl border border-white/10 p-5 sm:p-6">
             <h2 className="font-display text-lg font-semibold">2. Pay</h2>
 
             {/* Shown only to visitors who followed a partner link. Everyone
@@ -263,41 +274,50 @@ export function CheckoutClient({
               </div>
             )}
 
-            <label className="mt-5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <label
+              htmlFor="checkout-discord"
+              className="mt-5 block text-xs font-medium uppercase tracking-wider text-muted-foreground"
+            >
               Discord username <span className="normal-case">(so we can find you)</span>
             </label>
             <input
+              id="checkout-discord"
               value={discord}
               onChange={(event) => setDiscord(event.target.value)}
               placeholder="yourname"
-              aria-label="Discord username"
               className="mt-2 h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] px-3 text-sm outline-none transition-colors focus:border-electric/60"
             />
 
+            {/* Every row: `min-w-0 truncate` on the label, `shrink-0` on the
+                amount. The number is the thing the buyer is here to read, so
+                a long package name gives way to it rather than pushing it out
+                of the panel. */}
             <dl className="mt-6 space-y-2 border-t border-white/10 pt-5 text-sm">
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">{tier.name}</dt>
-                <dd>{formatAmount(tier.price)}€</dd>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="min-w-0 truncate text-muted-foreground">{tier.name}</dt>
+                <dd className="shrink-0">{formatAmount(tier.price)}€</dd>
               </div>
               {discount && (
-                <div className="flex items-center justify-between text-cyan-accent">
-                  <dt>{discount.code}</dt>
-                  <dd>−{formatAmount(saving)}€</dd>
+                <div className="flex items-center justify-between gap-3 text-cyan-accent">
+                  <dt className="min-w-0 truncate">{discount.code}</dt>
+                  <dd className="shrink-0">−{formatAmount(saving)}€</dd>
                 </div>
               )}
-              <div className="flex items-center justify-between border-t border-white/10 pt-3 font-display text-lg font-bold">
+              <div className="flex items-center justify-between gap-3 border-t border-white/10 pt-3 font-display text-lg font-bold">
                 <dt>Total</dt>
-                <dd className="text-gradient">{formatAmount(total)}€</dd>
+                <dd className="shrink-0 text-gradient">{formatAmount(total)}€</dd>
               </div>
             </dl>
 
+            {/* Wraps rather than dividing into fixed columns. Three equal
+                columns squeeze "Bank transfer" into a two-line sliver on a
+                narrow phone; with `flex-1 basis-24` the tabs stay side by side
+                while there's room and the third drops to its own full-width
+                row when there isn't. */}
             <div
               role="tablist"
               aria-label="Payment method"
-              className={cn(
-                "mt-6 grid gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1",
-                stripeEnabled ? "grid-cols-3" : "grid-cols-2",
-              )}
+              className="mt-6 flex flex-wrap gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1"
             >
               {/* Text only. Three tabs leave no room for an icon, and a
                   landmark glyph beside "Bank transfer" was never carrying
@@ -318,7 +338,7 @@ export function CheckoutClient({
                     aria-selected={method === option.id}
                     onClick={() => setMethod(option.id)}
                     className={cn(
-                      "flex min-h-11 items-center justify-center rounded-lg px-2 py-2 text-center text-sm font-medium transition-all duration-300",
+                      "flex min-h-11 flex-1 basis-24 items-center justify-center rounded-lg px-2 py-2 text-center text-sm font-medium transition-colors duration-300",
                       method === option.id
                         ? "bg-electric/20 text-foreground"
                         : "text-muted-foreground hover:text-foreground",
@@ -335,10 +355,13 @@ export function CheckoutClient({
                   type="button"
                   onClick={payWithCard}
                   disabled={redirecting}
-                  className={buttonVariants({
-                    size: "lg",
-                    className: "w-full disabled:cursor-not-allowed disabled:opacity-60",
-                  })}
+                  /* Tighter padding and type below `sm`: the label carries the
+                     amount, so it's the widest thing in the panel on a phone. */
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "w-full px-5 text-sm sm:px-7 sm:text-base",
+                    "disabled:cursor-not-allowed disabled:opacity-60",
+                  )}
                 >
                   {redirecting ? (
                     <>
@@ -348,7 +371,7 @@ export function CheckoutClient({
                   ) : (
                     <>
                       Pay {formatAmount(total)}€ by card
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4 shrink-0" />
                     </>
                   )}
                 </button>
@@ -503,9 +526,9 @@ function ManualPayPalFallback({ amount, tierName }: { amount: string; tierName: 
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={buttonVariants({ className: "w-full" })}
+        className={cn(buttonVariants(), "w-full px-4 sm:px-6")}
       >
-        Pay {amount}€ with PayPal <ArrowRight className="h-4 w-4" />
+        Pay {amount}€ with PayPal <ArrowRight className="h-4 w-4 shrink-0" />
       </a>
       <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
         You&apos;ll pay <span className="text-foreground/90">@{SITE.paypalMeHandle}</span> for the{" "}

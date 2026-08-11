@@ -218,8 +218,12 @@ function BankTransferReceipt({
           </dd>
         </div>
         <div className="flex justify-between gap-3">
-          <dt className="text-muted-foreground">To</dt>
-          <dd className="truncate font-mono">{SITE.bank.iban}</dd>
+          <dt className="shrink-0 text-muted-foreground">To</dt>
+          {/* `truncate` is `white-space: nowrap`, and a flex item's automatic
+              minimum is its min-content — so without `min-w-0` the IBAN's full
+              width becomes this row's floor and pushes the panel past the
+              viewport instead of being trimmed. */}
+          <dd className="min-w-0 truncate font-mono">{SITE.bank.iban}</dd>
         </div>
         <div className="flex justify-between gap-3">
           <dt className="text-muted-foreground">Reference</dt>

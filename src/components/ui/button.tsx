@@ -12,9 +12,16 @@ export const buttonVariants = cva(
         outline:
           "glass border border-white/15 text-foreground hover:border-electric/50 hover:bg-white/5",
       },
+      /**
+       * `min-h` plus padding, not a fixed `h`. A single-line label renders at
+       * exactly the same 44px / 48px as before, but a label that has to wrap —
+       * "Pay 128.50€ by card" in a narrow checkout column, a translated
+       * string, a long package name — grows the button instead of being
+       * clipped by it.
+       */
       size: {
-        default: "h-11 px-6 text-sm",
-        lg: "h-12 px-7 text-base",
+        default: "min-h-11 px-6 py-2.5 text-sm",
+        lg: "min-h-12 px-7 py-3 text-base",
       },
     },
     defaultVariants: { variant: "primary", size: "default" },
