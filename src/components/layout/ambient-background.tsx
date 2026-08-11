@@ -22,35 +22,36 @@ export function AmbientBackground() {
             "radial-gradient(120% 70% at 50% -10%, oklch(0.34 0.16 305 / 0.5) 0%, transparent 60%)",
         }}
       />
+      {/* The drift itself is declared in globals.css against `.aurora-a`…`-d`,
+          not inline here. Inline styles sit above the whole cascade, so while
+          the animation lived on the element nothing in the stylesheet could
+          pause it for a fast scroll or hold it still on a phone without
+          reaching for `!important`. */}
       <div
-        className="aurora-blob absolute -top-1/4 -left-1/4 h-[50rem] w-[50rem] rounded-full blur-3xl"
+        className="aurora-blob aurora-a absolute -top-1/4 -left-1/4 h-[50rem] w-[50rem] rounded-full blur-3xl"
         style={{
           background: "radial-gradient(circle, oklch(0.45 0.24 300 / 0.5) 0%, transparent 70%)",
-          animation: "aurora-drift-a 36s ease-in-out infinite",
         }}
       />
       <div
-        className="aurora-blob absolute top-1/3 -right-1/4 h-[46rem] w-[46rem] rounded-full blur-3xl"
+        className="aurora-blob aurora-b absolute top-1/3 -right-1/4 h-[46rem] w-[46rem] rounded-full blur-3xl"
         style={{
           background: "radial-gradient(circle, oklch(0.47 0.25 330 / 0.42) 0%, transparent 70%)",
-          animation: "aurora-drift-b 42s ease-in-out infinite",
         }}
       />
       <div
-        className="aurora-blob absolute -bottom-1/4 left-1/3 hidden h-[46rem] w-[46rem] rounded-full blur-3xl sm:block"
+        className="aurora-blob aurora-c absolute -bottom-1/4 left-1/3 hidden h-[46rem] w-[46rem] rounded-full blur-3xl sm:block"
         style={{
           background: "radial-gradient(circle, oklch(0.42 0.23 270 / 0.38) 0%, transparent 70%)",
-          animation: "aurora-drift-c 48s ease-in-out infinite",
         }}
       />
       {/* Fourth and third blobs are desktop-only: on a phone they overlap the
           other two almost entirely at that size, so they cost two more large
           blurred layers for a difference nobody can see. */}
       <div
-        className="aurora-blob absolute top-1/4 left-1/4 hidden h-[38rem] w-[38rem] rounded-full blur-3xl sm:block"
+        className="aurora-blob aurora-d absolute top-1/4 left-1/4 hidden h-[38rem] w-[38rem] rounded-full blur-3xl sm:block"
         style={{
           background: "radial-gradient(circle, oklch(0.5 0.22 315 / 0.28) 0%, transparent 70%)",
-          animation: "aurora-drift-b 54s ease-in-out infinite reverse",
         }}
       />
     </div>

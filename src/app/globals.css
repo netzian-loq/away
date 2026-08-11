@@ -72,6 +72,66 @@ h1, h2, h3, h4, h5, h6 {
   border: 1px solid color-mix(in oklab, white 10%, transparent);
 }
 
+/* Scroll-adaptive quality.
+   ------------------------------------------------------------------
+   The scroll engine puts `data-scroll="idle|moving|fast"` on <html>, and this
+   is what that attribute is for.
+
+   The home page carries ~22 `backdrop-filter` surfaces sitting over four
+   700–800px layers blurred by 64px. Backdrop blur can normally be rasterised
+   once and reused — but only while the backdrop holds still. Here the backdrop
+   drifts, so every one of those surfaces re-samples and re-blurs a changing
+   region on every frame, and a fast flick asks for all of it at once. That is
+   the stutter: not too many elements, one specific pile of per-frame GPU work.
+
+   So while the page is moving quickly the blur is dropped and the panels go a
+   few percent more opaque to compensate, the ambient drift is paused so the
+   backdrop is static, and the pointer-driven effects — which nobody is looking
+   at mid-flick — are switched off. Everything comes back the moment the page
+   settles, which is the only time any of it is legible anyway.
+
+   These rules sit outside `@layer`, so they win over the utilities above
+   regardless of source order. */
+html[data-scroll="fast"] .glass {
+  backdrop-filter: none;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, oklch(0.13 0.04 300) 95%, transparent),
+    color-mix(in oklab, oklch(0.13 0.04 300) 88%, transparent)
+  );
+}
+
+html[data-scroll="fast"] .glass-strong {
+  backdrop-filter: none;
+  background: color-mix(in oklab, oklch(0.11 0.038 300) 98%, transparent);
+}
+
+/* Pausing beats hiding: the blurred texture is kept, it just stops moving, so
+   the backdrop underneath the panels becomes cacheable again. */
+html[data-scroll="moving"] .aurora-blob,
+html[data-scroll="fast"] .aurora-blob {
+  animation-play-state: paused;
+}
+
+html[data-scroll="fast"] .spotlight-card::after {
+  opacity: 0;
+}
+
+/* A blended, full-viewport layer forces everything beneath it to be composited
+   as one group. Hidden rather than transparent — a 0-opacity layer is still
+   composited. */
+html[data-scroll="fast"] .cursor-glow {
+  visibility: hidden;
+}
+
+/* Scroll-scrubbed word reveal (see ScrollWordReveal). The opacity and lift are
+   written from JS; all this has to do is make the words transformable, since
+   `transform` doesn't apply to inline boxes. Rendering them at rest — no
+   opacity here — is what keeps the paragraph readable before hydration. */
+.word-reveal > span {
+  display: inline-block;
+}
+
 @utility text-gradient {
   background: linear-gradient(
     110deg,
@@ -139,8 +199,28 @@ h1, h2, h3, h4, h5, h6 {
   50% { transform: translate3d(6%, -6%, 0); }
 }
 
+/* The drift lives here rather than in inline styles on the elements, which is
+   what makes the three rules below able to switch it off at all: an inline
+   `animation` shorthand outranks any stylesheet rule, so the phone and
+   perf-lite cases used to need `!important` to land — and the shorthand, even
+   as `animation: none`, silently resets `animation-play-state` to `running`
+   and would outrank the scroll-phase pause. Named properties, in the cascade,
+   where they can be reasoned about. */
+.aurora-a {
+  animation: aurora-drift-a 36s ease-in-out infinite;
+}
+.aurora-b {
+  animation: aurora-drift-b 42s ease-in-out infinite;
+}
+.aurora-c {
+  animation: aurora-drift-c 48s ease-in-out infinite;
+}
+.aurora-d {
+  animation: aurora-drift-b 54s ease-in-out infinite reverse;
+}
+
 .perf-lite .aurora-blob {
-  animation: none;
+  animation-name: none;
 }
 
 /* Phones: hold the ambient wash still. Each blob is a ~700px layer with a
@@ -149,7 +229,7 @@ h1, h2, h3, h4, h5, h6 {
    smooth-scroll hijacking. The gradient itself stays; only the drift stops. */
 @media (max-width: 640px) {
   .aurora-blob {
-    animation: none !important;
+    animation-name: none;
   }
 }
 
@@ -177,5 +257,13 @@ h1, h2, h3, h4, h5, h6 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  /* The rule above only reaches CSS animation and transition. Anything driven
+     from a frame loop has to opt out itself, which is what `perf-lite` is for:
+     the inline script in the root layout sets it before first paint, and the
+     scroll engine reads it to skip Lenis and every scroll-linked effect. This
+     covers the last CSS-side piece — eased anchor jumps. */
+  html {
+    scroll-behavior: auto !important;
   }
 }

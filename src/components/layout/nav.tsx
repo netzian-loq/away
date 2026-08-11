@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE } from "@/content/site";
+import { scrollEngine } from "@/lib/scroll-engine";
 import { cn } from "@/lib/utils";
 
 export function Nav() {
@@ -14,20 +15,35 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Reads the shared engine rather than adding a second scroll listener, so
+  // the condensed state flips on the same frame as everything else.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    scrollEngine.mount();
+    return scrollEngine.subscribe(({ y }) => setScrolled(y > 24));
   }, []);
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-40 transition-all duration-500", scrolled ? "py-3" : "py-5")}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <header className="fixed inset-x-0 top-0 z-40 py-5">
+      {/* The condense used to animate the header's padding, which reflows the
+          bar on every frame of a 500ms transition each time the threshold is
+          crossed. An 8px lift reads identically and stays on the compositor.
+          It rides on the container so the open mobile menu travels with the
+          bar rather than drifting away from it. */}
+      <div
+        className={cn(
+          "mx-auto max-w-7xl px-4 transition-transform duration-500 sm:px-6",
+          scrolled && "-translate-y-2",
+        )}
+      >
+        {/* `backdrop-filter` and gradient backgrounds aren't interpolable, so
+            box-shadow is the only thing here that actually animates — naming
+            it stops the browser watching every other property for a change. */}
         <div
           className={cn(
-            "flex items-center justify-between rounded-2xl px-4 py-2.5 transition-all duration-500 sm:px-5",
-            scrolled ? "glass-strong shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]" : "bg-transparent",
+            "flex items-center justify-between rounded-2xl px-4 py-2.5 transition-shadow duration-500 sm:px-5",
+            scrolled
+              ? "glass-strong shadow-[0_8px_32px_-8px_rgba(0,0,0,0.5)]"
+              : "bg-transparent",
           )}
         >
           <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2.5">

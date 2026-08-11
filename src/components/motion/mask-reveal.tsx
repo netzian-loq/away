@@ -73,9 +73,13 @@ export function MaskReveal({
         verticalAlign: as === "span" ? "bottom" : undefined,
       }}
     >
+      {/* No `will-change` here. It was pinned on permanently, which holds a
+          compositor layer for the life of the page for an animation that runs
+          once; framer sets and — importantly — releases it around the actual
+          transition. */}
       <Inner
         className={innerClassName}
-        style={{ display: as === "span" ? "inline-block" : "block", willChange: "transform" }}
+        style={{ display: as === "span" ? "inline-block" : "block" }}
         variants={{ hidden: { y: TRAVEL }, visible: { y: "0%" } }}
         transition={{ duration, delay, ease: EASE }}
       >

@@ -5,6 +5,7 @@ import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { AmbientBackground } from "@/components/layout/ambient-background";
 import { CursorGlow } from "@/components/motion/cursor-glow";
+import { ScrollProgress } from "@/components/motion/scroll-progress";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import "./globals.css";
 
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-background text-foreground antialiased">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
         <SmoothScroll />
+        <ScrollProgress />
         <AmbientBackground />
         <CursorGlow />
         <Nav />
