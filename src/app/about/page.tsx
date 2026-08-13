@@ -89,7 +89,7 @@ export default function AboutPage() {
             <div className="glass-strong rounded-3xl border border-white/10 p-10 sm:p-14">
               <h2 className="font-display text-3xl font-bold text-gradient">{ABOUT.ctaTitle}</h2>
               <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{ABOUT.ctaBody}</p>
-              <Link href="/contact" className={buttonVariants({ size: "lg", className: "mt-8" })}>
+              <Link href="/checkout" className={buttonVariants({ size: "lg", className: "mt-8" })}>
                 Get Optimized <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

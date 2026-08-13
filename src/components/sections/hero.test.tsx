@@ -17,9 +17,11 @@ describe("Hero", () => {
       "href",
       "/checkout",
     );
-    expect(screen.getByRole("link", { name: /tell us your specs/i })).toHaveAttribute(
+    // The second step survives the contact form's removal — it just points at
+    // Discord now, which is where those questions were answered anyway.
+    expect(screen.getByRole("link", { name: /ask us about your specs/i })).toHaveAttribute(
       "href",
-      "/contact",
+      SITE.discordServerUrl,
     );
   });
 

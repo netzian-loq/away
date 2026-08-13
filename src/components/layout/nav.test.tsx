@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { SITE } from "@/content/site";
 import { Nav } from "./nav";
 
 vi.mock("next/navigation", () => ({
@@ -7,17 +8,31 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("Nav", () => {
-  it("renders links to all 4 pages", () => {
+  it("renders a link for every nav entry in site content", () => {
     render(<Nav />);
-    expect(screen.getAllByRole("link", { name: "Home" })[0]).toHaveAttribute("href", "/");
-    expect(screen.getAllByRole("link", { name: "Services" })[0]).toHaveAttribute("href", "/services");
-    expect(screen.getAllByRole("link", { name: "About" })[0]).toHaveAttribute("href", "/about");
-    expect(screen.getAllByRole("link", { name: "Contact" })[0]).toHaveAttribute("href", "/contact");
+    for (const item of SITE.nav) {
+      expect(screen.getAllByRole("link", { name: item.label })[0]).toHaveAttribute(
+        "href",
+        item.href,
+      );
+    }
   });
 
-  it("renders a Get Optimized CTA linking to /contact", () => {
+  it("offers no route to the retired contact page", () => {
+    render(<Nav />);
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
+    expect(hrefs).not.toContain("/contact");
+  });
+
+  // Every "Get Optimized" on the site sends people to the packages, not to a
+  // form. It used to open the contact page, which asked someone who had already
+  // decided to buy to write a message and wait.
+  it("points both Get Optimized CTAs at checkout", () => {
     render(<Nav />);
     const ctas = screen.getAllByRole("link", { name: /Get Optimized/i });
-    expect(ctas[0]).toHaveAttribute("href", "/contact");
+    expect(ctas.length).toBeGreaterThan(0);
+    for (const cta of ctas) {
+      expect(cta).toHaveAttribute("href", "/checkout");
+    }
   });
 });

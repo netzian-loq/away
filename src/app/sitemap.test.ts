@@ -9,12 +9,18 @@ describe("sitemap", () => {
     expect(urls).toContain(SITE.url);
     expect(urls).toContain(`${SITE.url}/services`);
     expect(urls).toContain(`${SITE.url}/about`);
-    expect(urls).toContain(`${SITE.url}/contact`);
   });
 
   it("leaves the unlisted partner and checkout pages out", () => {
     const urls = sitemap().map((entry) => entry.url);
     expect(urls).not.toContain(`${SITE.url}/cosmo`);
     expect(urls).not.toContain(`${SITE.url}/checkout`);
+  });
+
+  // Nothing on the site links to /contact any more, so advertising it to
+  // crawlers would send them to a page no visitor can navigate to.
+  it("drops the retired contact page", () => {
+    const urls = sitemap().map((entry) => entry.url);
+    expect(urls).not.toContain(`${SITE.url}/contact`);
   });
 });

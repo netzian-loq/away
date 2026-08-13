@@ -51,12 +51,18 @@ export function Hero() {
               <Link href="/checkout" className={buttonVariants({ size: "lg" })}>
                 See packages and prices <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                href="/contact"
+              {/* The lower-commitment second step is worth keeping — not
+                  everyone arrives ready to pay — but it points at Discord now
+                  that the contact form is gone. That's where the tickets are
+                  answered anyway, so it's one hop shorter than the form was. */}
+              <a
+                href={SITE.discordServerUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="tap-target text-sm text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline sm:ml-2"
               >
-                Or tell us your specs first
-              </Link>
+                Or ask us about your specs first
+              </a>
             </div>
           </div>
 

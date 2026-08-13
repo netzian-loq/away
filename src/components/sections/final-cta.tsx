@@ -18,7 +18,7 @@ export function FinalCTA() {
             <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
               Join the players who stopped blaming their hardware. Get your rig tuned by Away Tweaks.
             </p>
-            <Link href="/contact" className={buttonVariants({ size: "lg", className: "mt-8" })}>
+            <Link href="/checkout" className={buttonVariants({ size: "lg", className: "mt-8" })}>
               Get Optimized <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

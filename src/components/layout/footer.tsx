@@ -67,7 +67,7 @@ export function Footer() {
           <div className="flex items-center gap-5">
             <Link href="/services" className="tap-target hover:text-electric">Services</Link>
             <Link href="/#pricing" className="tap-target hover:text-electric">Pricing</Link>
-            <Link href="/contact" className="tap-target hover:text-electric">Contact</Link>
+            <Link href="/checkout" className="tap-target hover:text-electric">Buy</Link>
           </div>
         </div>
       </div>

@@ -71,7 +71,7 @@ export function Nav() {
           </nav>
 
           <div className="hidden lg:block">
-            <Link href="/contact" className={buttonVariants({ size: "lg" })}>
+            <Link href="/checkout" className={buttonVariants({ size: "lg" })}>
               Get Optimized <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -98,7 +98,7 @@ export function Nav() {
               </Link>
             ))}
             <Link
-              href="/contact"
+              href="/checkout"
               onClick={() => setOpen(false)}
               className={buttonVariants({ className: "mt-2 w-full" })}
             >

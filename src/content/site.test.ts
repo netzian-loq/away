@@ -14,14 +14,16 @@ describe("SITE", () => {
     expect(SITE.email).toBe(SITE.email.toLowerCase());
   });
 
-  it("has nav links for the 4 pages plus the free-tool anchor", () => {
-    expect(SITE.nav.map((n) => n.href)).toEqual([
-      "/",
-      "/services",
-      "/about",
-      "/#utility",
-      "/contact",
-    ]);
+  it("has nav links for the 3 pages plus the free-tool anchor", () => {
+    expect(SITE.nav.map((n) => n.href)).toEqual(["/", "/services", "/about", "/#utility"]);
+  });
+
+  // The contact form was removed in favour of sending people straight to the
+  // packages; anyone with a question goes to Discord, which is where the
+  // answers came from anyway. SITE.email stays — the owner's notification
+  // emails are still sent from it.
+  it("no longer routes anyone to the contact page", () => {
+    expect(SITE.nav.map((n) => n.href)).not.toContain("/contact");
   });
 
   it("has 4 hero stats", () => {

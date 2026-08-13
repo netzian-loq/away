@@ -26,7 +26,7 @@ export function VouchesCTA() {
             >
               <Disc className="h-4 w-4" /> Read the vouches
             </a>
-            <Link href="/contact" className={buttonVariants({ size: "lg", variant: "outline" })}>
+            <Link href="/checkout" className={buttonVariants({ size: "lg", variant: "outline" })}>
               Get optimized
             </Link>
           </div>
