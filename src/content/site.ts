@@ -41,7 +41,7 @@ export const SITE = {
     iban: "IT52G3608105138219694619732",
   },
   stats: [
-    { value: 40, suffix: "+", label: "Rigs tuned" },
+    { value: 60, suffix: "+", label: "Rigs tuned" },
     { value: 99, suffix: "%", label: "Client retention" },
     { value: 24, suffix: "/7", label: "Support" },
     { value: 5, suffix: "★", label: "Average rating" },

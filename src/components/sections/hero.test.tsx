@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { SITE } from "@/content/site";
 import { Hero } from "./hero";
 
 describe("Hero", () => {
@@ -24,15 +25,22 @@ describe("Hero", () => {
 
   it("renders every stat label from site content", () => {
     render(<Hero />);
-    expect(screen.getByText("Rigs tuned")).toBeInTheDocument();
-    expect(screen.getByText("Average rating")).toBeInTheDocument();
+    for (const stat of SITE.stats) {
+      expect(screen.getByText(stat.label)).toBeInTheDocument();
+    }
   });
 
   // The stats used to animate from zero on scroll. They're claims about the
   // business, so they should read the same whether or not you saw them arrive.
+  //
+  // Read from SITE rather than hardcoded: these are numbers the owner edits as
+  // the business grows, and a test that has to be updated alongside each one is
+  // a test that fails for the wrong reason. What's worth pinning is that the
+  // rendered figure equals the content figure exactly.
   it("prints the stat values outright rather than counting up to them", () => {
     render(<Hero />);
-    expect(screen.getByText("40")).toBeInTheDocument();
-    expect(screen.getByText("99")).toBeInTheDocument();
+    for (const stat of SITE.stats) {
+      expect(screen.getByText(String(stat.value))).toBeInTheDocument();
+    }
   });
 });
