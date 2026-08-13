@@ -56,13 +56,23 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--background);
 }
 
+/* No `backdrop-filter` here, deliberately.
+   ------------------------------------------------------------------
+   `.glass` is on ~18 cards per page. Backdrop blur has to re-sample and
+   re-blur whatever sits behind it whenever that changes — and scrolling moves
+   the entire page behind every one of them, so all 18 re-blurred on every
+   frame of every scroll. That was the desktop stutter.
+
+   The panels were already 86%/64% opaque, so the blur was doing almost nothing
+   visible; a few points more opacity reads the same and costs nothing per
+   frame. `.glass-strong` below keeps its blur — there are three of those, and
+   they sit over content where it actually shows. */
 @utility glass {
   background: linear-gradient(
     135deg,
-    color-mix(in oklab, oklch(0.13 0.04 300) 86%, transparent),
-    color-mix(in oklab, oklch(0.13 0.04 300) 64%, transparent)
+    color-mix(in oklab, oklch(0.13 0.04 300) 93%, transparent),
+    color-mix(in oklab, oklch(0.135 0.045 300) 80%, transparent)
   );
-  backdrop-filter: blur(10px) saturate(125%);
   border: 1px solid color-mix(in oklab, white 8%, transparent);
 }
 
@@ -77,30 +87,29 @@ h1, h2, h3, h4, h5, h6 {
    The scroll engine puts `data-scroll="idle|moving|fast"` on <html>, and this
    is what that attribute is for.
 
-   The home page carries ~22 `backdrop-filter` surfaces sitting over four
-   700–800px layers blurred by 64px. Backdrop blur can normally be rasterised
-   once and reused — but only while the backdrop holds still. Here the backdrop
-   drifts, so every one of those surfaces re-samples and re-blurs a changing
-   region on every frame, and a fast flick asks for all of it at once. That is
-   the stutter: not too many elements, one specific pile of per-frame GPU work.
+   The desktop stutter was backdrop blur, but not for the reason it first
+   looked like. The page carried ~22 `backdrop-filter` surfaces over four
+   700–800px layers blurred by 64px, and the obvious read was that the drifting
+   ambient layers were what kept invalidating the cached blur — so pausing the
+   drift and dropping the blur above a velocity threshold should have fixed it.
+   It barely helped, because the backdrop of a card is the page behind it, and
+   *scrolling* changes that no matter what the ambient layers are doing. Every
+   one of those surfaces re-blurred on every frame of every scroll, fast or
+   slow.
 
-   So while the page is moving quickly the blur is dropped and the panels go a
-   few percent more opaque to compensate, the ambient drift is paused so the
-   backdrop is static, and the pointer-driven effects — which nobody is looking
-   at mid-flick — are switched off. Everything comes back the moment the page
-   settles, which is the only time any of it is legible anyway.
+   So the blur is gone from `.glass` entirely (see above — 18 cards, and at 93%
+   opacity it was invisible anyway), and only the three `.glass-strong` panels
+   still carry one. What is left below is cheap insurance rather than the fix:
+   those three stand down while the page moves, the ambient drift pauses so its
+   texture stays cacheable, and the pointer effects stop during a flick.
 
    These rules sit outside `@layer`, so they win over the utilities above
    regardless of source order. */
-html[data-scroll="fast"] .glass {
-  backdrop-filter: none;
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, oklch(0.13 0.04 300) 95%, transparent),
-    color-mix(in oklab, oklch(0.13 0.04 300) 88%, transparent)
-  );
-}
-
+/* The three remaining blurred surfaces go opaque the moment the page moves at
+   all — not just when it moves fast. A backdrop blur costs its full price at
+   1px/frame and at 100px/frame alike, and at any scroll speed nobody is
+   studying the blur behind the nav bar. */
+html[data-scroll="moving"] .glass-strong,
 html[data-scroll="fast"] .glass-strong {
   backdrop-filter: none;
   background: color-mix(in oklab, oklch(0.11 0.038 300) 98%, transparent);
@@ -117,9 +126,9 @@ html[data-scroll="fast"] .spotlight-card::after {
   opacity: 0;
 }
 
-/* A blended, full-viewport layer forces everything beneath it to be composited
-   as one group. Hidden rather than transparent — a 0-opacity layer is still
-   composited. */
+/* Hidden rather than made transparent — a 0-opacity layer still composites.
+   The pointer isn't the subject mid-flick, and this is one fewer full-viewport
+   layer for the compositor to carry through the scroll. */
 html[data-scroll="fast"] .cursor-glow {
   visibility: hidden;
 }

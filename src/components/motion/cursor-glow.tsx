@@ -10,8 +10,15 @@ const SETTLED_PX = 0.15;
 /**
  * Motion cursor ported from xnettweaks.com: one large, soft radial glow that
  * trails the pointer through an exponential lerp inside a rAF loop, riding
- * *above* the content on `mix-blend-mode: screen` so it washes over cards
- * instead of hiding behind them.
+ * above the content so it washes over cards instead of hiding behind them.
+ *
+ * The source site puts `mix-blend-mode: screen` on it; this doesn't, and that
+ * is the single most valuable difference. A blend mode on a fixed,
+ * full-viewport layer forces everything beneath it into one composited group,
+ * so the browser can no longer cache page layers independently and has to
+ * re-blend the whole stack on every scrolled frame — a page-wide tax paid
+ * constantly for an effect that only shows near the pointer. Against a
+ * background this dark, an ordinary translucent radial reads the same.
  *
  * The same loop drives the per-card spotlight: while the pointer is over an
  * element tagged `.spotlight-card`, its `--mx`/`--my` are updated so the card's
@@ -120,12 +127,14 @@ export function CursorGlow() {
     <div
       ref={glowRef}
       aria-hidden="true"
-      className="cursor-glow pointer-events-none fixed top-0 left-0 z-[2] hidden rounded-full opacity-0 mix-blend-screen transition-opacity duration-300 will-change-transform sm:block"
+      className="cursor-glow pointer-events-none fixed top-0 left-0 z-[2] hidden rounded-full opacity-0 transition-opacity duration-300 will-change-transform sm:block"
       style={{
         width: GLOW_SIZE,
         height: GLOW_SIZE,
+        // Slightly hotter than the blended version was, to land in the same
+        // place visually now that `screen` is gone — see the note above.
         background:
-          "radial-gradient(closest-side, oklch(0.62 0.25 300 / 0.2), oklch(0.72 0.2 320 / 0.1) 40%, transparent 70%)",
+          "radial-gradient(closest-side, oklch(0.66 0.26 300 / 0.28), oklch(0.74 0.21 320 / 0.14) 40%, transparent 70%)",
       }}
     />
   );

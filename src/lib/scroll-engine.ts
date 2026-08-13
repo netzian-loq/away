@@ -60,7 +60,7 @@ const LENIS_OPTIONS = {
    * A lerp converges toward wherever the target is *now*, so a fast flick
    * catches up in a few frames instead of stacking.
    */
-  lerp: 0.11,
+  lerp: 0.09,
   wheelMultiplier: 1,
   smoothWheel: true,
   /** In-page links (the hero chevron) glide instead of jumping. */

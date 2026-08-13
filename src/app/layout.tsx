@@ -48,11 +48,18 @@ export const metadata: Metadata = {
   },
 };
 
-// Runs before first paint: flags reduced-motion preference or software
-// rendering (no real GPU) so the heavier motion layers (Lenis smooth
-// scroll, the cursor glow, ambient drift) can skip themselves instead of
-// janking on a machine that can't afford them.
-const PERF_LITE_INIT = `(function(){try{var r=document.documentElement;if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('perf-lite');return;}var c=document.createElement('canvas');var gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(!gl){r.classList.add('perf-lite');return;}var e=gl.getExtension('WEBGL_debug_renderer_info');var n=e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):'';if(/swiftshader|llvmpipe|software|microsoft basic render/i.test(String(n))){r.classList.add('perf-lite');}}catch(_){}})();`;
+// Runs before first paint: flags a machine with no real GPU behind the canvas
+// (software rasterisers like SwiftShader or llvmpipe) so the heavier motion
+// layers — Lenis smooth scroll, the cursor glow, the scroll-linked effects —
+// skip themselves rather than jank on hardware that can't afford them.
+//
+// Capability only. This deliberately does NOT check prefers-reduced-motion,
+// which it used to: this project runs on a Windows VM that reports `reduce`
+// unconditionally, so folding the preference in here silently disabled the
+// entire scroll engine on the one machine the site is built and reviewed on.
+// The `prefers-reduced-motion` media query in globals.css still stands down
+// CSS animation and transitions for anyone who genuinely asks for it.
+const PERF_LITE_INIT = `(function(){try{var r=document.documentElement;var c=document.createElement('canvas');var gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(!gl){r.classList.add('perf-lite');return;}var e=gl.getExtension('WEBGL_debug_renderer_info');var n=e?gl.getParameter(e.UNMASKED_RENDERER_WEBGL):'';if(/swiftshader|llvmpipe|software|microsoft basic render/i.test(String(n))){r.classList.add('perf-lite');}}catch(_){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
