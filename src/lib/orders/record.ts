@@ -1,5 +1,5 @@
-import { commissionOn, findPartner } from "@/lib/discounts";
-import { appendOrder } from "./store";
+import { commissionOn, findPartner, rateFor } from "@/lib/discounts";
+import { appendOrder, countPaidOrdersForPartner } from "./store";
 import type { OrderRecord } from "./types";
 
 export interface RecordOrderInput {
@@ -39,6 +39,18 @@ export async function recordOrder(input: RecordOrderInput): Promise<RecordOrderR
 
     const partner = findPartner(input.partner);
 
+    // Volume tier, resolved at the moment of sale. If the count can't be read
+    // the base rate is used rather than failing the order — under-paying a
+    // partner is recoverable from the ledger; losing the sale is not.
+    let rate = partner?.commissionRate ?? 0;
+    if (partner?.tiers?.length) {
+      try {
+        rate = rateFor(partner, await countPaidOrdersForPartner(partner.partner));
+      } catch (error) {
+        console.error("[orders] tier lookup failed, using base rate", error);
+      }
+    }
+
     const order: OrderRecord = {
       id: input.id,
       createdAt: new Date().toISOString(),
@@ -50,8 +62,8 @@ export async function recordOrder(input: RecordOrderInput): Promise<RecordOrderR
       currency: input.currency,
       discountCode: input.discountCode ?? null,
       partner: input.partner || "direct",
-      commissionRate: partner?.commissionRate ?? 0,
-      commission: commissionOn(amount, partner),
+      commissionRate: rate,
+      commission: commissionOn(amount, partner, rate),
       buyerEmail: input.buyerEmail ?? "",
       discord: input.discord ?? "",
     };

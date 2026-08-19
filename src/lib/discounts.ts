@@ -20,6 +20,19 @@ export interface Discount {
    * Change this one number to change what a partner earns.
    */
   commissionRate: number;
+  /**
+   * Optional volume tiers, applied PROSPECTIVELY: once the partner has this
+   * many paid orders, every *subsequent* order earns the higher rate. Past
+   * orders keep the rate they were sold at.
+   *
+   * Prospective rather than retroactive on purpose — retroactive would mean
+   * the 50th sale silently creates back-pay on the previous forty-nine, which
+   * is a nasty surprise to discover in a payout. Each order stores its own
+   * rate (see OrderRecord.commissionRate), so the ledger is self-explaining.
+   *
+   * Must be ordered by ascending `afterPaidOrders`.
+   */
+  tiers?: { afterPaidOrders: number; rate: number }[];
 }
 
 export const DISCOUNTS: Discount[] = [
@@ -30,12 +43,58 @@ export const DISCOUNTS: Discount[] = [
     partnerLabel: "Cosmo eSports",
     commissionRate: 0.15,
   },
+  {
+    code: "WAAQQI",
+    // 0.1%, i.e. about six cents off a 65 EUR package. This is an attribution
+    // code rather than a real offer — it exists so referred sales can be told
+    // apart from direct ones, not to move the price.
+    percentOff: 0.1,
+    partner: "waaqqi",
+    partnerLabel: "Waaqqi",
+    commissionRate: 0.15,
+    tiers: [{ afterPaidOrders: 50, rate: 0.32 }],
+  },
 ];
 
-/** Partner commission on a paid amount, rounded to cents. */
-export function commissionOn(amount: number, discount: Discount | null): number {
+/**
+ * The rate a partner earns on their NEXT sale, given how many paid orders
+ * they have already brought in.
+ */
+export function rateFor(discount: Discount | null, paidOrdersSoFar: number): number {
   if (!discount) return 0;
-  return Math.round(amount * discount.commissionRate * 100) / 100;
+  let rate = discount.commissionRate;
+  for (const tier of discount.tiers ?? []) {
+    if (paidOrdersSoFar >= tier.afterPaidOrders) rate = tier.rate;
+  }
+  return rate;
+}
+
+/** The next tier a partner has not reached yet, for showing progress. */
+export function nextTier(
+  discount: Discount | null,
+  paidOrdersSoFar: number,
+): { afterPaidOrders: number; rate: number } | null {
+  if (!discount) return null;
+  for (const tier of discount.tiers ?? []) {
+    if (paidOrdersSoFar < tier.afterPaidOrders) return tier;
+  }
+  return null;
+}
+
+/**
+ * Partner commission on a paid amount, rounded to cents.
+ *
+ * `rate` overrides the partner's base rate — pass the value from `rateFor()`
+ * when recording a sale so volume tiers are honoured. Omitting it keeps the
+ * base rate, which is what every existing caller wants.
+ */
+export function commissionOn(
+  amount: number,
+  discount: Discount | null,
+  rate?: number,
+): number {
+  if (!discount) return 0;
+  return Math.round(amount * (rate ?? discount.commissionRate) * 100) / 100;
 }
 
 /** Looks a partner up by its attribution slug (as stored on an order). */

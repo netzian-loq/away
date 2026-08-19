@@ -3,10 +3,11 @@ import { AlertTriangle, Database } from "lucide-react";
 import { AdminLogin } from "@/components/admin/admin-login";
 import { OrdersTable } from "@/components/admin/orders-table";
 import { adminLogout } from "@/actions/admin";
-import { DISCOUNTS, findPartner } from "@/lib/discounts";
+import { DISCOUNTS, findPartner, nextTier, rateFor } from "@/lib/discounts";
 import { isAdminConfigured, isSignedIn } from "@/lib/admin-auth";
 import { listOrders } from "@/lib/orders/store";
 import { summariseOrders } from "@/lib/orders/summary";
+import { summariseVisits, type VisitSummary } from "@/lib/visits/store";
 import type { OrderRecord } from "@/lib/orders/types";
 
 export const metadata: Metadata = {
@@ -58,6 +59,11 @@ export default async function AdminOrdersPage() {
     (partner) => findPartner(partner)?.partnerLabel ?? partner,
   );
 
+  // Visit counts, one query per configured partner. summariseVisits swallows
+  // its own errors and returns zeroes, so a missing table on a fresh database
+  // shows an empty dashboard rather than taking the orders view down with it.
+  const visits = await Promise.all(DISCOUNTS.map((d) => summariseVisits(d.partner)));
+
   return (
     <Shell>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -96,6 +102,33 @@ export default async function AdminOrdersPage() {
         <Stat label="Paid" value={String(summary.paidOrders)} />
         <Stat label="Awaiting payment" value={String(summary.pendingOrders)} />
         <Stat label="Revenue (paid)" value={money(summary.paidRevenue, summary.currency)} />
+      </div>
+
+      <h2 className="mt-12 font-display text-lg font-semibold">Partner links</h2>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Counted when someone opens checkout with the partner&apos;s code in the link — once per
+        browser session. No cookie, no IP, no identifier is stored.
+      </p>
+      <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        {DISCOUNTS.map((discount, i) => {
+          const v = visits[i];
+          const p = summary.partners.find((x) => x.partner === discount.partner);
+          const paid = p?.paidOrders ?? 0;
+          const upcoming = nextTier(discount, paid);
+          return (
+            <PartnerPageCard
+              key={discount.partner}
+              href={`/checkout?code=${discount.code}`}
+              label={discount.partnerLabel}
+              code={discount.code}
+              visits={v}
+              orders={p?.orders ?? 0}
+              paidOrders={paid}
+              currentRate={rateFor(discount, paid)}
+              nextTier={upcoming}
+            />
+          );
+        })}
       </div>
 
       <h2 className="mt-12 font-display text-lg font-semibold">Partners</h2>
@@ -159,6 +192,103 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="glass rounded-2xl border border-white/5 p-4">
       <div className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-xl font-bold text-gradient">{value}</div>
+    </div>
+  );
+}
+
+function PartnerPageCard({
+  href,
+  label,
+  code,
+  visits,
+  orders,
+  paidOrders,
+  currentRate,
+  nextTier: upcoming,
+}: {
+  href: string;
+  label: string;
+  code: string;
+  visits: VisitSummary;
+  orders: number;
+  paidOrders: number;
+  currentRate: number;
+  nextTier: { afterPaidOrders: number; rate: number } | null;
+}) {
+  // Conversion against total visits, not 7-day, so it does not swing wildly on
+  // a quiet week. Undefined rather than 0% when nobody has visited — "0%
+  // conversion" from zero traffic reads as a failure that has not happened.
+  const conversion = visits.total > 0 ? (orders / visits.total) * 100 : null;
+
+  return (
+    <div className="glass rounded-2xl border border-white/5 border-l-2 border-l-electric p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <span className="font-display font-semibold">{label}</span>
+        <a href={href} className="font-mono text-[11px] text-cyan-accent hover:underline">
+          {href}
+        </a>
+      </div>
+
+      {!visits.available && (
+        <p className="mt-3 flex items-start gap-1.5 rounded-lg border border-amber-400/30 bg-amber-400/[0.07] p-2.5 text-[11px] leading-relaxed text-amber-200/90">
+          <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
+          <span>
+            Link opens aren&apos;t being counted — {visits.error ?? "the visits table is unreadable"}{" "}
+            The numbers below are not zero traffic, they are no data.
+          </span>
+        </p>
+      )}
+
+      <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+        <Cell label="Opens" value={visits.available ? String(visits.total) : "—"} />
+        <Cell label="7 days" value={visits.available ? String(visits.last7d) : "—"} />
+        <Cell label="Orders" value={`${orders}`} />
+        <Cell
+          label="Conversion"
+          value={!visits.available || conversion === null ? "—" : `${conversion.toFixed(1)}%`}
+        />
+      </div>
+
+      <dl className="mt-4 space-y-1.5 text-sm">
+        <Row label="Code" value={code} />
+        <Row label="Current rate" value={`${Math.round(currentRate * 100)}%`} emphasis />
+        {upcoming && (
+          <Row
+            label={`Next tier at ${upcoming.afterPaidOrders} paid`}
+            value={`${Math.round(upcoming.rate * 100)}% — ${upcoming.afterPaidOrders - paidOrders} to go`}
+          />
+        )}
+        {visits.lastAt && (
+          <Row label="Last visit" value={new Date(visits.lastAt).toLocaleString()} />
+        )}
+      </dl>
+
+      {visits.topReferrers.length > 0 && (
+        <div className="mt-4 border-t border-white/5 pt-3">
+          <div className="text-[11px] uppercase tracking-wider text-muted-foreground">
+            Where they came from
+          </div>
+          <ul className="mt-2 space-y-1 text-xs">
+            {visits.topReferrers.map((r) => (
+              <li key={r.host} className="flex items-center justify-between gap-3">
+                <span className="truncate text-muted-foreground">{r.host}</span>
+                <span className="shrink-0 font-mono text-foreground">{r.count}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Cell({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-white/5 bg-white/[0.02] px-2 py-2.5">
+      <div className="font-display text-lg font-bold tabular-nums">{value}</div>
+      <div className="mt-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+        {label}
+      </div>
     </div>
   );
 }

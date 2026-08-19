@@ -53,6 +53,22 @@ export async function listOrders(): Promise<OrderRecord[]> {
   return rows.map(fromRow);
 }
 
+/**
+ * How many PAID orders a partner has already brought in. Drives the volume
+ * tiers in `rateFor()`.
+ *
+ * Counts paid only, deliberately: a pending bank transfer is not a sale yet,
+ * and letting unpaid orders push a partner over a tier boundary would pay a
+ * higher rate on money that never arrived.
+ */
+export async function countPaidOrdersForPartner(partner: string): Promise<number> {
+  const sql = await ordersSql();
+  const rows = (await sql`
+    SELECT COUNT(*)::int AS n FROM orders WHERE partner = ${partner} AND status = 'paid'
+  `) as unknown as { n: number }[];
+  return rows[0]?.n ?? 0;
+}
+
 /** Inserts an order, or overwrites it in place if the id already exists. */
 export async function appendOrder(order: OrderRecord): Promise<void> {
   const sql = await ordersSql();

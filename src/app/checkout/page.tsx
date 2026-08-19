@@ -4,6 +4,8 @@ import { CheckoutClient } from "@/components/checkout/checkout-client";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { SITE } from "@/content/site";
 import { generateOrderReference } from "@/lib/order-reference";
+import { findDiscount } from "@/lib/discounts";
+import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { isStripeConfigured } from "@/lib/stripe";
 
 const TITLE = "Checkout";
@@ -32,9 +34,16 @@ export default async function CheckoutPage({
   const first = (value: string | string[] | undefined) =>
     (Array.isArray(value) ? value[0] : value) ?? "";
 
+  // Partner attribution is counted here rather than on a landing page: the
+  // link a partner shares drops people straight into checkout, so arriving
+  // with a valid code IS the visit. Resolved server-side so an unknown or
+  // invented code in the URL records nothing.
+  const referral = findDiscount(first(params.code));
+
   return (
     <>
       <BreadcrumbJsonLd crumbs={[{ name: "Checkout", path: "/checkout" }]} />
+      {referral && <VisitBeacon partner={referral.partner} />}
 
       <section className="relative pt-40 pb-10 sm:pt-48">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
