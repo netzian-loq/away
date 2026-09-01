@@ -57,7 +57,7 @@ describe("discounts", () => {
 });
 
 describe("creator codes", () => {
-  const codes = ["COLD1ZR", "EUZXN"] as const;
+  const codes = ["COLDVVS", "EUZXN"] as const;
 
   it.each(codes)("%s takes 10%% off and pays 40%%", (code) => {
     const discount = findDiscount(code)!;
@@ -79,12 +79,12 @@ describe("creator codes", () => {
   });
 
   it("resolves them regardless of case or padding", () => {
-    expect(findDiscount(" cold1zr ")?.code).toBe("COLD1ZR");
+    expect(findDiscount(" coldvvs ")?.code).toBe("COLDVVS");
     expect(findDiscount("Euzxn")?.code).toBe("EUZXN");
   });
 
-  it("no longer honours the retired WAAQQI code", () => {
-    expect(findDiscount("WAAQQI")).toBeNull();
+  it.each(["WAAQQI", "COLD1ZR"])("no longer honours the retired %s code", (code) => {
+    expect(findDiscount(code)).toBeNull();
   });
 });
 

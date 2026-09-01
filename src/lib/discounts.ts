@@ -48,10 +48,10 @@ export const DISCOUNTS: Discount[] = [
   // package that is 58.50 charged and 23.40 owed, leaving 35.10 — so these are
   // deliberately priced as a growth deal, not a standing margin.
   {
-    code: "COLD1ZR",
+    code: "COLDVVS",
     percentOff: 10,
-    partner: "cold1zr",
-    partnerLabel: "Cold1zr",
+    partner: "coldvvs",
+    partnerLabel: "Coldvvs",
     commissionRate: 0.4,
   },
   {
