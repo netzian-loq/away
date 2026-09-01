@@ -172,18 +172,38 @@ describe("submitBankTransferOrder", () => {
     expect(sendBankTransferNotification).not.toHaveBeenCalled();
   });
 
-  it("silently drops honeypot and instant submissions", async () => {
+  it("silently drops a honeypot submission", async () => {
     const bot = await submitBankTransferOrder({ status: "idle" }, form({ company: "Acme" }));
     expect(bot.status).toBe("success");
+    expect(sendBankTransferNotification).not.toHaveBeenCalled();
+    expect(sendBankTransferEmail).not.toHaveBeenCalled();
+  });
 
-    const tooFast = await submitBankTransferOrder(
+  // A fast submission used to be discarded exactly like a honeypot hit, which
+  // meant a human tripping the timer got a receipt for an order that was never
+  // recorded and never emailed to anyone. It is now recorded and flagged.
+  it("records an instant submission but flags it for the owner", async () => {
+    const state = await submitBankTransferOrder(
       { status: "idle" },
       form({ startedAt: String(Date.now()) }),
     );
-    expect(tooFast.status).toBe("success");
 
-    expect(sendBankTransferNotification).not.toHaveBeenCalled();
-    expect(sendBankTransferEmail).not.toHaveBeenCalled();
+    expect(state.status).toBe("success");
+    expect(recordOrder).toHaveBeenCalledWith(expect.objectContaining({ id: REFERENCE }));
+    expect(sendBankTransferNotification).toHaveBeenCalledWith(
+      expect.objectContaining({ flag: expect.stringContaining("suspiciously fast") }),
+      expect.anything(),
+      expect.anything(),
+    );
+  });
+
+  it("does not flag a normally-paced submission", async () => {
+    await submitBankTransferOrder({ status: "idle" }, form());
+    expect(sendBankTransferNotification).toHaveBeenCalledWith(
+      expect.not.objectContaining({ flag: expect.anything() }),
+      expect.anything(),
+      expect.anything(),
+    );
   });
 
   it("still succeeds when the buyer's email bounces, since the owner was told", async () => {
@@ -192,7 +212,16 @@ describe("submitBankTransferOrder", () => {
     expect(state.status).toBe("success");
   });
 
-  it("fails loudly when the owner notification cannot be sent", async () => {
+  // The ledger is the record of the order, not the email. Telling the buyer it
+  // failed sent them back to submit a duplicate against an order that existed.
+  it("still succeeds when the owner notification fails but the order was recorded", async () => {
+    sendBankTransferNotification.mockRejectedValueOnce(new Error("resend down"));
+    const state = await submitBankTransferOrder({ status: "idle" }, form());
+    expect(state.status).toBe("success");
+  });
+
+  it("fails only when the ledger AND the notification both fail", async () => {
+    recordOrder.mockResolvedValueOnce({ recorded: false, error: "db down" });
     sendBankTransferNotification.mockRejectedValueOnce(new Error("resend down"));
     const state = await submitBankTransferOrder({ status: "idle" }, form());
     expect(state.status).toBe("error");

@@ -7,6 +7,7 @@ import { generateOrderReference } from "@/lib/order-reference";
 import { findDiscount } from "@/lib/discounts";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { isStripeConfigured } from "@/lib/stripe";
+import { isCryptoConfigured } from "@/lib/nowpayments";
 
 const TITLE = "Checkout";
 
@@ -15,7 +16,14 @@ const TITLE = "Checkout";
  * promise a payment method the page doesn't actually offer. Card payments are
  * currently off; turning them back on updates both sentences by itself.
  */
-const METHODS = isStripeConfigured() ? "card, PayPal or bank transfer" : "PayPal or bank transfer";
+const METHODS = [
+  ...(isStripeConfigured() ? ["card"] : []),
+  "PayPal",
+  ...(isCryptoConfigured() ? ["crypto"] : []),
+  "bank transfer",
+].reduce((sentence, method, i, all) =>
+  i === 0 ? method : i === all.length - 1 ? `${sentence} or ${method}` : `${sentence}, ${method}`,
+);
 
 const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS} — no ticket needed.`;
 
@@ -78,6 +86,7 @@ export default async function CheckoutPage({
             initialCode={first(params.code)}
             reference={generateOrderReference()}
             stripeEnabled={isStripeConfigured()}
+            cryptoEnabled={isCryptoConfigured()}
           />
         </div>
       </section>

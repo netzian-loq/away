@@ -5,6 +5,7 @@ import Script from "next/script";
 import { AlertTriangle, ArrowRight, Loader2, ShieldCheck, Tag } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { BankTransfer } from "@/components/checkout/bank-transfer";
+import { CryptoPanel } from "@/components/checkout/crypto-panel";
 import { PurchaseSuccess, type PurchaseReceipt } from "@/components/checkout/purchase-success";
 import {
   BUNDLES,
@@ -38,15 +39,17 @@ declare global {
   }
 }
 
-type PaymentMethod = "card" | "paypal" | "bank";
+type PaymentMethod = "card" | "paypal" | "bank" | "crypto";
 
 interface CheckoutClientProps {
   initialTier: string;
   initialCode: string;
-  /** Server-generated payment reference for the bank transfer path. */
+  /** Server-generated payment reference, used by bank transfer and crypto. */
   reference: string;
   /** Whether STRIPE_SECRET_KEY is set — resolved on the server. */
   stripeEnabled: boolean;
+  /** Whether NOWPAYMENTS_API_KEY is set — resolved on the server. */
+  cryptoEnabled: boolean;
 }
 
 export function CheckoutClient({
@@ -54,6 +57,7 @@ export function CheckoutClient({
   initialCode,
   reference,
   stripeEnabled,
+  cryptoEnabled,
 }: CheckoutClientProps) {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
   // Card is the default when it's available: it's the only path that takes a
@@ -319,13 +323,14 @@ export function CheckoutClient({
               aria-label="Payment method"
               className="mt-6 flex flex-wrap gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1"
             >
-              {/* Text only. Three tabs leave no room for an icon, and a
+              {/* Text only. The tabs leave no room for an icon, and a
                   landmark glyph beside "Bank transfer" was never carrying
                   information the word didn't already. */}
               {(
                 [
                   { id: "card", label: "Card", enabled: stripeEnabled },
                   { id: "paypal", label: "PayPal", enabled: true },
+                  { id: "crypto", label: "Crypto", enabled: cryptoEnabled },
                   { id: "bank", label: "Bank transfer", enabled: true },
                 ] as const
               )
@@ -375,6 +380,13 @@ export function CheckoutClient({
                     </>
                   )}
                 </button>
+              ) : method === "crypto" ? (
+                <CryptoPanel
+                  tier={tier}
+                  amount={formatAmount(total)}
+                  code={discount?.code ?? ""}
+                  reference={reference}
+                />
               ) : method === "bank" ? (
                 <BankTransfer
                   tier={tier}
@@ -416,7 +428,9 @@ export function CheckoutClient({
                 ? "You pay from your own banking app — Away Tweaks never asks for your bank login or card details."
                 : method === "card"
                   ? "Your card is handled entirely on Stripe's own checkout page — Away Tweaks never sees your card details."
-                  : "Payment is handled entirely by PayPal — Away Tweaks never sees your card details."}
+                  : method === "crypto"
+                    ? "You pay on NOWPayments' own page and the network confirms it — Away Tweaks never holds your funds or your keys."
+                    : "Payment is handled entirely by PayPal — Away Tweaks never sees your card details."}
             </p>
           </div>
         </div>

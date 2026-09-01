@@ -251,6 +251,11 @@ export interface BankTransferEmailInput {
   /** Human-readable discount line for the owner — see describeDiscount(). */
   discountSummary?: string;
   discord: string;
+  /**
+   * Warning to put at the top of the owner's mail, e.g. a submission that
+   * tripped the bot timer. Owner mail only — never shown to the buyer.
+   */
+  flag?: string;
 }
 
 /**
@@ -296,8 +301,9 @@ export async function sendBankTransferNotification(
     from: from(),
     to: SITE.email,
     replyTo: input.buyerEmail,
-    subject: `Bank transfer incoming — ${input.tierName} (${input.amount} ${input.currency}) ${input.reference}`,
+    subject: `${input.flag ? "[CHECK] " : ""}Bank transfer incoming — ${input.tierName} (${input.amount} ${input.currency}) ${input.reference}`,
     text: [
+      ...(input.flag ? [`!! ${input.flag}`, ""] : []),
       `Reference: ${input.reference}`,
       `Package: ${input.tierName}`,
       `Expecting: ${input.amount} ${input.currency}`,

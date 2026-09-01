@@ -40,6 +40,22 @@ export const createStripeSessionSchema = z.object({
   discord: z.string().trim().max(100).optional().or(z.literal("")),
 });
 
+/**
+ * Crypto invoice. Email and Discord are REQUIRED here, unlike the Stripe
+ * schema where Stripe collects the email on its own page — NOWPayments
+ * collects nothing, and a confirmed payment with no way to contact the buyer
+ * is an order that can't be delivered.
+ */
+export const cryptoInvoiceSchema = z.object({
+  tier: z.string().trim().min(1, "Choose a package").max(64),
+  code: z.string().trim().max(40).optional().or(z.literal("")),
+  email: z.email("Enter a valid email").max(200),
+  discord: z.string().trim().min(2, "Enter your Discord username").max(100),
+  reference: z.string().trim().regex(ORDER_REFERENCE_PATTERN, "Invalid payment reference"),
+});
+
+export type CryptoInvoiceValues = z.infer<typeof cryptoInvoiceSchema>;
+
 export type CreateOrderValues = z.infer<typeof createOrderSchema>;
 export type CaptureOrderValues = z.infer<typeof captureOrderSchema>;
 export type CreateStripeSessionValues = z.infer<typeof createStripeSessionSchema>;

@@ -47,6 +47,19 @@ function fromRow(row: OrderRow): OrderRecord {
   };
 }
 
+/**
+ * One order by id, or null if it isn't there.
+ *
+ * Exists for the crypto IPN handler, which retries until it gets a 2xx: it has
+ * to know whether an order was ALREADY paid before it emails anybody, or a
+ * retried callback sends the buyer a second receipt.
+ */
+export async function getOrder(id: string): Promise<OrderRecord | null> {
+  const sql = await ordersSql();
+  const rows = (await sql`SELECT * FROM orders WHERE id = ${id}`) as unknown as OrderRow[];
+  return rows[0] ? fromRow(rows[0]) : null;
+}
+
 export async function listOrders(): Promise<OrderRecord[]> {
   const sql = await ordersSql();
   const rows = (await sql`SELECT * FROM orders ORDER BY created_at DESC`) as unknown as OrderRow[];

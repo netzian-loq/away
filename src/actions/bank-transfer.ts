@@ -43,10 +43,19 @@ export async function submitBankTransferOrder(
 
   const { tier: tierSlug, code, email, discord, reference, company, startedAt } = parsed.data;
 
-  // Honeypot and minimum fill time — same bot defences as the contact form.
-  // Both report success so a bot learns nothing from the response.
+  // Honeypot: the field is hidden, so only a script fills it. Reporting
+  // success teaches a bot nothing, and the false-positive rate is ~zero.
   if (company) return { status: "success", reference };
-  if (Date.now() - startedAt < MIN_FILL_TIME_MS) return { status: "success", reference };
+
+  // Minimum fill time is NOT treated the same way, deliberately. A human who
+  // trips it — password-manager autofill, a fast typist on a slow-mounting
+  // page — used to get an identical fake receipt with no order recorded and
+  // no email sent to anybody, which is indistinguishable from success and
+  // loses a real sale silently. It is now a flag on the owner's notification
+  // instead of a discard: a suspicious order that turns out to be a bot costs
+  // one email, a discarded order that turned out to be a customer costs the
+  // customer.
+  const suspiciouslyFast = Date.now() - startedAt < MIN_FILL_TIME_MS;
 
   const item = findPurchasable(tierSlug);
   if (!item) {
@@ -66,6 +75,9 @@ export async function submitBankTransferOrder(
     discountCode: discount?.code,
     discountSummary: describeDiscount(discount),
     discord,
+    ...(suspiciouslyFast
+      ? { flag: "Submitted suspiciously fast — this may be a bot, not a buyer." }
+      : {}),
   };
 
   // Buyer receipt first, so its outcome can be reported in the owner's
@@ -99,16 +111,23 @@ export async function submitBankTransferOrder(
     discord,
   });
 
-  // The owner's notification is what makes the order real, so this one is
-  // make-or-break: without it an order could vanish unnoticed.
+  // The notification used to be treated as make-or-break, from when email was
+  // the only record. It isn't any more — the ledger write above is — and
+  // failing the whole submission on a mail error told the buyer their order
+  // hadn't been recorded when it had, sending them off to submit it a second
+  // time. It is now only fatal when the ledger ALSO failed, which is the case
+  // where nothing anywhere knows about this order.
   try {
     await sendBankTransferNotification(input, delivery, ledger);
   } catch (error) {
     console.error("[bank-transfer] owner notification failed", error);
-    return {
-      status: "error",
-      message: "Something went wrong recording your order. Please open a ticket on Discord.",
-    };
+    if (!ledger.recorded) {
+      console.error("[bank-transfer] ORDER LOST — ledger and notification both failed", reference);
+      return {
+        status: "error",
+        message: "Something went wrong recording your order. Please open a ticket on Discord.",
+      };
+    }
   }
 
   return { status: "success", reference, amount, tierName: item.name };
