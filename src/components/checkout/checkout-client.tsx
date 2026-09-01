@@ -326,12 +326,17 @@ export function CheckoutClient({
               {/* Text only. The tabs leave no room for an icon, and a
                   landmark glyph beside "Bank transfer" was never carrying
                   information the word didn't already. */}
+              {/* Crypto is always listed, but until the NOWPayments keys are
+                  in place it shows as "soon" rather than vanishing: an
+                  announced method people can see coming is worth more than an
+                  empty space, and the disabled state is honest about not
+                  being able to take a payment yet. */}
               {(
                 [
-                  { id: "card", label: "Card", enabled: stripeEnabled },
-                  { id: "paypal", label: "PayPal", enabled: true },
-                  { id: "crypto", label: "Crypto", enabled: cryptoEnabled },
-                  { id: "bank", label: "Bank transfer", enabled: true },
+                  { id: "card", label: "Card", enabled: stripeEnabled, soon: false },
+                  { id: "paypal", label: "PayPal", enabled: true, soon: false },
+                  { id: "crypto", label: "Crypto", enabled: true, soon: !cryptoEnabled },
+                  { id: "bank", label: "Bank transfer", enabled: true, soon: false },
                 ] as const
               )
                 .filter((option) => option.enabled)
@@ -340,16 +345,30 @@ export function CheckoutClient({
                     key={option.id}
                     type="button"
                     role="tab"
-                    aria-selected={method === option.id}
-                    onClick={() => setMethod(option.id)}
+                    disabled={option.soon}
+                    aria-selected={!option.soon && method === option.id}
+                    aria-disabled={option.soon}
+                    // Out of the tab sequence while it can't be chosen —
+                    // otherwise keyboard users land on a control that does
+                    // nothing and have no way to know why.
+                    tabIndex={option.soon ? -1 : undefined}
+                    title={option.soon ? "Crypto payments are coming soon" : undefined}
+                    onClick={option.soon ? undefined : () => setMethod(option.id)}
                     className={cn(
-                      "flex min-h-11 flex-1 basis-24 items-center justify-center rounded-lg px-2 py-2 text-center text-sm font-medium transition-colors duration-300",
-                      method === option.id
-                        ? "bg-electric/20 text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
+                      "flex min-h-11 flex-1 basis-24 items-center justify-center gap-1.5 rounded-lg px-2 py-2 text-center text-sm font-medium transition-colors duration-300",
+                      option.soon
+                        ? "cursor-not-allowed text-muted-foreground/50"
+                        : method === option.id
+                          ? "bg-electric/20 text-foreground"
+                          : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {option.label}
+                    {option.soon && (
+                      <span className="rounded-full bg-white/[0.07] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/70">
+                        Soon
+                      </span>
+                    )}
                   </button>
                 ))}
             </div>
