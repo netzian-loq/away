@@ -39,8 +39,24 @@ export class StripeApiError extends Error {
   }
 }
 
+/**
+ * Card payments are OFF. Flip this to true to bring them back.
+ *
+ * A switch in code rather than "just unset STRIPE_SECRET_KEY", for two
+ * reasons. The key stays in place so webhooks can still verify and settle any
+ * session that was already in flight when this was turned off — pulling the
+ * key would strand those payments as money taken with no order recorded. And a
+ * deploy that copies env vars from another environment can silently switch
+ * card payments back on; a constant in the repo cannot.
+ *
+ * Two things read it: `isStripeConfigured()`, which is what hides the Card tab
+ * at checkout, and `createCheckoutSession()`, so a request posted straight at
+ * /api/stripe/create-session is refused too rather than trusting the UI.
+ */
+const STRIPE_ENABLED = false;
+
 export function isStripeConfigured(): boolean {
-  return Boolean(process.env.STRIPE_SECRET_KEY);
+  return STRIPE_ENABLED && Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
 /** True once webhooks can be verified — without it we must not trust events. */
@@ -113,6 +129,10 @@ export interface StripeSession {
 export async function createCheckoutSession(
   input: CreateSessionInput,
 ): Promise<StripeSession> {
+  // Server-side enforcement of the switch above. The Card tab is already gone
+  // from checkout, but that is a UI decision and the route is a public POST.
+  if (!STRIPE_ENABLED) throw new StripeConfigError();
+
   const stripe = stripeClient();
 
   try {

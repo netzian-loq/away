@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type Stripe from "stripe";
 import {
+  createCheckoutSession,
   fromMinorUnits,
   isLive,
   isStripeConfigured,
@@ -23,10 +24,31 @@ afterEach(() => {
 });
 
 describe("configuration guards", () => {
-  it("reports Stripe as off until a secret key is set", () => {
+  // Card payments are switched off in stripe.ts (STRIPE_ENABLED = false), so
+  // this stays false even with a valid key present. When cards are turned back
+  // on, this assertion is the one that has to flip.
+  it("reports Stripe as off while the kill switch is down, key or not", () => {
     expect(isStripeConfigured()).toBe(false);
     process.env.STRIPE_SECRET_KEY = "sk_test_123";
-    expect(isStripeConfigured()).toBe(true);
+    expect(isStripeConfigured()).toBe(false);
+  });
+
+  it("refuses to open a checkout session while cards are off", async () => {
+    process.env.STRIPE_SECRET_KEY = "sk_test_123";
+    await expect(
+      createCheckoutSession({
+        amount: 65,
+        currency: "EUR",
+        productName: "Away Tweaks — Pro Level",
+        description: "test",
+        tierSlug: "pro-level",
+        partner: "direct",
+        discountCode: "",
+        discord: "",
+        successUrl: "https://example.test/checkout/success",
+        cancelUrl: "https://example.test/checkout",
+      }),
+    ).rejects.toBeInstanceOf(StripeConfigError);
   });
 
   it("tracks the webhook secret separately from the API key", () => {

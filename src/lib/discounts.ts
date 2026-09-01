@@ -43,16 +43,23 @@ export const DISCOUNTS: Discount[] = [
     partnerLabel: "Cosmo eSports",
     commissionRate: 0.15,
   },
+  // Creator codes. Both are real offers, not bare attribution: 10% off for the
+  // buyer and 40% of what is actually paid to the partner. On the 65 EUR Pro
+  // package that is 58.50 charged and 23.40 owed, leaving 35.10 — so these are
+  // deliberately priced as a growth deal, not a standing margin.
   {
-    code: "WAAQQI",
-    // 0.1%, i.e. about six cents off a 65 EUR package. This is an attribution
-    // code rather than a real offer — it exists so referred sales can be told
-    // apart from direct ones, not to move the price.
-    percentOff: 0.1,
-    partner: "waaqqi",
-    partnerLabel: "Waaqqi",
-    commissionRate: 0.15,
-    tiers: [{ afterPaidOrders: 50, rate: 0.32 }],
+    code: "COLD1ZR",
+    percentOff: 10,
+    partner: "cold1zr",
+    partnerLabel: "Cold1zr",
+    commissionRate: 0.4,
+  },
+  {
+    code: "EUZXN",
+    percentOff: 10,
+    partner: "euzxn",
+    partnerLabel: "Euzxn",
+    commissionRate: 0.4,
   },
 ];
 
@@ -103,8 +110,14 @@ export function findPartner(partner: string | null | undefined): Discount | null
   return DISCOUNTS.find((discount) => discount.partner === partner) ?? null;
 }
 
-/** The code Cosmo shares with their community. */
-export const COSMO_DISCOUNT = DISCOUNTS[0];
+/**
+ * The code Cosmo shares with their community.
+ *
+ * Looked up by code rather than by index: `/cosmo` renders its price and CTA
+ * straight off this, so an entry added above Cosmo in the table would silently
+ * put another partner's code on their page.
+ */
+export const COSMO_DISCOUNT = DISCOUNTS.find((d) => d.code === "COSMO10")!;
 
 /** Case- and whitespace-insensitive lookup. Returns null for unknown codes. */
 export function findDiscount(code: string | null | undefined): Discount | null {

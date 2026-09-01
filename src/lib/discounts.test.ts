@@ -8,6 +8,7 @@ import {
   formatAmount,
   nextTier,
   rateFor,
+  type Discount,
 } from "./discounts";
 
 describe("discounts", () => {
@@ -55,17 +56,59 @@ describe("discounts", () => {
   });
 });
 
-describe("Waaqqi volume tiers", () => {
-  const waaqqi = findDiscount("WAAQQI")!;
+describe("creator codes", () => {
+  const codes = ["COLD1ZR", "EUZXN"] as const;
+
+  it.each(codes)("%s takes 10%% off and pays 40%%", (code) => {
+    const discount = findDiscount(code)!;
+    expect(discount).not.toBeNull();
+    expect(discount.percentOff).toBe(10);
+    expect(discount.commissionRate).toBe(0.4);
+    // The whole point of the pair: same terms, different attribution slug, so
+    // the dashboard can tell the two apart.
+    expect(discount.partner).toBe(code.toLowerCase());
+  });
+
+  it.each(codes)("%s bills 58.50 and owes 23.40 on the 65 EUR package", (code) => {
+    const discount = findDiscount(code)!;
+    const charged = applyDiscount(65, discount);
+    expect(charged).toBe(58.5);
+    // Commission is a cut of what the buyer actually paid, never of list price
+    // — 40% of 65 would be 26.00 and overpay the partner by 2.60 a sale.
+    expect(commissionOn(charged, discount)).toBe(23.4);
+  });
+
+  it("resolves them regardless of case or padding", () => {
+    expect(findDiscount(" cold1zr ")?.code).toBe("COLD1ZR");
+    expect(findDiscount("Euzxn")?.code).toBe("EUZXN");
+  });
+
+  it("no longer honours the retired WAAQQI code", () => {
+    expect(findDiscount("WAAQQI")).toBeNull();
+  });
+});
+
+// No live partner is on tiers right now, so this exercises the machinery
+// against a fixture. Deleting these along with WAAQQI would have left rateFor
+// and nextTier untested while both are still wired into the dashboard.
+describe("volume tiers", () => {
+  const tiered: Discount = {
+    code: "TIERED",
+    percentOff: 10,
+    partner: "tiered",
+    partnerLabel: "Tiered",
+    commissionRate: 0.15,
+    tiers: [{ afterPaidOrders: 50, rate: 0.32 }],
+  };
 
   it("earns the base rate before the threshold", () => {
-    expect(rateFor(waaqqi, 0)).toBe(0.15);
-    expect(rateFor(waaqqi, 49)).toBe(0.15);
+    expect(rateFor(tiered, 0)).toBe(0.15);
+    expect(rateFor(tiered, 49)).toBe(0.15);
   });
 
   it("steps up once the threshold is reached", () => {
-    expect(rateFor(waaqqi, 50)).toBe(0.32);
-    expect(rateFor(waaqqi, 400)).toBe(0.32);
+    expect(rateFor(tiered, 50)).toBe(0.32);
+    expect(rateFor(tiered, 400)).toBe(0.32);
   });
 
   it("leaves a partner without tiers on their flat rate", () => {
@@ -74,8 +117,8 @@ describe("Waaqqi volume tiers", () => {
   });
 
   it("counts down to the next tier, then reports none left", () => {
-    expect(nextTier(waaqqi, 12)).toEqual({ afterPaidOrders: 50, rate: 0.32 });
-    expect(nextTier(waaqqi, 50)).toBeNull();
+    expect(nextTier(tiered, 12)).toEqual({ afterPaidOrders: 50, rate: 0.32 });
+    expect(nextTier(tiered, 50)).toBeNull();
     expect(nextTier(COSMO_DISCOUNT, 0)).toBeNull();
   });
 
@@ -83,18 +126,11 @@ describe("Waaqqi volume tiers", () => {
   // the order, so crossing the threshold must not change what earlier orders
   // were worth. This asserts the arithmetic that guarantee rests on.
   it("pays the tier that applied at the time of each sale", () => {
-    expect(commissionOn(58.5, waaqqi, rateFor(waaqqi, 49))).toBe(8.78);
-    expect(commissionOn(58.5, waaqqi, rateFor(waaqqi, 50))).toBe(18.72);
+    expect(commissionOn(58.5, tiered, rateFor(tiered, 49))).toBe(8.78);
+    expect(commissionOn(58.5, tiered, rateFor(tiered, 50))).toBe(18.72);
   });
 
   it("falls back to the base rate when no rate is passed", () => {
-    expect(commissionOn(100, waaqqi)).toBe(15);
-  });
-
-  it("is an attribution code, not an offer — the price barely moves", () => {
-    // 0.1% off 65 is about six cents. Asserted so nobody "fixes" the decimal
-    // point into a 10% discount by accident.
-    expect(waaqqi.percentOff).toBe(0.1);
-    expect(applyDiscount(65, waaqqi)).toBe(64.94);
+    expect(commissionOn(100, tiered)).toBe(15);
   });
 });

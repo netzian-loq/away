@@ -5,7 +5,7 @@ import { neon } from "@neondatabase/serverless";
  *
  * Deliberately minimal in what it stores: a partner slug, a timestamp, and the
  * referring host. No IP, no user agent, no cookie, no id of any kind — this
- * answers "how many people opened the Waaqqi page and how many bought", which
+ * answers "how many people opened a partner's link and how many bought", which
  * needs counting, not identifying. Storing less means there is nothing here to
  * leak and no consent banner to argue about.
  *

@@ -9,8 +9,15 @@ import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { isStripeConfigured } from "@/lib/stripe";
 
 const TITLE = "Checkout";
-const DESCRIPTION =
-  "Pick your Away Tweaks optimization package and pay securely by card, PayPal or bank transfer — no ticket needed.";
+
+/**
+ * Derived from the same switch that draws the tabs, so the copy can never
+ * promise a payment method the page doesn't actually offer. Card payments are
+ * currently off; turning them back on updates both sentences by itself.
+ */
+const METHODS = isStripeConfigured() ? "card, PayPal or bank transfer" : "PayPal or bank transfer";
+
+const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS} — no ticket needed.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -55,8 +62,8 @@ export default async function CheckoutPage({
               Get optimized
             </h1>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              Choose a package, apply your partner code, and pay by card, PayPal or bank transfer.
-              We&apos;ll email your receipt and pick it up from there on Discord.
+              Choose a package, apply your partner code, and pay by {METHODS}. We&apos;ll email
+              your receipt and pick it up from there on Discord.
             </p>
           </Reveal>
         </div>
