@@ -1,4 +1,4 @@
-import { EXTREME_UPGRADE, PRICING_TIERS } from "./pricing";
+import { EXTREME_UPGRADE, PRICING_TIERS, type PricingTier } from "./pricing";
 import { SERVICES, type ServiceCategory } from "./services";
 
 /**
@@ -89,3 +89,37 @@ export function findPurchasable(slug: string | null | undefined): Purchasable | 
 
 /** The default selection when checkout is opened without one. */
 export const DEFAULT_PURCHASE = CATALOG.find((item) => item.featured) ?? CATALOG[0];
+
+/**
+ * What a package's contents would cost bought one by one, or null when any
+ * line in it has no single service behind it.
+ *
+ * Derived from the feature list by title rather than stored as a number, so
+ * it cannot go stale: repricing a service reprices every anchor that includes
+ * it, in the same edit. Null rather than a partial sum on a miss — a saving
+ * that quietly omits a line is worse than no saving shown at all, because it
+ * understates the package and the number still looks authoritative.
+ */
+export function partsTotal(tier: PricingTier): number | null {
+  let sum = 0;
+  for (const feature of tier.features) {
+    const service = SERVICES.find((item) => item.title === feature);
+    if (!service) return null;
+    sum += service.priceValue;
+  }
+  return sum;
+}
+
+/** What a package saves against its parts. 0 when it saves nothing. */
+export function savingOn(tier: PricingTier): number {
+  const parts = partsTotal(tier);
+  if (parts === null) return 0;
+  return Math.max(0, Math.round((parts - tier.price) * 100) / 100);
+}
+
+/**
+ * Below this, the saving is not worth printing. Standard saves 2€ against
+ * its parts, and "Save 2€" on a 38€ package reads as a reason not to bother
+ * rather than a reason to buy.
+ */
+export const MIN_SHOWN_SAVING = 5;

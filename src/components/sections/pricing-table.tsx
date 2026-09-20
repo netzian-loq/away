@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { EXTREME_UPGRADE, PRICING_TIERS } from "@/content/pricing";
-import { BASE_CURRENCY, chargedNote, formatPrice, type DisplayCurrency } from "@/lib/money";
+import { MIN_SHOWN_SAVING, partsTotal, savingOn } from "@/content/catalog";
+import { BASE_CURRENCY, chargedNote, formatIn, formatPrice, type DisplayCurrency } from "@/lib/money";
 
 export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayCurrency }) {
   return (
@@ -28,8 +29,12 @@ export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayC
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {PRICING_TIERS.map((tier, i) => (
-            <Reveal key={tier.name} delay={i * 0.06}>
+          {PRICING_TIERS.map((tier, i) => {
+            const parts = partsTotal(tier);
+            const saving = savingOn(tier);
+
+            return (
+              <Reveal key={tier.name} delay={i * 0.06}>
               <div
                 className={`hover-lift spotlight-card relative flex h-full flex-col rounded-3xl p-6 ${
                   tier.featured ? "glass-strong border border-electric/40" : "glass border border-white/5"
@@ -41,7 +46,24 @@ export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayC
                   </span>
                 )}
                 <div className="font-display text-lg font-semibold">{tier.name}</div>
-                <div className="mt-4 font-display text-4xl font-bold text-gradient">
+
+                {/* The anchor, and the reason this section leads the page:
+                    a package only reads as a deal next to what its parts
+                    cost separately. Both numbers are derived from the same
+                    catalog the checkout prices from, so neither can drift
+                    away from what is actually charged. */}
+                {saving >= MIN_SHOWN_SAVING && parts !== null && (
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-sm text-muted-foreground line-through">
+                      {formatIn(parts, currency)}
+                    </span>
+                    <span className="rounded-full border border-cyan-accent/40 bg-cyan-accent/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-cyan-accent">
+                      Save {formatIn(saving, currency)}
+                    </span>
+                  </div>
+                )}
+
+                <div className="mt-2 font-display text-4xl font-bold text-gradient">
                   {formatPrice(tier.price, currency)}
                 </div>
                 {chargedNote(tier.price, currency) && (
@@ -67,10 +89,26 @@ export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayC
                 >
                   Choose
                 </Link>
-              </div>
-            </Reveal>
-          ))}
+                </div>
+              </Reveal>
+            );
+          })}
         </div>
+
+        {/* Down to the single services, not up: the packages are the top of
+            the page now, so the person still reading here is the one who
+            wants less than a package rather than more. */}
+        <Reveal className="mt-12 flex flex-col items-center gap-3 text-center">
+          <p className="text-sm text-muted-foreground">
+            Only need one thing? Every service is sold on its own too.
+          </p>
+          <Link
+            href="#services-teaser"
+            className="inline-flex min-h-11 items-center gap-2 px-3 text-sm font-semibold text-electric hover:underline"
+          >
+            See single services <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Reveal>
       </div>
     </section>
   );

@@ -4,7 +4,10 @@ import {
   CATALOG,
   DEFAULT_PURCHASE,
   findPurchasable,
+  MIN_SHOWN_SAVING,
+  partsTotal,
   priceFor,
+  savingOn,
   SINGLE_SERVICES,
   supportsExtreme,
 } from "./catalog";
@@ -89,5 +92,47 @@ describe("CATALOG", () => {
       expect(item.blurb).toBeTruthy();
       expect(item.price).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("what a package saves against its parts", () => {
+  it("prices each package's contents from the single services", () => {
+    const pro = PRICING_TIERS.find((tier) => tier.slug === "pro-level")!;
+    // Windows Tuning 25 + BIOS Full Tuning 15 + CPU 27 + GPU 18.
+    expect(partsTotal(pro)).toBe(85);
+    expect(savingOn(pro)).toBe(15);
+  });
+
+  it("saves something on every package", () => {
+    for (const tier of PRICING_TIERS) {
+      expect(partsTotal(tier)).not.toBeNull();
+      expect(savingOn(tier)).toBeGreaterThan(0);
+    }
+  });
+
+  /**
+   * A bundle that costs more than its parts is a pricing mistake, not a
+   * display one — this is the test that catches it on the next reprice.
+   */
+  it("never prices a package above the sum of its parts", () => {
+    for (const tier of PRICING_TIERS) {
+      expect(tier.price).toBeLessThanOrEqual(partsTotal(tier)!);
+    }
+  });
+
+  /**
+   * Refuses to guess. A feature with no service behind it would otherwise
+   * produce a partial sum that understates the package while still looking
+   * authoritative.
+   */
+  it("reports no total when a line has no single service behind it", () => {
+    const invented = { ...PRICING_TIERS[0], features: ["Windows Tuning", "Free Pizza"] };
+    expect(partsTotal(invented)).toBeNull();
+    expect(savingOn(invented)).toBe(0);
+  });
+
+  it("keeps the smallest package's saving below the threshold worth printing", () => {
+    const standard = PRICING_TIERS.find((tier) => tier.slug === "standard")!;
+    expect(savingOn(standard)).toBeLessThan(MIN_SHOWN_SAVING);
   });
 });

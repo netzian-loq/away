@@ -66,19 +66,19 @@ export function ServicesTeaser({ currency = BASE_CURRENCY }: { currency?: Displa
           </div>
         ))}
 
-        {/* Two exits, not one. The packages link is for people who want more
-            than one service; the details link is for people who want to read
-            before they buy, which the cards deliberately do not make them do. */}
+        {/* The details link is for people who want to read before they buy,
+            which the cards deliberately do not make them do. The packages
+            link points back up, because they are above this section now. */}
         <Reveal className="mt-12 flex flex-col items-center gap-3 text-center">
           <p className="text-sm text-muted-foreground">
-            Want more than one? The packages bundle them and cost less than the sum.
+            Taking more than one? The packages above cost less than the sum of these.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             <Link
               href="#pricing"
               className="inline-flex min-h-11 items-center gap-2 px-3 text-sm font-semibold text-electric hover:underline"
             >
-              See the packages <ArrowRight className="h-4 w-4" />
+              Back to the packages <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/services"

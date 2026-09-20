@@ -32,22 +32,26 @@ export default async function HomePage() {
     <>
       <JsonLd />
       <Hero />
-      {/* Services come first, directly under the hero.
+      {/* What is for sale comes first, directly under the hero.
           ------------------------------------------------------------------
-          They used to sit fourth, behind the manifesto and the video, which
-          put two full-height sections of atmosphere between someone arriving
-          and anything they could actually buy. What people want to know on
-          arrival is what is sold and what it costs — every card is priced and
-          links straight into checkout with that service selected.
+          Both commercial sections used to sit behind the manifesto and the
+          video, which put two full-height sections of atmosphere between
+          someone arriving and anything they could actually buy.
+
+          Packages lead, single services follow. A package is the larger
+          order and the better deal, and it only reads as a deal next to what
+          its parts cost separately — which is exactly what the section below
+          it lists. Leading with the singles inverted that: it anchored every
+          visitor on the cheapest line before they saw a bundle.
 
           The keyword marquee that used to sit here was removed separately: an
           infinite 26s scroll of "FPS BOOST · LOW LATENCY · …" repeated the
           services section as decoration, and never stopped moving. */}
+      <PricingTable currency={currency} />
       <ServicesTeaser currency={currency} />
       <Manifesto />
       <VideoShowcase />
       <WhyUs />
-      <PricingTable currency={currency} />
       <VouchesCTA />
       <FreeUtility />
       <FinalCTA />
