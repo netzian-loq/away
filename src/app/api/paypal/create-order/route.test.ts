@@ -29,17 +29,17 @@ describe("POST /api/paypal/create-order", () => {
   it("charges the list price when no code is given", async () => {
     const response = await POST(post({ tier: "pro-level" }));
     expect(response.status).toBe(200);
-    await expect(response.json()).resolves.toMatchObject({ id: "ORDER123", amount: "65.00" });
+    await expect(response.json()).resolves.toMatchObject({ id: "ORDER123", amount: "70.00" });
     expect(createPayPalOrder).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: "65.00", currency: "EUR", referenceId: "pro-level", customId: "direct" }),
+      expect.objectContaining({ amount: "70.00", currency: "EUR", referenceId: "pro-level", customId: "direct" }),
     );
   });
 
   it("applies COSMO10 and tags the order for Cosmo", async () => {
     const response = await POST(post({ tier: "pro-level", code: "cosmo10" }));
-    await expect(response.json()).resolves.toMatchObject({ amount: "58.50", discountApplied: true });
+    await expect(response.json()).resolves.toMatchObject({ amount: "63.00", discountApplied: true });
     expect(createPayPalOrder).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: "58.50", customId: "cosmo" }),
+      expect.objectContaining({ amount: "63.00", customId: "cosmo" }),
     );
   });
 
@@ -49,7 +49,7 @@ describe("POST /api/paypal/create-order", () => {
       expect.objectContaining({
         amount: "10.00",
         referenceId: "network-tuning",
-        description: "Away Tweaks — Network Tuning",
+        description: "Away Tweaks — Network Optimization",
       }),
     );
   });
@@ -57,19 +57,19 @@ describe("POST /api/paypal/create-order", () => {
   it("applies the partner code to a single service too", async () => {
     await POST(post({ tier: "bios-tuning", code: "COSMO10" }));
     expect(createPayPalOrder).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: "10.80", customId: "cosmo" }),
+      expect.objectContaining({ amount: "13.50", customId: "cosmo" }),
     );
   });
 
   it("ignores any price the client tries to send", async () => {
     await POST(post({ tier: "extreme-level", price: 1, amount: "1.00", total: 1 }));
-    expect(createPayPalOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: "95.00" }));
+    expect(createPayPalOrder).toHaveBeenCalledWith(expect.objectContaining({ amount: "105.00" }));
   });
 
   it("ignores unknown discount codes instead of trusting them", async () => {
     await POST(post({ tier: "standard", code: "FREESTUFF99" }));
     expect(createPayPalOrder).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: "35.00", customId: "direct" }),
+      expect.objectContaining({ amount: "38.00", customId: "direct" }),
     );
   });
 

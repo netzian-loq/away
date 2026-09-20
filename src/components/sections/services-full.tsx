@@ -3,12 +3,24 @@ import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
-import { SERVICES } from "@/content/services";
+import { SERVICE_CATEGORIES, servicesIn } from "@/content/services";
+import { BASE_CURRENCY, chargedNote, formatPrice, type DisplayCurrency } from "@/lib/money";
 
-export function ServicesFull() {
+export function ServicesFull({ currency = BASE_CURRENCY }: { currency?: DisplayCurrency }) {
   return (
-    <div className="space-y-10">
-      {SERVICES.map((service, i) => {
+    <div className="space-y-16">
+      {SERVICE_CATEGORIES.map((category) => (
+        <section key={category.id} className="space-y-10">
+          <Reveal>
+            <div className="flex flex-col gap-1 border-b border-white/10 pb-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+              <h2 className="font-display text-2xl font-bold sm:text-3xl">{category.label}</h2>
+              <p className="text-sm text-muted-foreground sm:max-w-md sm:text-right">
+                {category.note}
+              </p>
+            </div>
+          </Reveal>
+
+          {servicesIn(category.id).map((service, i) => {
         const Icon = service.icon;
         return (
           <Reveal key={service.slug} delay={i * 0.04}>
@@ -17,10 +29,20 @@ export function ServicesFull() {
                 <div className="grid h-12 w-12 place-items-center rounded-xl border border-electric/40 bg-gradient-to-br from-electric/25 to-cyan-accent/10">
                   <Icon className="h-5 w-5 text-electric" strokeWidth={2} />
                 </div>
-                <h2 className="font-display text-2xl font-bold">{service.title}</h2>
+                <h3 className="font-display text-2xl font-bold">{service.title}</h3>
+                {service.tag && (
+                  <span className="rounded-full border border-cyan-accent/40 bg-cyan-accent/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-accent">
+                    {service.tag}
+                  </span>
+                )}
                 <span className="rounded-lg border border-electric/30 bg-electric/10 px-2.5 py-1 font-mono text-sm font-semibold text-electric">
-                  {service.priceLabel}
+                  {formatPrice(service.priceValue, currency)}
                 </span>
+                {chargedNote(service.priceValue, currency) && (
+                  <span className="text-xs text-muted-foreground">
+                    {chargedNote(service.priceValue, currency)}
+                  </span>
+                )}
               </div>
 
               <p className="mt-5 max-w-3xl leading-relaxed text-foreground/85">{service.description}</p>
@@ -62,16 +84,19 @@ export function ServicesFull() {
                   href={`/checkout?item=${service.slug}`}
                   className={buttonVariants({ size: "lg" })}
                 >
-                  Buy {service.priceLabel} <ArrowRight className="h-4 w-4" />
+                  Buy {formatPrice(service.priceValue, currency)}{" "}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
                 <span className="text-xs text-muted-foreground">
-                  Pay with PayPal or bank transfer — no ticket needed.
+                  Pay by card, PayPal, crypto or bank transfer.
                 </span>
               </div>
             </article>
           </Reveal>
-        );
-      })}
+            );
+          })}
+        </section>
+      ))}
     </div>
   );
 }

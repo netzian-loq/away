@@ -38,12 +38,19 @@ export async function POST(request: NextRequest) {
     }
 
     const item = findPurchasable(capture.tierSlug);
+    // PayPal echoes the line description back, and it is the only field that
+    // knows whether the extreme upgrade was taken. The slug lookup is the
+    // fallback for orders placed before it carried one.
+    const tierName =
+      (capture.description ?? "").replace(/^Away Tweaks — /, "").trim() ||
+      item?.name ||
+      capture.tierSlug;
     const discount = DISCOUNTS.find((entry) => entry.partner === capture.partner) ?? null;
 
     const emailInput: PurchaseEmailInput = {
       buyerEmail: capture.buyerEmail,
       buyerName: capture.buyerName,
-      tierName: item?.name ?? capture.tierSlug,
+      tierName,
       amount: capture.amount,
       currency: capture.currency,
       orderId: capture.orderId,

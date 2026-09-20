@@ -2,17 +2,34 @@ import { describe, expect, it } from "vitest";
 import { SERVICES } from "./services";
 
 describe("SERVICES", () => {
-  it("has exactly 6 services with the preserved prices", () => {
-    expect(SERVICES).toHaveLength(6);
+  it("has exactly 9 services with the preserved prices", () => {
+    expect(SERVICES).toHaveLength(9);
     const prices = Object.fromEntries(SERVICES.map((s) => [s.title, s.priceLabel]));
     expect(prices).toEqual({
+      "RAM Overclocking": "50€",
+      "CPU Overclocking": "27€",
+      "GPU Overclocking": "18€",
+      "BIOS Full Tuning": "15€",
+      "AwayOS + Windows Tuning": "27€",
+      "AwayOS + Extreme Windows Tuning": "32€",
       "Windows Tuning": "25€",
-      "GPU Overclocking": "15€",
-      "RAM Overclocking": "45€",
-      "CPU Overclocking": "25€",
-      "Network Tuning": "10€",
-      "BIOS Tuning": "12€",
+      "Extreme Windows Tuning": "30€",
+      "Network Optimization": "10€",
     });
+  });
+
+  it("keeps the price label and the charged value in step", () => {
+    // The label is what the page prints; the value is what checkout charges.
+    // A mismatch would advertise one price and take another.
+    for (const service of SERVICES) {
+      expect(service.priceLabel).toBe(`${service.priceValue}€`);
+    }
+  });
+
+  it("sorts every service into one of the two categories", () => {
+    for (const service of SERVICES) {
+      expect(["overclocking", "windows"]).toContain(service.category);
+    }
   });
 
   it("ships no placeholder screenshots", () => {

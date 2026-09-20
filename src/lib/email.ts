@@ -345,3 +345,90 @@ export async function sendPurchaseNotification(
     ].join("\n"),
   });
 }
+
+
+export interface TicketOrderEmailInput {
+  method: "bank-transfer" | "crypto";
+  /** Optional here, unlike the old bank flow: the ticket is the channel. */
+  buyerEmail?: string;
+  tierName: string;
+  amount: string;
+  currency: string;
+  reference: string;
+  partner: string;
+  discountCode?: string;
+  discountSummary?: string;
+  discord: string;
+}
+
+/** "bank transfer" / "crypto", for copy that reads as a sentence. */
+function methodLabel(method: TicketOrderEmailInput["method"]): string {
+  return method === "crypto" ? "crypto" : "bank transfer";
+}
+
+/**
+ * Buyer's copy of an order that will be settled in a ticket.
+ *
+ * Deliberately confirms nothing about payment. The old bank-transfer receipt
+ * listed the IBAN and read like an invoice, which made a self-declared order
+ * look settled to the person who declared it; this says what it is — a
+ * reservation with a reference on it — and points at the ticket.
+ */
+export async function sendTicketOrderEmail(input: TicketOrderEmailInput) {
+  if (!input.buyerEmail) return;
+
+  return send({
+    from: from(),
+    to: input.buyerEmail,
+    subject: `Your ${SITE.name} order — ${input.reference}`,
+    text: [
+      `${PURCHASE_THANK_YOU}: ${SITE.discordSupportUrl}`,
+      "",
+      `Package: ${input.tierName}`,
+      `Total: ${input.amount} ${input.currency}`,
+      `Paying by: ${methodLabel(input.method)}`,
+      `Your reference: ${input.reference}`,
+      "",
+      "Open a ticket on Discord and quote that reference. We'll send you the",
+      `${input.method === "crypto" ? "wallet address for the coin you want to use" : "account details"} there, and confirm as soon as the payment lands.`,
+      "",
+      "Nothing expires — your order stays reserved until then.",
+      "",
+      `— ${SITE.name}`,
+    ].join("\n"),
+  });
+}
+
+/**
+ * Heads-up to the owner that someone is on their way to a ticket.
+ *
+ * Worded as an expectation, never a sale. Nothing on this path can confirm a
+ * payment: the owner checks the account or the wallet, then marks it paid on
+ * the dashboard.
+ */
+export async function sendTicketOrderNotification(
+  input: TicketOrderEmailInput,
+  ledger?: LedgerOutcome,
+) {
+  return send({
+    from: from(),
+    to: SITE.email,
+    ...(input.buyerEmail ? { replyTo: input.buyerEmail } : {}),
+    subject: `Ticket incoming (${methodLabel(input.method)}) — ${input.tierName} (${input.amount} ${input.currency}) ${input.reference}`,
+    text: [
+      `Reference: ${input.reference}`,
+      `Package: ${input.tierName}`,
+      `Expecting: ${input.amount} ${input.currency} by ${methodLabel(input.method)}`,
+      `Discord: ${input.discord}`,
+      `Buyer email: ${input.buyerEmail || "— (not given)"}`,
+      `Discount code used: ${input.discountSummary ?? input.discountCode ?? "none"}`,
+      `Partner: ${input.partner}`,
+      ...ledgerLines(ledger),
+      "",
+      input.method === "crypto"
+        ? "Quote them a wallet address in the ticket, then mark this paid once the coins land."
+        : "Send them the account details in the ticket, then mark this paid once the transfer lands.",
+      "Not paid yet — nothing on the site can confirm it.",
+    ].join("\n"),
+  });
+}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/motion/reveal";
 import { ServicesFull } from "@/components/sections/services-full";
+import { getDisplayCurrency } from "@/lib/currency.server";
 import { PricingTable } from "@/components/sections/pricing-table";
 import { FinalCTA } from "@/components/sections/final-cta";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
@@ -21,7 +22,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const currency = await getDisplayCurrency();
+
   return (
     <>
       <BreadcrumbJsonLd crumbs={[{ name: "Services", path: "/services" }]} />
@@ -42,7 +45,7 @@ export default function ServicesPage() {
 
       <section className="relative pb-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <ServicesFull />
+          <ServicesFull currency={currency} />
         </div>
       </section>
 

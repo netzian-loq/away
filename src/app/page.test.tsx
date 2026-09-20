@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 import HomePage from "./page";
 
 describe("HomePage", () => {
-  it("renders the hero heading before the pricing heading in document order", () => {
-    render(<HomePage />);
+  it("renders the hero heading before the pricing heading in document order", async () => {
+    render(await HomePage());
     const headings = [
       ...screen.getAllByRole("heading", { level: 1 }),
       ...screen.getAllByRole("heading", { level: 2 }),

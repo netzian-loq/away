@@ -43,10 +43,10 @@ export const DISCOUNTS: Discount[] = [
     partnerLabel: "Cosmo eSports",
     commissionRate: 0.15,
   },
-  // Creator codes. Both are real offers, not bare attribution: 10% off for the
-  // buyer and 40% of what is actually paid to the partner. On the 65 EUR Pro
-  // package that is 58.50 charged and 23.40 owed, leaving 35.10 — so these are
-  // deliberately priced as a growth deal, not a standing margin.
+  // Creator codes. These are real offers, not bare attribution: a discount for
+  // the buyer and a share of what is actually paid to the partner. On the 70
+  // EUR Pro package a 10/40 code is 63.00 charged and 25.20 owed, leaving
+  // 37.80 — deliberately priced as a growth deal, not a standing margin.
   {
     code: "COLDVVS",
     percentOff: 10,
@@ -59,6 +59,18 @@ export const DISCOUNTS: Discount[] = [
     percentOff: 10,
     partner: "euzxn",
     partnerLabel: "Euzxn",
+    commissionRate: 0.4,
+  },
+  {
+    // Added 2026-09-20. A smaller buyer discount than the other creator
+    // codes, so the commission is the one number to sanity-check if this is
+    // meant to sit at the same 40% they earn: on the 70 EUR Pro package this
+    // bills 66.50 and owes 26.60, which is a larger payout than COLDVVS or
+    // EUZXN earn, because the buyer is discounted less.
+    code: "JESTER5",
+    percentOff: 5,
+    partner: "jesterfv",
+    partnerLabel: "Jesterfv",
     commissionRate: 0.4,
   },
 ];

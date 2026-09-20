@@ -3,9 +3,10 @@ import { Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
-import { PRICING_TIERS } from "@/content/pricing";
+import { EXTREME_UPGRADE, PRICING_TIERS } from "@/content/pricing";
+import { BASE_CURRENCY, chargedNote, formatPrice, type DisplayCurrency } from "@/lib/money";
 
-export function PricingTable() {
+export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayCurrency }) {
   return (
     <section id="pricing" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -17,6 +18,13 @@ export function PricingTable() {
             </MaskReveal>
           </h2>
           <p className="mt-4 text-muted-foreground">Stack services and pay less. Need something custom? Just ask — we build to spec.</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Every package can be upgraded to {EXTREME_UPGRADE.name} at checkout for{" "}
+            <span className="text-electric">
+              +{formatPrice(EXTREME_UPGRADE.price, currency)}
+            </span>
+            .
+          </p>
         </Reveal>
 
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
@@ -33,7 +41,14 @@ export function PricingTable() {
                   </span>
                 )}
                 <div className="font-display text-lg font-semibold">{tier.name}</div>
-                <div className="mt-4 font-display text-4xl font-bold text-gradient">{tier.price}€</div>
+                <div className="mt-4 font-display text-4xl font-bold text-gradient">
+                  {formatPrice(tier.price, currency)}
+                </div>
+                {chargedNote(tier.price, currency) && (
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {chargedNote(tier.price, currency)}
+                  </div>
+                )}
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{tier.description}</p>
                 <ul className="mt-5 flex-1 space-y-2.5">
                   {tier.features.map((feature) => (

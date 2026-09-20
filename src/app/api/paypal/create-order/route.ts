@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { findPurchasable } from "@/content/catalog";
+import { findPurchasable, priceFor, supportsExtreme } from "@/content/catalog";
 import { CURRENCY } from "@/content/pricing";
 import { applyDiscount, findDiscount, formatAmount } from "@/lib/discounts";
 import { createPayPalOrder, PayPalApiError, PayPalConfigError } from "@/lib/paypal";
@@ -25,13 +25,17 @@ export async function POST(request: NextRequest) {
   }
 
   const discount = findDiscount(parsed.data.code);
-  const amount = formatAmount(applyDiscount(item.price, discount));
+  // Upgrade first, discount second: a partner code takes its percentage off
+  // the whole order, not off the base with the upgrade bolted on after.
+  const extreme = parsed.data.extreme && supportsExtreme(item);
+  const amount = formatAmount(applyDiscount(priceFor(item, extreme), discount));
+  const itemName = extreme ? item.name + " + Extreme Windows Tuning" : item.name;
 
   try {
     const order = await createPayPalOrder({
       amount,
       currency: CURRENCY,
-      description: `Away Tweaks — ${item.name}`,
+      description: `Away Tweaks — ${itemName}`,
       referenceId: item.slug,
       customId: discount?.partner ?? "direct",
     });

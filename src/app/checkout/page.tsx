@@ -6,20 +6,24 @@ import { SITE } from "@/content/site";
 import { generateOrderReference } from "@/lib/order-reference";
 import { findDiscount } from "@/lib/discounts";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
-import { isStripeConfigured } from "@/lib/stripe";
-import { isCryptoConfigured } from "@/lib/nowpayments";
+import { isPayPalConfigured } from "@/lib/paypal";
+import { getDisplayCurrency } from "@/lib/currency.server";
 
 const TITLE = "Checkout";
 
 /**
  * Derived from the same switch that draws the tabs, so the copy can never
- * promise a payment method the page doesn't actually offer. Card payments are
- * currently off; turning them back on updates both sentences by itself.
+ * promise a payment method the page doesn't actually offer.
+ *
+ * Card is the conditional one: it runs on PayPal's card funding source, so it
+ * appears exactly when the PayPal credentials do. Crypto is unconditional now
+ * that it's settled in a Discord ticket rather than through a hosted invoice
+ * that needed its own keys.
  */
 const METHODS = [
-  ...(isStripeConfigured() ? ["card"] : []),
+  ...(isPayPalConfigured() ? ["card"] : []),
   "PayPal",
-  ...(isCryptoConfigured() ? ["crypto"] : []),
+  "crypto",
   "bank transfer",
 ].reduce((sentence, method, i, all) =>
   i === 0 ? method : i === all.length - 1 ? `${sentence} or ${method}` : `${sentence}, ${method}`,
@@ -54,6 +58,7 @@ export default async function CheckoutPage({
   // with a valid code IS the visit. Resolved server-side so an unknown or
   // invented code in the URL records nothing.
   const referral = findDiscount(first(params.code));
+  const currency = await getDisplayCurrency();
 
   return (
     <>
@@ -85,8 +90,8 @@ export default async function CheckoutPage({
             initialTier={first(params.item) || first(params.tier)}
             initialCode={first(params.code)}
             reference={generateOrderReference()}
-            stripeEnabled={isStripeConfigured()}
-            cryptoEnabled={isCryptoConfigured()}
+            paypalEnabled={isPayPalConfigured()}
+            currency={currency}
           />
         </div>
       </section>

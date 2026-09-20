@@ -43,7 +43,7 @@ describe("POST /api/stripe/create-session", () => {
     });
     expect(createCheckoutSession).toHaveBeenCalledWith(
       expect.objectContaining({
-        amount: 65,
+        amount: 70,
         currency: "EUR",
         tierSlug: "pro-level",
         partner: "direct",
@@ -56,15 +56,15 @@ describe("POST /api/stripe/create-session", () => {
     await POST(post({ tier: "pro-level", code: "cosmo10" }));
 
     expect(createCheckoutSession).toHaveBeenCalledWith(
-      expect.objectContaining({ amount: 58.5, partner: "cosmo", discountCode: "COSMO10" }),
+      expect.objectContaining({ amount: 63, partner: "cosmo", discountCode: "COSMO10" }),
     );
   });
 
   // The whole point of deriving from the catalog: a tampered body can't
-  // buy a €65 tune for €1.
+  // buy a €70 tune for €1.
   it("ignores any price the browser tries to send", async () => {
     await POST(post({ tier: "pro-level", amount: 1, price: 1, unit_amount: 100 }));
-    expect(createCheckoutSession).toHaveBeenCalledWith(expect.objectContaining({ amount: 65 }));
+    expect(createCheckoutSession).toHaveBeenCalledWith(expect.objectContaining({ amount: 70 }));
   });
 
   it("rejects an unknown package", async () => {

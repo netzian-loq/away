@@ -133,6 +133,15 @@ export interface PayPalCapture {
   currency: string;
   /** Tier slug from reference_id. */
   tierSlug: string;
+  /**
+   * The line description PayPal echoes back, e.g.
+   * "Away Tweaks — Pro Level + Extreme Windows Tuning".
+   *
+   * Carried because reference_id is only the base slug: it cannot say
+   * whether the buyer took the extreme upgrade, and the ledger would name
+   * the wrong package for an order that was charged 4€ more than its slug.
+   */
+  description: string;
   /** Partner slug from custom_id. */
   partner: string;
   buyerEmail: string;
@@ -169,6 +178,7 @@ interface PayPalCaptureResponse {
   purchase_units?: Array<{
     reference_id?: string;
     custom_id?: string;
+    description?: string;
     payments?: {
       captures?: Array<{ amount?: { value?: string; currency_code?: string } }>;
     };
@@ -191,6 +201,7 @@ export function normalizeCapture(data: PayPalCaptureResponse): PayPalCapture {
     amount: capture?.amount?.value ?? "",
     currency: capture?.amount?.currency_code ?? "",
     tierSlug: unit?.reference_id ?? "",
+    description: unit?.description ?? "",
     partner: unit?.custom_id ?? "direct",
     buyerEmail: data.payer?.email_address ?? "",
     buyerName: name,

@@ -5,8 +5,8 @@ import { SERVICES } from "@/content/services";
 import { PRICING_TIERS } from "@/content/pricing";
 
 describe("ServicesPage", () => {
-  it("renders full detail for every service and repeats every pricing tier", () => {
-    render(<ServicesPage />);
+  it("renders full detail for every service and repeats every pricing tier", async () => {
+    render(await ServicesPage());
     for (const service of SERVICES) {
       expect(screen.getByRole("heading", { name: service.title })).toBeInTheDocument();
     }

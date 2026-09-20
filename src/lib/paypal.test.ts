@@ -26,6 +26,7 @@ describe("normalizeCapture", () => {
       status: "COMPLETED",
       amount: "58.50",
       currency: "EUR",
+      description: "",
       tierSlug: "pro-level",
       partner: "cosmo",
       buyerEmail: "grinder@example.com",

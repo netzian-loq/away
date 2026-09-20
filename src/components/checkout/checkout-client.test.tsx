@@ -11,7 +11,7 @@ const PROPS = {
   initialTier: "pro-level",
   initialCode: "COSMO10",
   reference: "AWAY-K7P2QM",
-  stripeEnabled: false,
+  paypalEnabled: false,
 };
 
 // With no NEXT_PUBLIC_PAYPAL_CLIENT_ID in the test env, the component renders
@@ -28,16 +28,19 @@ describe("CheckoutClient (manual PayPal path)", () => {
     const link = screen
       .getAllByRole("link")
       .find((anchor) => anchor.getAttribute("href")?.includes("paypal.me"));
-    expect(link).toHaveAttribute("href", `https://paypal.me/${SITE.paypalMeHandle}/58.50EUR`);
+    expect(link).toHaveAttribute("href", `https://paypal.me/${SITE.paypalMeHandle}/63.00EUR`);
   });
 
   it("switches to bank transfer and drops the Friends & Family notice", async () => {
     const user = userEvent.setup();
     render(<CheckoutClient {...PROPS} />);
 
-    await user.click(screen.getByRole("tab", { name: /Bank transfer/i }));
+    await user.click(screen.getByRole("tab", { name: /^Bank$/i }));
 
-    expect(screen.getByText(SITE.bank.iban)).toBeInTheDocument();
+    // The account details moved into the ticket — the page no longer prints
+    // the IBAN, and there is no button claiming a transfer has been sent.
+    expect(screen.getByText(/Confirmed in a ticket/i)).toBeInTheDocument();
+    expect(screen.queryByText(SITE.bank.iban)).not.toBeInTheDocument();
     expect(screen.queryByText(/Send as Friends & Family/i)).not.toBeInTheDocument();
   });
 
@@ -45,8 +48,8 @@ describe("CheckoutClient (manual PayPal path)", () => {
     render(<CheckoutClient {...PROPS} />);
     expect(screen.getByText(/Cosmo eSports — 10% off applied/i)).toBeInTheDocument();
     // Discounted price shows twice: on the selected package card and as the total.
-    expect(screen.getAllByText("58.50€").length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText("−6.50€")).toBeInTheDocument();
+    expect(screen.getAllByText("63€").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText("−7€")).toBeInTheDocument();
   });
 });
 
@@ -55,7 +58,7 @@ describe("CheckoutClient partner discount gating", () => {
     initialTier: "pro-level",
     initialCode: "",
     reference: "AWAY-K7P2QM",
-    stripeEnabled: false,
+    paypalEnabled: false,
   };
 
   it("never mentions a discount to someone who arrived without a partner link", () => {
@@ -78,25 +81,25 @@ describe("CheckoutClient partner discount gating", () => {
 
   it("charges full price without a partner link", () => {
     render(<CheckoutClient {...direct} />);
-    expect(screen.getAllByText("65.00€").length).toBeGreaterThanOrEqual(1);
-    expect(screen.queryByText("58.50€")).not.toBeInTheDocument();
+    expect(screen.getAllByText("70€").length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByText("63€")).not.toBeInTheDocument();
 
     const paypal = screen
       .getAllByRole("link")
       .find((a) => a.getAttribute("href")?.includes("paypal.me"));
-    expect(paypal).toHaveAttribute("href", `https://paypal.me/${SITE.paypalMeHandle}/65.00EUR`);
+    expect(paypal).toHaveAttribute("href", `https://paypal.me/${SITE.paypalMeHandle}/70.00EUR`);
   });
 
   it("ignores an unrecognised code in the URL instead of hinting one exists", () => {
     render(<CheckoutClient {...direct} initialCode="NOTACODE" />);
     expect(screen.queryByText(/% off applied/i)).not.toBeInTheDocument();
-    expect(screen.getAllByText("65.00€").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("70€").length).toBeGreaterThanOrEqual(1);
   });
 
   it("applies the discount when the partner link carried the code", () => {
     render(<CheckoutClient {...direct} initialCode="COSMO10" />);
     expect(screen.getByText(/Cosmo eSports — 10% off applied/i)).toBeInTheDocument();
-    expect(screen.getAllByText("58.50€").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("63€").length).toBeGreaterThanOrEqual(2);
   });
 
   it("accepts the code however the link cased it", () => {
@@ -105,76 +108,87 @@ describe("CheckoutClient partner discount gating", () => {
   });
 });
 
-describe("CheckoutClient card path (Stripe)", () => {
-  const withStripe = { ...PROPS, stripeEnabled: true };
-
+describe("CheckoutClient card path (PayPal card funding)", () => {
   afterEach(() => {
-    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
-  it("hides the card tab entirely when Stripe isn't configured", () => {
+  /**
+   * The card button is PayPal's, so it needs both halves of the credential:
+   * the secret (via the prop) and the client id the SDK is loaded with.
+   */
+  function configured() {
+    vi.stubEnv("NEXT_PUBLIC_PAYPAL_CLIENT_ID", "test-client-id");
+    return { ...PROPS, paypalEnabled: true };
+  }
+
+  it("shows the card tab as coming soon, not missing, until PayPal is configured", () => {
     render(<CheckoutClient {...PROPS} />);
-    expect(screen.queryByRole("tab", { name: /^Card$/i })).not.toBeInTheDocument();
+    const tab = screen.getByRole("tab", { name: /Card/i });
+    expect(tab).toBeDisabled();
+    expect(tab).toHaveTextContent(/soon/i);
   });
 
-  it("defaults to card when Stripe is configured", () => {
-    render(<CheckoutClient {...withStripe} />);
-    expect(screen.getByRole("tab", { name: /^Card$/i })).toHaveAttribute(
+  it("falls back to PayPal as the selected tab while card is unavailable", () => {
+    render(<CheckoutClient {...PROPS} />);
+    expect(screen.getByRole("tab", { name: /^PayPal$/i })).toHaveAttribute(
       "aria-selected",
       "true",
     );
   });
 
-  it("names the discounted amount on the pay button", () => {
-    render(<CheckoutClient {...withStripe} />);
-    expect(screen.getByRole("button", { name: /Pay 58\.50€ by card/i })).toBeInTheDocument();
+  /**
+   * Half a credential is the case that used to fail after the click, with a
+   * rendered button and a 503 from create-order. Neither tab may offer one.
+   */
+  it("keeps card off when the client id is set but the secret isn't", () => {
+    vi.stubEnv("NEXT_PUBLIC_PAYPAL_CLIENT_ID", "test-client-id");
+    render(<CheckoutClient {...PROPS} paypalEnabled={false} />);
+    expect(screen.getByRole("tab", { name: /Card/i })).toBeDisabled();
   });
 
-  it("sends the slug and code — never a price — then redirects to Stripe", async () => {
-    const user = userEvent.setup();
-    const assign = vi.fn();
-    vi.stubGlobal("location", { assign });
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => ({ id: "cs_test_1", url: "https://checkout.stripe.com/c/pay/cs_test_1" }),
-    });
-    vi.stubGlobal("fetch", fetchMock);
-
-    render(<CheckoutClient {...withStripe} />);
-    await user.click(screen.getByRole("button", { name: /Pay 58\.50€ by card/i }));
-
-    const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe("/api/stripe/create-session");
-    const sent = JSON.parse(init.body);
-    expect(sent).toEqual({ tier: "pro-level", code: "COSMO10", discord: "" });
-    // The browser must never get to name its own price.
-    expect(init.body).not.toMatch(/58\.50|amount|price/i);
-    expect(assign).toHaveBeenCalledWith("https://checkout.stripe.com/c/pay/cs_test_1");
+  it("defaults to card once PayPal is fully configured", () => {
+    render(<CheckoutClient {...configured()} />);
+    const tab = screen.getByRole("tab", { name: /^Card$/i });
+    expect(tab).toBeEnabled();
+    expect(tab).toHaveAttribute("aria-selected", "true");
   });
 
-  it("surfaces the server's error and stays on the page", async () => {
-    const user = userEvent.setup();
-    const assign = vi.fn();
-    vi.stubGlobal("location", { assign });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({
-        ok: false,
-        json: async () => ({ error: "Card payments aren't switched on yet." }),
-      }),
-    );
-
-    render(<CheckoutClient {...withStripe} />);
-    await user.click(screen.getByRole("button", { name: /Pay 58\.50€ by card/i }));
-
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Card payments aren't switched on yet.",
-    );
-    expect(assign).not.toHaveBeenCalled();
+  it("waits on PayPal's SDK rather than showing an empty panel", () => {
+    render(<CheckoutClient {...configured()} />);
+    expect(screen.getByText(/Loading the card form/i)).toBeInTheDocument();
   });
 
-  it("promises Stripe handles the card, not Away Tweaks", () => {
-    render(<CheckoutClient {...withStripe} />);
+  it("drops the PayPal.Me Friends & Family path once the API is configured", () => {
+    render(<CheckoutClient {...configured()} />);
+    expect(screen.queryByText(/Send as Friends & Family/i)).not.toBeInTheDocument();
+  });
+
+  it("promises the card is entered on PayPal's form, not this site", () => {
+    render(<CheckoutClient {...configured()} />);
+    expect(screen.getByText(/no PayPal account needed/i)).toBeInTheDocument();
     expect(screen.getByText(/never sees your card details/i)).toBeInTheDocument();
+  });
+});
+
+describe("CheckoutClient crypto tab", () => {
+  it("is always open now that crypto is settled in a ticket", async () => {
+    const user = userEvent.setup();
+    render(<CheckoutClient {...PROPS} />);
+
+    const tab = screen.getByRole("tab", { name: /^Crypto$/i });
+    expect(tab).toBeEnabled();
+
+    await user.click(tab);
+    expect(screen.getByText(/Handled in a ticket/i)).toBeInTheDocument();
+  });
+
+  it("takes no payment on the page and says so", async () => {
+    const user = userEvent.setup();
+    render(<CheckoutClient {...PROPS} />);
+
+    await user.click(screen.getByRole("tab", { name: /^Crypto$/i }));
+    expect(screen.getByText(/No payment is taken here/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Pay 63.00€ in crypto/i })).toBeInTheDocument();
   });
 });

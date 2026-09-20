@@ -6,11 +6,11 @@ describe("PRICING_TIERS", () => {
     expect(PRICING_TIERS).toHaveLength(5);
     const prices = Object.fromEntries(PRICING_TIERS.map((t) => [t.name, t.price]));
     expect(prices).toEqual({
-      Standard: 35,
-      "Entry Level": 45,
-      "High Entry Level": 52,
-      "Pro Level": 65,
-      "Extreme Level": 95,
+      Standard: 38,
+      "Low Entry Level": 50,
+      "High Entry Level": 55,
+      "Pro Level": 70,
+      "Extreme Level": 105,
     });
   });
 
@@ -37,8 +37,8 @@ describe("PRICING_TIERS", () => {
   });
 
   it("looks tiers up by slug and rejects unknown ones", () => {
-    expect(findTier("pro-level")?.price).toBe(65);
-    expect(findTier(" PRO-LEVEL ")?.price).toBe(65);
+    expect(findTier("pro-level")?.price).toBe(70);
+    expect(findTier(" PRO-LEVEL ")?.price).toBe(70);
     expect(findTier("free-please")).toBeNull();
     expect(findTier("")).toBeNull();
     expect(findTier(undefined)).toBeNull();
