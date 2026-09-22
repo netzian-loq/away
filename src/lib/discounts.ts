@@ -33,6 +33,16 @@ export interface Discount {
    * Must be ordered by ascending `afterPaidOrders`.
    */
   tiers?: { afterPaidOrders: number; rate: number }[];
+  /**
+   * Path of the partner's own landing page, when they have one.
+   *
+   * Exists so the site chrome can keep the code attached. A visitor who
+   * lands on a partner page and then clicks the nav's "Get Optimized"
+   * button rather than the page's own CTA would otherwise arrive at a bare
+   * /checkout — full price for them, no attribution for the partner, and no
+   * way to tell afterwards that it happened.
+   */
+  landingPath?: string;
 }
 
 export const DISCOUNTS: Discount[] = [
@@ -70,8 +80,9 @@ export const DISCOUNTS: Discount[] = [
     code: "JESTER5",
     percentOff: 5,
     partner: "jesterfv",
-    partnerLabel: "Jesterfv",
+    partnerLabel: "Jesterfv1",
     commissionRate: 0.4,
+    landingPath: "/jesterfv1",
   },
 ];
 
@@ -130,6 +141,25 @@ export function findPartner(partner: string | null | undefined): Discount | null
  * put another partner's code on their page.
  */
 export const COSMO_DISCOUNT = DISCOUNTS.find((d) => d.code === "COSMO10")!;
+
+/**
+ * The discount belonging to a partner landing page, if the path is one.
+ * Used by the nav and footer to keep their checkout links attributed.
+ */
+export function discountForPath(pathname: string | null | undefined): Discount | null {
+  if (!pathname) return null;
+  const normalized = pathname.replace(/\/+$/, "").toLowerCase() || "/";
+  return DISCOUNTS.find((entry) => entry.landingPath === normalized) ?? null;
+}
+
+/** A checkout href that keeps whatever partner code the current page implies. */
+export function checkoutHrefFor(pathname: string | null | undefined): string {
+  const discount = discountForPath(pathname);
+  return discount ? `/checkout?code=${discount.code}` : "/checkout";
+}
+
+/** Jesterfv1 creator code, for his page at /jesterfv1. */
+export const JESTER_DISCOUNT = DISCOUNTS.find((d) => d.code === "JESTER5")!;
 
 /** Case- and whitespace-insensitive lookup. Returns null for unknown codes. */
 export function findDiscount(code: string | null | undefined): Discount | null {

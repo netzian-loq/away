@@ -13,7 +13,7 @@ describe("sitemap", () => {
 
   it("leaves the unlisted partner and checkout pages out", () => {
     const urls = sitemap().map((entry) => entry.url);
-    expect(urls).not.toContain(`${SITE.url}/cosmo`);
+    expect(urls).not.toContain(`${SITE.url}/jesterfv1`);
     expect(urls).not.toContain(`${SITE.url}/checkout`);
   });
 

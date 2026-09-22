@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { CheckoutLink } from "@/components/layout/checkout-link";
 import { useEffect, useState } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -71,9 +72,9 @@ export function Nav() {
           </nav>
 
           <div className="hidden lg:block">
-            <Link href="/checkout" className={buttonVariants({ size: "lg" })}>
+            <CheckoutLink className={buttonVariants({ size: "lg" })}>
               Get Optimized <ArrowRight className="h-4 w-4" />
-            </Link>
+            </CheckoutLink>
           </div>
 
           <button
@@ -97,13 +98,12 @@ export function Nav() {
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/checkout"
+            <CheckoutLink
               onClick={() => setOpen(false)}
               className={buttonVariants({ className: "mt-2 w-full" })}
             >
               Get Optimized
-            </Link>
+            </CheckoutLink>
           </div>
         )}
       </div>

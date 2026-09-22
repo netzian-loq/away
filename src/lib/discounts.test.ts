@@ -1,15 +1,53 @@
 import { describe, expect, it } from "vitest";
 import {
   applyDiscount,
+  checkoutHrefFor,
   commissionOn,
   COSMO_DISCOUNT,
   describeDiscount,
+  discountForPath,
   findDiscount,
   formatAmount,
+  JESTER_DISCOUNT,
   nextTier,
   rateFor,
   type Discount,
 } from "./discounts";
+
+/**
+ * The site chrome keeps a partner's code on their own page. Without this, a
+ * viewer who clicked the nav's "Get Optimized" instead of the page's button
+ * paid full price and the partner was never credited.
+ */
+describe("partner landing pages", () => {
+  it("resolves the partner behind a landing page", () => {
+    expect(discountForPath("/jesterfv1")).toBe(JESTER_DISCOUNT);
+  });
+
+  it("ignores a trailing slash and letter case", () => {
+    expect(discountForPath("/jesterfv1/")).toBe(JESTER_DISCOUNT);
+    expect(discountForPath("/JesterFV1")).toBe(JESTER_DISCOUNT);
+  });
+
+  it("claims no partner for an ordinary page", () => {
+    expect(discountForPath("/")).toBeNull();
+    expect(discountForPath("/services")).toBeNull();
+    expect(discountForPath(null)).toBeNull();
+    expect(discountForPath(undefined)).toBeNull();
+  });
+
+  /** A partner without a page must not be matched by an empty path. */
+  it("never matches a partner that has no landing page", () => {
+    expect(discountForPath("")).toBeNull();
+    expect(COSMO_DISCOUNT.landingPath).toBeUndefined();
+  });
+
+  it("keeps the code on checkout links from a partner page only", () => {
+    expect(checkoutHrefFor("/jesterfv1")).toBe(`/checkout?code=${JESTER_DISCOUNT.code}`);
+    expect(checkoutHrefFor("/")).toBe("/checkout");
+    expect(checkoutHrefFor("/checkout")).toBe("/checkout");
+  });
+});
 
 describe("discounts", () => {
   it("exposes COSMO10 as a 10% Cosmo eSports code", () => {

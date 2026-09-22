@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Disc } from "lucide-react";
 import { SITE } from "@/content/site";
+import { CheckoutLink } from "@/components/layout/checkout-link";
 import { SERVICES } from "@/content/services";
 
 export function Footer() {
@@ -67,7 +68,7 @@ export function Footer() {
           <div className="flex items-center gap-5">
             <Link href="/services" className="tap-target hover:text-electric">Services</Link>
             <Link href="/#pricing" className="tap-target hover:text-electric">Pricing</Link>
-            <Link href="/checkout" className="tap-target hover:text-electric">Buy</Link>
+            <CheckoutLink className="tap-target hover:text-electric">Buy</CheckoutLink>
           </div>
         </div>
       </div>
