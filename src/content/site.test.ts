@@ -14,8 +14,8 @@ describe("SITE", () => {
     expect(SITE.email).toBe(SITE.email.toLowerCase());
   });
 
-  it("has nav links for the 3 pages plus the free-tool anchor", () => {
-    expect(SITE.nav.map((n) => n.href)).toEqual(["/", "/services", "/about", "/#utility"]);
+  it("has nav links for the 4 pages plus the free-tool anchor", () => {
+    expect(SITE.nav.map((n) => n.href)).toEqual(["/", "/services", "/uefi-kompile", "/about", "/#utility"]);
   });
 
   // The contact form was removed in favour of sending people straight to the

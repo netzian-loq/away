@@ -49,6 +49,7 @@ export const SITE = {
   nav: [
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
+    { label: "Uefi-Kompile", href: "/uefi-kompile" },
     { label: "About", href: "/about" },
     { label: "Free Tool", href: "/#utility" },
   ] as NavLink[],

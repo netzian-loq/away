@@ -9,6 +9,7 @@ describe("sitemap", () => {
     expect(urls).toContain(SITE.url);
     expect(urls).toContain(`${SITE.url}/services`);
     expect(urls).toContain(`${SITE.url}/about`);
+    expect(urls).toContain(`${SITE.url}/uefi-kompile`);
   });
 
   it("leaves the unlisted partner and checkout pages out", () => {

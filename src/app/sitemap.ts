@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // only by a shared link or from the pricing table. /contact is gone from the
   // sitemap too — nothing on the site links to it any more, so listing it would
   // point crawlers at a page visitors can't reach.
-  const routes = ["", "/services", "/about"];
+  const routes = ["", "/services", "/uefi-kompile", "/about"];
   return routes.map((route) => ({
     url: `${SITE.url}${route}`,
     lastModified: new Date(),
