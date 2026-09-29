@@ -30,12 +30,18 @@ export interface UefiKompileStep {
 export const UEFI_KOMPILE = {
   name: "Uefi-Kompile",
   path: "/uefi-kompile",
+  /** Euros, as everything on the site is priced (owner, 2026-09-29): the
+   *  tool is 48€ with its 25 coins included; more coins are 10€ per 30.
+   *  Display goes through money.ts, so US visitors see ≈$ beside the euros. */
+  price: 48,
+  freeCoins: 25,
+  coinPack: { coins: 30, price: 10 },
   eyebrow: "BIOS optimization tool",
   tagline: "A low-level, automated tool for BIOS optimization.",
   heroSubtitle:
     "400–500 BIOS settings tuned in depth for extra low latency and smoothness, built to lift your 1% and 0.1% lows. Fully automated, so anyone can use it.",
   description:
-    "Uefi-Kompile is a low-level, automated BIOS optimization tool: 400–500 settings tuned for low latency and smoother frames, automated presets for AM4, AM5 and Intel, and 25 free coins included.",
+    "Uefi-Kompile is a low-level, automated BIOS optimization tool: 400–500 settings tuned for low latency and smoother frames, automated presets for AM4, AM5 and Intel, and 25 coins included, for 48€.",
 
   facts: [
     { value: "400–500", label: "BIOS settings tuned" },
@@ -76,8 +82,12 @@ export const UEFI_KOMPILE = {
   coinsTitle: "Comes with 25 free coins.",
   coinsBody: "Every Save or Export uses one coin, and you start with 25.",
 
+  pricingTitle: "One price, coins included.",
+  toolLine: "The tool, every preset, and 25 coins to start.",
+  coinPackLine: "Top up whenever you need to. Each Save or Export uses one coin.",
+
   steps: [
-    { title: "Get it on Discord", body: "Open a ticket and we set you up with Uefi-Kompile." },
+    { title: "Get it on Discord", body: "Open a ticket, pay, and we set you up with Uefi-Kompile." },
     { title: "Activate your PC", body: "Send the PC ID the app shows you. We add your PC and your 25 coins." },
     { title: "Run your preset", body: "Read your BIOS, pick AM4, AM5, Intel or X3D, review and write." },
   ] as UefiKompileStep[],

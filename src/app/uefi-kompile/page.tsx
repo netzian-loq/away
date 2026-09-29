@@ -8,6 +8,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { UEFI_KOMPILE, type UefiKompileIcon } from "@/content/uefi-kompile";
 import { SITE } from "@/content/site";
+import { getDisplayCurrency } from "@/lib/currency.server";
+import { chargedNote, formatPrice } from "@/lib/money";
 
 const PATH = UEFI_KOMPILE.path;
 
@@ -29,22 +31,29 @@ const FEATURE_ICONS: Record<UefiKompileIcon, LucideIcon> = {
   safe: ShieldCheck,
 };
 
-/** Buyers get the tool through a Discord ticket, the same path every order on
- *  the site already takes; there is no checkout item for it yet. */
-function GetButton({ variant }: { variant?: "outline" }) {
+/** Buyers get the tool through a Discord ticket, the same path every manual
+ *  order on the site takes; there is no checkout item for it yet. The price
+ *  rides on the button so nobody opens a ticket without knowing it. */
+function GetButton({ price }: { price: string }) {
   return (
     <a
       href={SITE.discordSupportUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={buttonVariants({ variant, size: "lg" })}
+      className={buttonVariants({ size: "lg" })}
     >
-      {UEFI_KOMPILE.cta} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      {UEFI_KOMPILE.cta} · {price} <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </a>
   );
 }
 
-export default function UefiKompilePage() {
+export default async function UefiKompilePage() {
+  const currency = await getDisplayCurrency();
+  const price = formatPrice(UEFI_KOMPILE.price, currency);
+  const charged = chargedNote(UEFI_KOMPILE.price, currency);
+  const pack = UEFI_KOMPILE.coinPack;
+  const packPrice = formatPrice(pack.price, currency);
+
   return (
     <>
       <BreadcrumbJsonLd crumbs={[{ name: UEFI_KOMPILE.name, path: PATH }]} />
@@ -74,10 +83,17 @@ export default function UefiKompilePage() {
             </p>
             <p className="mt-4 max-w-md leading-relaxed text-muted-foreground">{UEFI_KOMPILE.heroSubtitle}</p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <GetButton />
-              <Link href="#how" className={buttonVariants({ variant: "outline", size: "lg" })}>
-                How it works
+            <p className="mt-7 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span className="font-display text-4xl font-bold text-gradient">{price}</span>
+              <span className="text-sm text-muted-foreground">
+                {UEFI_KOMPILE.freeCoins} coins included{charged && ` · ${charged}`}
+              </span>
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <GetButton price={price} />
+              <Link href="#pricing" className={buttonVariants({ variant: "outline", size: "lg" })}>
+                See pricing
               </Link>
             </div>
           </Reveal>
@@ -167,7 +183,9 @@ export default function UefiKompilePage() {
               </span>
               <span className="min-w-0">
                 <span className="block font-display text-lg font-semibold">{UEFI_KOMPILE.coinsTitle}</span>
-                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{UEFI_KOMPILE.coinsBody}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">
+                  {UEFI_KOMPILE.coinsBody} More are {packPrice} for {pack.coins}.
+                </span>
               </span>
             </div>
           </Reveal>
@@ -187,6 +205,58 @@ export default function UefiKompilePage() {
         </div>
       </section>
 
+      {/* ── Pricing ─────────────────────────────────────────────────────
+          Two lines, both computed from the content numbers: the tool, and
+          the coin top-up. The tool is the larger, accented cell - it is the
+          thing being bought; coins are what keeps it running. */}
+      <section id="pricing" className="relative scroll-mt-28 py-12 sm:py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <Reveal className="max-w-2xl">
+            <h2 className="font-display text-3xl font-bold text-balance sm:text-4xl">{UEFI_KOMPILE.pricingTitle}</h2>
+          </Reveal>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            <Reveal className="min-w-0">
+              <div className="glass-strong flex h-full flex-col rounded-3xl border border-electric/30 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8">
+                <span className="font-display text-2xl font-semibold">{UEFI_KOMPILE.name}</span>
+                <span className="mt-4 font-display text-5xl font-bold text-gradient">{price}</span>
+                {charged && <span className="mt-1 text-xs text-muted-foreground">{charged}</span>}
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{UEFI_KOMPILE.toolLine}</p>
+                <span className="mt-auto pt-8">
+                  <GetButton price={price} />
+                </span>
+              </div>
+            </Reveal>
+
+            <Reveal className="min-w-0" delay={0.06}>
+              <div className="glass flex h-full flex-col rounded-3xl border border-white/10 p-7 sm:p-8">
+                <span className="flex items-center gap-2 font-display text-2xl font-semibold">
+                  <Coins className="h-5 w-5 text-electric" strokeWidth={2} aria-hidden="true" />
+                  {pack.coins} coins
+                </span>
+                <span className="mt-4 font-display text-5xl font-bold">{packPrice}</span>
+                {chargedNote(pack.price, currency) && (
+                  <span className="mt-1 text-xs text-muted-foreground">{chargedNote(pack.price, currency)}</span>
+                )}
+                <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{UEFI_KOMPILE.coinPackLine}</p>
+                {/* Coins are topped up the same way the tool is bought: in a
+                    ticket. Outline, so it never competes with the tool's CTA. */}
+                <span className="mt-auto pt-8">
+                  <a
+                    href={SITE.discordSupportUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={buttonVariants({ variant: "outline", size: "lg" })}
+                  >
+                    Top up on Discord
+                  </a>
+                </span>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
       {/* ── Close ───────────────────────────────────────────────────────
           One panel, one ask, and the three real steps under it: the tool
           only opens an account on a PC that has been activated, so the PC ID
@@ -199,7 +269,7 @@ export default function UefiKompilePage() {
               <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{UEFI_KOMPILE.closeBody}</p>
 
               <div className="mt-8 flex justify-center">
-                <GetButton />
+                <GetButton price={price} />
               </div>
 
               <ol className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-6 border-t border-white/10 pt-8 text-left sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/10">
