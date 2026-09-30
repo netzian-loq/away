@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Coins, Cpu, Gauge, Layers, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check, Coins, Cpu, Gauge, Layers, ShieldCheck, type LucideIcon } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
@@ -34,23 +34,29 @@ const FEATURE_ICONS: Record<UefiKompileIcon, LucideIcon> = {
 /** Buyers get the tool through a Discord ticket, the same path every manual
  *  order on the site takes; there is no checkout item for it yet. The price
  *  rides on the button so nobody opens a ticket without knowing it. */
-function GetButton({ price }: { price: string }) {
+function GetButton({ label, price, outline = false }: { label: string; price: string; outline?: boolean }) {
   return (
     <a
       href={SITE.discordSupportUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={buttonVariants({ size: "lg" })}
+      className={buttonVariants({ variant: outline ? "outline" : "primary", size: "lg" })}
     >
-      {UEFI_KOMPILE.cta} · {price} <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      {label} · {price} <ArrowRight className="h-4 w-4" aria-hidden="true" />
     </a>
   );
 }
 
 export default async function UefiKompilePage() {
   const currency = await getDisplayCurrency();
-  const price = formatPrice(UEFI_KOMPILE.price, currency);
-  const charged = chargedNote(UEFI_KOMPILE.price, currency);
+  const plans = UEFI_KOMPILE.plans;
+  // The entry price: the hero and the closing ask quote "from" the cheaper
+  // version, the pricing cards give each its own.
+  const fromEuros = Math.min(...plans.map((p) => p.price));
+  const from = `from ${formatPrice(fromEuros, currency)}`;
+  const charged = chargedNote(fromEuros, currency);
+  const pro = plans.find((p) => p.id === "pro");
+  const upgrade = UEFI_KOMPILE.upgrade;
   const pack = UEFI_KOMPILE.coinPack;
   const packPrice = formatPrice(pack.price, currency);
 
@@ -84,14 +90,16 @@ export default async function UefiKompilePage() {
             <p className="mt-4 max-w-md leading-relaxed text-muted-foreground">{UEFI_KOMPILE.heroSubtitle}</p>
 
             <p className="mt-7 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className="font-display text-4xl font-bold text-gradient">{price}</span>
+              <span className="text-sm text-muted-foreground">From</span>
+              <span className="font-display text-4xl font-bold text-gradient">{formatPrice(fromEuros, currency)}</span>
               <span className="text-sm text-muted-foreground">
-                {UEFI_KOMPILE.freeCoins} coins included{charged && ` · ${charged}`}
+                Normal{pro && ` · Pro ${formatPrice(pro.price, currency)}`} · {UEFI_KOMPILE.freeCoins} coins included
+                {charged && ` · ${charged}`}
               </span>
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <GetButton price={price} />
+              <GetButton label={UEFI_KOMPILE.cta} price={from} />
               <Link href="#pricing" className={buttonVariants({ variant: "outline", size: "lg" })}>
                 See pricing
               </Link>
@@ -102,7 +110,7 @@ export default async function UefiKompilePage() {
             <div className="glass-strong overflow-hidden rounded-2xl border border-white/10 shadow-glow-lg">
               <Image
                 src="/uefi-kompile/main.webp"
-                alt="Uefi-Kompile main window: a BIOS settings list, the selected setting's details, and 25 coins available"
+                alt="Uefi-Kompile main window: a BIOS settings list, the selected setting's details, a Pro account and 25 coins available"
                 width={1212}
                 height={690}
                 sizes="(max-width: 1024px) 100vw, 60vw"
@@ -131,6 +139,43 @@ export default async function UefiKompilePage() {
                 </div>
               ))}
             </dl>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ── Updates ─────────────────────────────────────────────────────
+          The owner's changelog (2026-09-30). One quiet panel with the label
+          on the left and the items as plain rows - news, not a feature grid.
+          The version choice links down to the cards that price it. */}
+      <section aria-labelledby="updates-title" className="relative pt-10 pb-2">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <Reveal>
+            <div className="glass grid gap-6 rounded-3xl border border-white/10 p-6 sm:p-8 md:grid-cols-[minmax(0,0.6fr)_minmax(0,1.4fr)] md:gap-10">
+              <div className="min-w-0">
+                <span className="inline-flex items-center rounded-full border border-electric/40 bg-electric/10 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-electric">
+                  New
+                </span>
+                <h2 id="updates-title" className="mt-3 font-display text-2xl font-bold">
+                  {UEFI_KOMPILE.updatesTitle}
+                </h2>
+              </div>
+              <ul className="min-w-0 divide-y divide-white/10">
+                {UEFI_KOMPILE.updates.map((update) => (
+                  <li key={update.title} className="py-4 first:pt-0 last:pb-0">
+                    <span className="block font-display text-lg font-semibold">{update.title}</span>
+                    <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{update.body}</span>
+                  </li>
+                ))}
+                <li className="pt-4">
+                  <Link
+                    href="#pricing"
+                    className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-electric hover:underline"
+                  >
+                    Compare Normal and Pro <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -206,53 +251,109 @@ export default async function UefiKompilePage() {
       </section>
 
       {/* ── Pricing ─────────────────────────────────────────────────────
-          Two lines, both computed from the content numbers: the tool, and
-          the coin top-up. The tool is the larger, accented cell - it is the
-          thing being bought; coins are what keeps it running. */}
+          The two versions side by side, then the two smaller buys under
+          them: the upgrade and the coin top-up. Every figure is computed from
+          the content numbers. Pro is the accented card (the site's
+          featured-tier construction): it is the exception; Normal is the
+          plain, affordable default. */}
       <section id="pricing" className="relative scroll-mt-28 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal className="max-w-2xl">
             <h2 className="font-display text-3xl font-bold text-balance sm:text-4xl">{UEFI_KOMPILE.pricingTitle}</h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">{UEFI_KOMPILE.pricingBody}</p>
           </Reveal>
 
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
-            <Reveal className="min-w-0">
-              <div className="glass-strong flex h-full flex-col rounded-3xl border border-electric/30 p-7 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-8">
-                <span className="font-display text-2xl font-semibold">{UEFI_KOMPILE.name}</span>
-                <span className="mt-4 font-display text-5xl font-bold text-gradient">{price}</span>
-                {charged && <span className="mt-1 text-xs text-muted-foreground">{charged}</span>}
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{UEFI_KOMPILE.toolLine}</p>
-                <span className="mt-auto pt-8">
-                  <GetButton price={price} />
-                </span>
-              </div>
-            </Reveal>
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+            {plans.map((plan, i) => {
+              const featured = plan.id === "pro";
+              const planPrice = formatPrice(plan.price, currency);
+              const planCharged = chargedNote(plan.price, currency);
+              return (
+                <Reveal key={plan.id} className="min-w-0" delay={i * 0.06}>
+                  <div
+                    className={`flex h-full flex-col rounded-3xl p-7 sm:p-8 ${
+                      featured
+                        ? "glass-strong border border-electric/40 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                        : "glass border border-white/10"
+                    }`}
+                  >
+                    <span className="flex flex-wrap items-center gap-3">
+                      <span className="font-display text-2xl font-semibold">
+                        {UEFI_KOMPILE.name} {plan.name}
+                      </span>
+                      <span
+                        className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
+                          featured
+                            ? "border border-electric/40 bg-electric/10 text-electric"
+                            : "border border-white/15 bg-white/[0.04] text-muted-foreground"
+                        }`}
+                      >
+                        {plan.audience}
+                      </span>
+                    </span>
+                    <span className={`mt-4 font-display text-5xl font-bold ${featured ? "text-gradient" : ""}`}>{planPrice}</span>
+                    {planCharged && <span className="mt-1 text-xs text-muted-foreground">{planCharged}</span>}
+                    <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{plan.summary}</p>
+                    <ul className="mt-5 flex-1 space-y-2.5">
+                      {plan.points.map((point) => (
+                        <li key={point} className="flex items-start gap-2 text-sm text-foreground/90">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-electric" aria-hidden="true" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="pt-8">
+                      <GetButton label={`Get ${plan.name}`} price={planPrice} outline={!featured} />
+                    </span>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
 
-            <Reveal className="min-w-0" delay={0.06}>
-              <div className="glass flex h-full flex-col rounded-3xl border border-white/10 p-7 sm:p-8">
-                <span className="flex items-center gap-2 font-display text-2xl font-semibold">
-                  <Coins className="h-5 w-5 text-electric" strokeWidth={2} aria-hidden="true" />
-                  {pack.coins} coins
-                </span>
-                <span className="mt-4 font-display text-5xl font-bold">{packPrice}</span>
-                {chargedNote(pack.price, currency) && (
-                  <span className="mt-1 text-xs text-muted-foreground">{chargedNote(pack.price, currency)}</span>
-                )}
-                <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">{UEFI_KOMPILE.coinPackLine}</p>
-                {/* Coins are topped up the same way the tool is bought: in a
-                    ticket. Outline, so it never competes with the tool's CTA. */}
-                <span className="mt-auto pt-8">
+          {/* The two smaller buys, both through a ticket like the versions.
+              Outline buttons, so neither competes with a version's CTA. */}
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            {[
+              {
+                key: "upgrade",
+                title: `Upgrade ${upgrade.title}`,
+                price: upgrade.price,
+                line: upgrade.line,
+                action: "Upgrade on Discord",
+              },
+              {
+                key: "coins",
+                title: `${pack.coins} coins`,
+                price: pack.price,
+                line: UEFI_KOMPILE.coinPackLine,
+                action: "Top up on Discord",
+              },
+            ].map((buy, i) => (
+              <Reveal key={buy.key} className="min-w-0" delay={0.12 + i * 0.06}>
+                <div className="glass flex h-full flex-col gap-5 rounded-3xl border border-white/10 p-6 sm:flex-row sm:items-center sm:p-7">
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2 font-display text-lg font-semibold">
+                      {buy.key === "coins" && <Coins className="h-5 w-5 text-electric" strokeWidth={2} aria-hidden="true" />}
+                      {buy.title}
+                      <span className="ml-auto font-display text-2xl font-bold sm:ml-2">{formatPrice(buy.price, currency)}</span>
+                    </span>
+                    {chargedNote(buy.price, currency) && (
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{chargedNote(buy.price, currency)}</span>
+                    )}
+                    <span className="mt-2 block text-sm leading-relaxed text-muted-foreground">{buy.line}</span>
+                  </span>
                   <a
                     href={SITE.discordSupportUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={buttonVariants({ variant: "outline", size: "lg" })}
+                    className={buttonVariants({ variant: "outline", size: "lg", className: "shrink-0" })}
                   >
-                    Top up on Discord
+                    {buy.action}
                   </a>
-                </span>
-              </div>
-            </Reveal>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -269,7 +370,7 @@ export default async function UefiKompilePage() {
               <p className="mx-auto mt-4 max-w-xl text-muted-foreground">{UEFI_KOMPILE.closeBody}</p>
 
               <div className="mt-8 flex justify-center">
-                <GetButton price={price} />
+                <GetButton label={UEFI_KOMPILE.cta} price={from} />
               </div>
 
               <ol className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-6 border-t border-white/10 pt-8 text-left sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/10">
