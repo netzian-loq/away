@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CURRENCY, findTier, PRICING_TIERS } from "./pricing";
+import { CURRENCY, findTier, popularityBadge, PRICING_TIERS } from "./pricing";
 
 describe("PRICING_TIERS", () => {
   it("has exactly 5 tiers with the preserved prices", () => {
@@ -17,6 +17,19 @@ describe("PRICING_TIERS", () => {
   it("marks exactly Pro Level as featured", () => {
     const featured = PRICING_TIERS.filter((t) => t.featured).map((t) => t.name);
     expect(featured).toEqual(["Pro Level"]);
+  });
+
+  it("marks exactly Standard as the 2nd most popular", () => {
+    const runnerUp = PRICING_TIERS.filter((t) => t.runnerUp).map((t) => t.name);
+    expect(runnerUp).toEqual(["Standard"]);
+    expect(popularityBadge(findTier("standard")!)).toBe("2nd most popular");
+    expect(popularityBadge(findTier("pro-level")!)).toBe("Most popular");
+    expect(popularityBadge(findTier("extreme-level")!)).toBeNull();
+  });
+
+  /** One package cannot be first and second at once. */
+  it("never puts both badges on one package", () => {
+    expect(PRICING_TIERS.some((t) => t.featured && t.runnerUp)).toBe(false);
   });
 
   it("Extreme Level includes RAM Overclocking", () => {

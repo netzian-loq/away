@@ -3,7 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { SINGLE_SERVICES } from "@/content/catalog";
-import { PRICING_TIERS, type PricingTier } from "@/content/pricing";
+import { PRICING_TIERS, popularityBadge, type PricingTier } from "@/content/pricing";
 import { applyDiscount, type Discount } from "@/lib/discounts";
 import { chargedNote, formatIn, formatPrice, type DisplayCurrency } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -158,16 +158,25 @@ function PackageTile({
 }) {
   const yours = applyDiscount(tier.price, discount);
   const charged = chargedNote(yours, currency);
+  const badge = popularityBadge(tier);
 
   return (
     <Link
       href={partnerCheckoutHref(discount, tier.slug)}
       className={cn(
-        "group glass hover-lift flex h-full flex-col rounded-2xl border border-white/5 p-5",
+        "group glass hover-lift flex h-full flex-col rounded-2xl border p-5",
         "transition-colors duration-300 hover:border-electric/40 active:scale-[0.99]",
+        badge ? "border-electric/25" : "border-white/5",
       )}
     >
-      <span className="font-display font-semibold">{tier.name}</span>
+      <span className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+        <span className="font-display font-semibold">{tier.name}</span>
+        {badge && (
+          <span className="rounded-full border border-electric/40 px-2 py-0.5 text-[11px] font-semibold text-electric">
+            {badge}
+          </span>
+        )}
+      </span>
       <span className="mt-1 text-xs leading-relaxed text-muted-foreground">
         {summarise(tier.features)}
       </span>

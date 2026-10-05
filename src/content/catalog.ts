@@ -25,6 +25,8 @@ export interface Purchasable {
   /** Short badge, e.g. "XOC". */
   tag?: string;
   featured?: boolean;
+  /** Carries PricingTier.runnerUp, for the "2nd most popular" badge. */
+  runnerUp?: boolean;
 }
 
 export const CATALOG: Purchasable[] = [
@@ -36,6 +38,7 @@ export const CATALOG: Purchasable[] = [
       kind: "bundle",
       blurb: tier.features.join(" · "),
       featured: tier.featured,
+      runnerUp: tier.runnerUp,
     }),
   ),
   ...SERVICES.map(

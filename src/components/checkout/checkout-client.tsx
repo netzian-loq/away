@@ -15,7 +15,7 @@ import {
   supportsExtreme,
   type Purchasable,
 } from "@/content/catalog";
-import { CURRENCY, EXTREME_UPGRADE } from "@/content/pricing";
+import { CURRENCY, EXTREME_UPGRADE, popularityBadge } from "@/content/pricing";
 import { SERVICE_CATEGORIES } from "@/content/services";
 import { SITE } from "@/content/site";
 import { applyDiscount, findDiscount, formatAmount, type Discount } from "@/lib/discounts";
@@ -601,6 +601,7 @@ function Group({
         {items.map((item) => {
           const selected = item.slug === selectedSlug;
           const total = applyDiscount(item.price, discount);
+          const badge = popularityBadge(item);
           return (
             <button
               key={item.slug}
@@ -615,11 +616,13 @@ function Group({
               )}
             >
               <span className="min-w-0">
-                <span className="flex items-center gap-2">
+                {/* Wraps rather than squeezing: "2nd most popular" is long
+                    enough to crowd the name in a narrow checkout column. */}
+                <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span className="font-display font-semibold">{item.name}</span>
-                  {item.featured && (
+                  {badge && (
                     <span className="rounded-full bg-electric/15 px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-electric">
-                      Popular
+                      {badge}
                     </span>
                   )}
                 </span>

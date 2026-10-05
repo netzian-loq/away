@@ -3,7 +3,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
-import { EXTREME_UPGRADE, PRICING_TIERS } from "@/content/pricing";
+import { EXTREME_UPGRADE, PRICING_TIERS, popularityBadge } from "@/content/pricing";
 import { MIN_SHOWN_SAVING, partsTotal, savingOn } from "@/content/catalog";
 import { BASE_CURRENCY, chargedNote, formatIn, formatPrice, type DisplayCurrency } from "@/lib/money";
 
@@ -32,17 +32,32 @@ export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayC
           {PRICING_TIERS.map((tier, i) => {
             const parts = partsTotal(tier);
             const saving = savingOn(tier);
+            const badge = popularityBadge(tier);
 
             return (
               <Reveal key={tier.name} delay={i * 0.06}>
               <div
                 className={`hover-lift spotlight-card relative flex h-full flex-col rounded-3xl p-6 ${
-                  tier.featured ? "glass-strong border border-electric/40" : "glass border border-white/5"
+                  tier.featured
+                    ? "glass-strong border border-electric/40"
+                    : tier.runnerUp
+                      ? "glass border border-electric/25"
+                      : "glass border border-white/5"
                 }`}
               >
-                {tier.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-electric to-cyan-accent px-3 py-1 text-xs font-semibold uppercase tracking-wider text-background">
-                    Most popular
+                {/* First place is the filled pill; second place is outlined, so
+                    the two never read as equals. The outlined one sits on an
+                    opaque background-coloured fill because it straddles the
+                    card's top border. */}
+                {badge && (
+                  <span
+                    className={`absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
+                      tier.featured
+                        ? "bg-gradient-to-r from-electric to-cyan-accent text-background"
+                        : "border border-electric/50 bg-background text-electric"
+                    }`}
+                  >
+                    {badge}
                   </span>
                 )}
                 <div className="font-display text-lg font-semibold">{tier.name}</div>

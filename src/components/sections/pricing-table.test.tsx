@@ -16,4 +16,10 @@ describe("PricingTable", () => {
     render(<PricingTable />);
     expect(screen.getByText("Most popular")).toBeInTheDocument();
   });
+
+  it("marks Standard as the 2nd most popular, once", () => {
+    render(<PricingTable />);
+    const badge = screen.getByText("2nd most popular");
+    expect(badge.closest("div")).toHaveTextContent("Standard");
+  });
 });

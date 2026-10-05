@@ -5,7 +5,23 @@ export interface PricingTier {
   price: number;
   description: string;
   features: string[];
+  /**
+   * The one package the site leads with: highlighted card, primary button,
+   * the large cell on partner pages and the default checkout pick.
+   */
   featured?: boolean;
+  /**
+   * Second-place badge only ("2nd most popular"). Unlike `featured` it moves
+   * no layout and changes no default, so it can sit on any package.
+   */
+  runnerUp?: boolean;
+}
+
+/** The popularity badge a package carries, if any. */
+export function popularityBadge(tier: Pick<PricingTier, "featured" | "runnerUp">): string | null {
+  if (tier.featured) return "Most popular";
+  if (tier.runnerUp) return "2nd most popular";
+  return null;
 }
 
 export const PRICING_TIERS: PricingTier[] = [
@@ -13,6 +29,7 @@ export const PRICING_TIERS: PricingTier[] = [
     slug: "standard",
     name: "Standard",
     price: 38,
+    runnerUp: true,
     description: "Essential optimization package for noticeable performance gains.",
     features: ["Windows Tuning", "BIOS Full Tuning"],
   },
