@@ -27,6 +27,15 @@ describe("CheckoutLink", () => {
     );
   });
 
+  it("keeps One Prodige's code on their page", () => {
+    usePathname.mockReturnValue("/oneprodige");
+    render(<CheckoutLink>Get Optimized</CheckoutLink>);
+    expect(screen.getByRole("link", { name: "Get Optimized" })).toHaveAttribute(
+      "href",
+      "/checkout?code=ONEPRODIGE",
+    );
+  });
+
   it("passes other link props through", () => {
     usePathname.mockReturnValue("/");
     render(<CheckoutLink className="tap-target">Buy</CheckoutLink>);

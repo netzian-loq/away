@@ -22,6 +22,9 @@
   --foreground: oklch(0.97 0.012 300);
   --muted-foreground: oklch(0.74 0.06 300);
   --electric: oklch(0.62 0.25 300);
+  /* Far stop of the primary button's gradient. A token, not a literal in the
+     button, so a partner theme (.theme-1p below) can recolour the button. */
+  --electric-deep: oklch(0.5 0.2 300);
   --electric-glow: oklch(0.62 0.27 300 / 0.45);
   --cyan-accent: oklch(0.76 0.15 300);
 }
@@ -275,4 +278,66 @@ html[data-scroll="fast"] .cursor-glow {
   html {
     scroll-behavior: auto !important;
   }
+}
+
+/* One Prodige partner page (/oneprodige).
+   ------------------------------------------------------------------
+   Their palette, taken from oneprodige.com: gold #febc31 on a neutral
+   #101010, text #f2f2ee, muted #a4a49c. Their type (Bebas Neue titles,
+   Barlow text) is bound to --font-display / --font-sans by the segment
+   layout, which also puts this class on the page body only, so the Away nav
+   and footer keep their own look. Everything inside that reads the site
+   tokens (text-electric, hover-lift, the primary button, the code card)
+   turns gold without a per-component override.
+
+   Unlayered like the rest of this file, so these win over the utilities.
+   That is also why nothing here sets a border colour: an unlayered border
+   colour would beat every card's own `border-electric/…` hover state. */
+.theme-1p {
+  --background: #101010;
+  --foreground: #f2f2ee;
+  --muted-foreground: #a4a49c;
+  --electric: #febc31;
+  --electric-deep: #e89b12;
+  --electric-glow: rgb(254 188 49 / 0.3);
+  /* Solid over the violet ambient layers, then faded out over the last
+     stretch so the page hands over to the Away footer without a hard edge. */
+  background: linear-gradient(to bottom, #101010 calc(100% - 8rem), transparent);
+  color: var(--foreground);
+  /* Bebas Neue has one weight. Without this every bold heading would be a
+     synthesised smear; their own site turns synthesis off as well. */
+  font-synthesis: none;
+}
+.theme-1p :is(h1, h2, h3, h4, h5, h6) {
+  /* Bebas is condensed and set tight already; the site's -0.02em crushes it. */
+  letter-spacing: 0.01em;
+}
+.theme-1p .glass {
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.015));
+}
+.theme-1p .glass-strong,
+html[data-scroll="moving"] .theme-1p .glass-strong,
+html[data-scroll="fast"] .theme-1p .glass-strong {
+  background: rgb(22 22 22 / 0.96);
+}
+.theme-1p .text-gradient {
+  background: linear-gradient(110deg, #fff1cf 0%, #febc31 45%, #ee9d16 100%);
+  background-clip: text;
+  color: transparent;
+}
+.theme-1p ::selection {
+  background: #febc31;
+  color: #101010;
+}
+/* The cursor glow is a fixed sibling of <main>, outside the themed wrapper,
+   and paints its colour inline, hence :has() and !important. Gold and
+   quieter than the violet one: on a neutral black a violet halo would read
+   as a stain. */
+body:has(.theme-1p) .cursor-glow {
+  background: radial-gradient(
+    closest-side,
+    rgb(254 188 49 / 0.14),
+    rgb(254 188 49 / 0.05) 40%,
+    transparent 70%
+  ) !important;
 }

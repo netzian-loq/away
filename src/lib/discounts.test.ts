@@ -5,11 +5,13 @@ import {
   commissionOn,
   COSMO_DISCOUNT,
   describeDiscount,
+  DISCOUNTS,
   discountForPath,
   findDiscount,
   formatAmount,
   JESTER_DISCOUNT,
   nextTier,
+  ONE_PRODIGE_DISCOUNT,
   rateFor,
   type Discount,
 } from "./discounts";
@@ -123,6 +125,50 @@ describe("creator codes", () => {
 
   it.each(["WAAQQI", "COLD1ZR"])("no longer honours the retired %s code", (code) => {
     expect(findDiscount(code)).toBeNull();
+  });
+});
+
+describe("5% / 20% partner codes", () => {
+  const codes = [
+    ["ZOX3Y", "zox3y"],
+    ["ONEPRODIGE", "oneprodige"],
+  ] as const;
+
+  it.each(codes)("%s takes 5%% off and pays 20%%", (code, partner) => {
+    const discount = findDiscount(code)!;
+    expect(discount).not.toBeNull();
+    expect(discount.percentOff).toBe(5);
+    expect(discount.commissionRate).toBe(0.2);
+    expect(discount.partner).toBe(partner);
+  });
+
+  it.each(codes)("%s bills 66.50 and owes 13.30 on the 70 EUR package", (code) => {
+    const discount = findDiscount(code)!;
+    const charged = applyDiscount(70, discount);
+    expect(charged).toBe(66.5);
+    // A cut of what was paid, not of list price (20% of 70 would be 14.00).
+    expect(commissionOn(charged, discount)).toBe(13.3);
+  });
+
+  it("resolves them regardless of case or padding", () => {
+    expect(findDiscount(" zox3y ")?.code).toBe("ZOX3Y");
+    expect(findDiscount("OneProdige")?.code).toBe("ONEPRODIGE");
+  });
+
+  /** The owner asked for a bare code for zox3y: no page to keep attributed. */
+  it("gives ZOX3Y no landing page and One Prodige theirs", () => {
+    expect(findDiscount("ZOX3Y")!.landingPath).toBeUndefined();
+    expect(ONE_PRODIGE_DISCOUNT.landingPath).toBe("/oneprodige");
+    expect(discountForPath("/oneprodige")).toBe(ONE_PRODIGE_DISCOUNT);
+    expect(checkoutHrefFor("/oneprodige")).toBe("/checkout?code=ONEPRODIGE");
+  });
+
+  /** `partner` is the ledger's join key, so no two codes may share one. */
+  it("keeps every partner slug and code unique", () => {
+    const partners = DISCOUNTS.map((d) => d.partner);
+    const all = DISCOUNTS.map((d) => d.code);
+    expect(new Set(partners).size).toBe(partners.length);
+    expect(new Set(all).size).toBe(all.length);
   });
 });
 

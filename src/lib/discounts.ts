@@ -84,6 +84,27 @@ export const DISCOUNTS: Discount[] = [
     commissionRate: 0.4,
     landingPath: "/jesterfv1",
   },
+  // Added 2026-10-05 on the owner's terms: 5% off for the buyer, 20% of what
+  // is actually paid for the partner. On the 70 EUR Pro package that bills
+  // 66.50 and owes 13.30.
+  {
+    // Code only, no page: the owner asked for a discount code and nothing more.
+    code: "ZOX3Y",
+    percentOff: 5,
+    partner: "zox3y",
+    partnerLabel: "Zox3y",
+    commissionRate: 0.2,
+  },
+  {
+    // One Prodige (1P), the French Fortnite esports team. Their page is
+    // /oneprodige.
+    code: "ONEPRODIGE",
+    percentOff: 5,
+    partner: "oneprodige",
+    partnerLabel: "One Prodige",
+    commissionRate: 0.2,
+    landingPath: "/oneprodige",
+  },
 ];
 
 /**
@@ -160,6 +181,9 @@ export function checkoutHrefFor(pathname: string | null | undefined): string {
 
 /** Jesterfv1 creator code, for his page at /jesterfv1. */
 export const JESTER_DISCOUNT = DISCOUNTS.find((d) => d.code === "JESTER5")!;
+
+/** One Prodige team code, for their page at /oneprodige. */
+export const ONE_PRODIGE_DISCOUNT = DISCOUNTS.find((d) => d.code === "ONEPRODIGE")!;
 
 /** Case- and whitespace-insensitive lookup. Returns null for unknown codes. */
 export function findDiscount(code: string | null | undefined): Discount | null {

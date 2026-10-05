@@ -118,7 +118,9 @@ export default async function AdminOrdersPage() {
           return (
             <PartnerPageCard
               key={discount.partner}
-              href={`/checkout?code=${discount.code}`}
+              // The link the partner actually shares: their page when they
+              // have one, otherwise checkout with the code on.
+              href={discount.landingPath ?? `/checkout?code=${discount.code}`}
               label={discount.partnerLabel}
               code={discount.code}
               visits={v}

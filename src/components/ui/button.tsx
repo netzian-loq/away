@@ -8,7 +8,7 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-br from-electric to-[oklch(0.5_0.2_300)] text-background shadow-glow hover:-translate-y-0.5 hover:shadow-glow-lg",
+          "bg-gradient-to-br from-electric to-[var(--electric-deep)] text-background shadow-glow hover:-translate-y-0.5 hover:shadow-glow-lg",
         outline:
           "glass border border-white/15 text-foreground hover:border-electric/50 hover:bg-white/5",
       },
