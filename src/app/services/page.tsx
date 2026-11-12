@@ -29,6 +29,7 @@ export default async function ServicesPage() {
     <>
       <BreadcrumbJsonLd crumbs={[{ name: "Services", path: "/services" }]} />
       <section className="relative pt-40 pb-16 sm:pt-48">
+        <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <Reveal>
             <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Services</span>

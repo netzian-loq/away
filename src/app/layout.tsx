@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { AmbientBackground } from "@/components/layout/ambient-background";
 import { CursorGlow } from "@/components/motion/cursor-glow";
 import { ScrollProgress } from "@/components/motion/scroll-progress";
+import { RouteCurtain } from "@/components/motion/route-curtain";
 import { SmoothScroll } from "@/components/motion/smooth-scroll";
 import "./globals.css";
 
@@ -70,6 +71,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="bg-background text-foreground antialiased">
         <script dangerouslySetInnerHTML={{ __html: PERF_LITE_INIT }} />
+        <div aria-hidden="true" className="curtain">
+          {/* A plain img: this has to paint with the very first frame, and
+              next/image would add a lazy-loading wrapper around it. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.png" alt="" width={96} height={96} className="h-24 w-24 rounded-3xl" />
+        </div>
+        <RouteCurtain />
         <SmoothScroll />
         <ScrollProgress />
         <AmbientBackground />

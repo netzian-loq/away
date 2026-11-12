@@ -74,6 +74,7 @@ export default async function JesterfvPage() {
           Top padding clears the floating nav (about 5.5rem) and no more, so
           the hero sits at the top of the viewport instead of drifting down. */}
       <section className="relative pt-28 pb-10 sm:pt-32 lg:pb-14">
+        <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
           <Reveal className="min-w-0">
             <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">

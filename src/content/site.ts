@@ -41,7 +41,7 @@ export const SITE = {
     iban: "IT52G3608105138219694619732",
   },
   stats: [
-    { value: 110, suffix: "+", label: "Rigs tuned" },
+    { value: 140, suffix: "+", label: "Rigs tuned" },
     { value: 99, suffix: "%", label: "Client retention" },
     { value: 24, suffix: "/7", label: "Support" },
     { value: 5, suffix: "★", label: "Average rating" },
@@ -50,6 +50,7 @@ export const SITE = {
     { label: "Home", href: "/" },
     { label: "Services", href: "/services" },
     { label: "Uefi-Kompile", href: "/uefi-kompile" },
+    { label: "OverTuner", href: "/overtuner" },
     { label: "About", href: "/about" },
     { label: "Free Tool", href: "/#utility" },
   ] as NavLink[],

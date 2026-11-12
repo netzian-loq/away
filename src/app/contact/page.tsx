@@ -25,6 +25,7 @@ export default function ContactPage() {
     <>
       <BreadcrumbJsonLd crumbs={[{ name: "Contact", path: "/contact" }]} />
       <section className="relative pt-40 pb-24 sm:pt-48">
+        <div aria-hidden="true" className="stage" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Reveal className="glass-strong rounded-3xl border border-white/10 p-8 sm:p-14">
           <div className="grid gap-10 lg:grid-cols-5">

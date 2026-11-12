@@ -18,10 +18,8 @@ import { SITE } from "@/content/site";
  */
 export function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden pt-36 pb-24">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_30%_40%,black_20%,transparent_70%)]" />
-      </div>
+    <section className="relative flex min-h-[100dvh] items-center pt-32 pb-24">
+      <div aria-hidden="true" className="stage" />
 
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6">
         <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-10">
@@ -68,7 +66,7 @@ export function Hero() {
 
           {/* 5 of 12 — supporting evidence, deliberately quieter. */}
           <div className="lg:col-span-5 lg:pl-10">
-            <span className="inline-grid h-16 w-16 place-items-center overflow-hidden rounded-2xl ring-1 ring-white/10">
+            <span className="inline-grid h-28 w-28 place-items-center overflow-hidden rounded-3xl ring-1 ring-white/15 shadow-[0_24px_60px_-24px_var(--electric-glow)]">
               <Image
                 src="/logo.png"
                 alt="Away Tweaks"

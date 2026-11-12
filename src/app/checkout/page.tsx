@@ -66,6 +66,7 @@ export default async function CheckoutPage({
       {referral && <VisitBeacon partner={referral.partner} />}
 
       <section className="relative pt-40 pb-10 sm:pt-48">
+        <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
             <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">

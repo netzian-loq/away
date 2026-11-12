@@ -33,6 +33,7 @@ export default async function CheckoutSuccessPage({
 
   return (
     <section className="relative pt-40 pb-24 sm:pt-48">
+        <div aria-hidden="true" className="stage" />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <Panel sessionId={sessionId} />
       </div>

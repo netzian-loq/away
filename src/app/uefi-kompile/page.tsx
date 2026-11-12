@@ -69,6 +69,7 @@ export default async function UefiKompilePage() {
           screenshot is the proof - a BIOS tool that shows its settings list
           and coins is more convincing than any illustration of one. */}
       <section className="relative pt-28 pb-10 sm:pt-32 lg:pb-14">
+        <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
           <Reveal className="min-w-0">
             <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">
@@ -109,10 +110,10 @@ export default async function UefiKompilePage() {
           <Reveal className="min-w-0" delay={0.12}>
             <div className="glass-strong overflow-hidden rounded-2xl border border-white/10 shadow-glow-lg">
               <Image
-                src="/uefi-kompile/main.webp"
-                alt="Uefi-Kompile main window: a BIOS settings list, the selected setting's details, a Pro account and 25 coins available"
-                width={1212}
-                height={690}
+                src="/uefi-kompile/main-v2.webp"
+                alt="Uefi-Kompile: the main window with the account, coins and Read from BIOS, and the Preset Manager listing switch groups for an AMD profile"
+                width={1919}
+                height={1031}
                 sizes="(max-width: 1024px) 100vw, 60vw"
                 className="h-auto w-full"
                 loading="eager"
@@ -238,10 +239,10 @@ export default async function UefiKompilePage() {
           <Reveal className="min-w-0" delay={0.08}>
             <div className="glass-strong overflow-hidden rounded-2xl border border-white/10 shadow-glow-lg">
               <Image
-                src="/uefi-kompile/presets.webp"
-                alt="The Uefi-Kompile Preset Manager with the X3D recommended profile set on the rows, ready to apply"
-                width={1081}
-                height={695}
+                src="/uefi-kompile/presets-v2.webp"
+                alt="The Uefi-Kompile Preset Manager: switch groups such as C-States, SVM and Bluetooth, each set to No change, Off or On, with an AMD profile picker"
+                width={1121}
+                height={682}
                 sizes="(max-width: 1024px) 100vw, 55vw"
                 className="h-auto w-full"
               />
