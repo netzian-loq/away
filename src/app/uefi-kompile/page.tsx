@@ -5,6 +5,7 @@ import { ArrowRight, Check, Coins, Cpu, Gauge, Layers, ShieldCheck, type LucideI
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
+import { SoftwareJsonLd } from "@/components/seo/software-json-ld";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { UEFI_KOMPILE, type UefiKompileIcon } from "@/content/uefi-kompile";
 import { SITE } from "@/content/site";
@@ -14,7 +15,7 @@ import { chargedNote, formatPrice } from "@/lib/money";
 const PATH = UEFI_KOMPILE.path;
 
 export const metadata: Metadata = {
-  title: UEFI_KOMPILE.name,
+  title: `${UEFI_KOMPILE.name}: Automated BIOS Optimization Tool for AM4, AM5 and Intel`,
   description: UEFI_KOMPILE.description,
   alternates: { canonical: `${SITE.url}${PATH}` },
   openGraph: {
@@ -63,6 +64,14 @@ export default async function UefiKompilePage() {
   return (
     <>
       <BreadcrumbJsonLd crumbs={[{ name: UEFI_KOMPILE.name, path: PATH }]} />
+      <SoftwareJsonLd
+        name={UEFI_KOMPILE.name}
+        path={PATH}
+        description={UEFI_KOMPILE.description}
+        image="/uefi-kompile/main-v2.webp"
+        price={fromEuros}
+        priceNote="Normal version, 25 coins included"
+      />
 
       {/* ── Hero ────────────────────────────────────────────────────────
           Split: the pitch on the left, the real app on the right. The

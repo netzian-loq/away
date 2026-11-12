@@ -1,3 +1,4 @@
+import { PRICING_TIERS } from "@/content/pricing";
 import { SERVICES } from "@/content/services";
 import { SITE } from "@/content/site";
 
@@ -19,18 +20,32 @@ export function JsonLd() {
         name: SITE.name,
         url: SITE.url,
         description: SITE.description,
+        logo: `${SITE.url}/logo-mark.png`,
+        image: `${SITE.url}/opengraph-image.png`,
         priceRange: "€€",
         areaServed: { "@type": "Place", name: "Worldwide" },
         sameAs: [SITE.discordServerUrl],
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "PC Optimization Services",
-          itemListElement: SERVICES.map((service) => ({
-            "@type": "Offer",
-            priceCurrency: "EUR",
-            price: String(service.priceValue),
-            itemOffered: { "@type": "Service", name: service.title, description: service.summary },
-          })),
+          itemListElement: [
+            ...PRICING_TIERS.map((tier) => ({
+              "@type": "Offer",
+              priceCurrency: "EUR",
+              price: String(tier.price),
+              itemOffered: {
+                "@type": "Service",
+                name: `${tier.name} package`,
+                description: `${tier.description} Includes ${tier.features.join(", ")}.`,
+              },
+            })),
+            ...SERVICES.map((service) => ({
+              "@type": "Offer",
+              priceCurrency: "EUR",
+              price: String(service.priceValue),
+              itemOffered: { "@type": "Service", name: service.title, description: service.summary },
+            })),
+          ],
         },
       },
     ],

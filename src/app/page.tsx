@@ -13,11 +13,11 @@ import { SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 
 export const metadata: Metadata = {
-  title: `${SITE.name} — Elite PC Optimization for Competitive Gamers`,
+  title: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
   description: SITE.description,
   alternates: { canonical: SITE.url },
   openGraph: {
-    title: `${SITE.name} — Elite PC Optimization for Competitive Gamers`,
+    title: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
     description: SITE.description,
     url: SITE.url,
   },

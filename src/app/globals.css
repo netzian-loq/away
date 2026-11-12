@@ -285,6 +285,26 @@ html[data-scroll="fast"] .cursor-glow {
   }
 }
 
+/* The curtains are exempt from the flattening above, on the same grounds as
+   the scroll engine (see the perf-lite note in layout.tsx): the machine this
+   site is built and reviewed on reports `reduce` unconditionally. Flattened
+   to 0.01ms, the cover does not wipe at all. It appears, sits for its delay
+   and vanishes, which reads as an image popping up over the page. These are
+   short, one-shot, user-initiated transitions rather than ambient motion. */
+@media (prefers-reduced-motion: reduce) {
+  .curtain {
+    animation-duration: 0.75s !important;
+  }
+  .route-curtain-in,
+  .route-curtain-in > *,
+  .curtain > * {
+    animation-duration: 0.5s !important;
+  }
+  .route-curtain-out {
+    animation-duration: 0.6s !important;
+  }
+}
+
 /* One Prodige partner page (/oneprodige).
    ------------------------------------------------------------------
    Their palette, taken from oneprodige.com: gold #febc31 on a neutral
@@ -410,11 +430,36 @@ body:has(.theme-1p) .cursor-glow {
   background: oklch(0.085 0.04 300);
   animation: curtain-out 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.5s both;
 }
-/* The page-change curtain: the new page is already underneath, so it lifts
-   straight away and a little faster than the opening one. */
-.curtain-route {
-  animation-duration: 0.6s;
-  animation-delay: 0.16s;
+/* Page-change transition (see RouteCurtain): the cover wipes up from the
+   foot of the old page, holds while the route swaps underneath, then keeps
+   travelling up and off the new one. Two halves of one upward movement. */
+@keyframes route-curtain-in {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.route-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: oklch(0.085 0.04 300);
+}
+.route-curtain-in {
+  border-radius: 44px 44px 0 0;
+  animation: route-curtain-in 0.5s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+.route-curtain-out {
+  pointer-events: none;
+  border-radius: 0 0 44px 44px;
+  animation: curtain-out 0.6s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+}
+.route-curtain-in > * {
+  animation: curtain-mark 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 .curtain > * {
   animation: curtain-mark 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;

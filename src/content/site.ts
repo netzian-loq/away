@@ -40,6 +40,21 @@ export const SITE = {
     accountHolder: "Carmela Bazzi",
     iban: "IT52G3608105138219694619732",
   },
+  /** Search phrases the site should be found for. All are things it sells. */
+  keywords: [
+    "PC optimization service",
+    "gaming PC optimization",
+    "FPS boost",
+    "reduce input delay",
+    "Windows optimization for gaming",
+    "CPU overclocking service",
+    "GPU overclocking service",
+    "RAM overclocking service",
+    "BIOS tuning",
+    "custom gaming OS",
+    "Fortnite PC optimization",
+    "Valorant PC optimization",
+  ],
   stats: [
     { value: 140, suffix: "+", label: "Rigs tuned" },
     { value: 99, suffix: "%", label: "Client retention" },

@@ -5,6 +5,7 @@ import { ArrowRight, Check, Cpu, Gamepad2, Gauge, type LucideIcon } from "lucide
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
+import { SoftwareJsonLd } from "@/components/seo/software-json-ld";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { OVERTUNER, type OverTunerIcon } from "@/content/overtuner";
 import { SITE } from "@/content/site";
@@ -15,7 +16,7 @@ import { cn } from "@/lib/utils";
 const PATH = OVERTUNER.path;
 
 export const metadata: Metadata = {
-  title: OVERTUNER.name,
+  title: `${OVERTUNER.name}: Nvidia GPU Overclocking and Game Optimization App`,
   description: OVERTUNER.description,
   alternates: { canonical: `${SITE.url}${PATH}` },
   openGraph: {
@@ -57,6 +58,14 @@ export default async function OverTunerPage() {
   return (
     <>
       <BreadcrumbJsonLd crumbs={[{ name: OVERTUNER.name, path: PATH }]} />
+      <SoftwareJsonLd
+        name={OVERTUNER.name}
+        path={PATH}
+        description={OVERTUNER.description}
+        image="/overtuner/main.webp"
+        price={OVERTUNER.yearlyPrice}
+        priceNote="Per year"
+      />
 
       {/* Hero: the pitch on the left, the real app on the right. */}
       <section className="relative pt-28 pb-14 sm:pt-32 lg:pb-20">

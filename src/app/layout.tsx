@@ -29,11 +29,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Elite PC Optimization for Competitive Gamers`,
+    default: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
     template: `%s — ${SITE.name}`,
   },
   description: SITE.description,
+  applicationName: SITE.name,
   authors: [{ name: SITE.name }],
+  keywords: SITE.keywords,
   robots: {
     index: true,
     follow: true,
