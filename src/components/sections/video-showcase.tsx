@@ -30,11 +30,7 @@ export function VideoShowcase() {
     <section className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
         <Reveal className="mb-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/10 px-3 py-1 text-xs font-medium uppercase tracking-widest text-electric">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-electric" />
-            AwayOS Preview
-          </div>
-          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight sm:text-5xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">
             <MaskReveal as="span">
               See <span className="text-gradient">AwayOS</span> in action
             </MaskReveal>

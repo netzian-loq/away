@@ -29,7 +29,7 @@ const METHODS = [
   i === 0 ? method : i === all.length - 1 ? `${sentence} or ${method}` : `${sentence}, ${method}`,
 );
 
-const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS} — no ticket needed.`;
+const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS}, no ticket needed.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   // A transactional page with no standalone content worth indexing.
   robots: { index: false, follow: true },
   openGraph: {
-    title: `${TITLE} — ${SITE.name}`,
+    title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/checkout`,
   },

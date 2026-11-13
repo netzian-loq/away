@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, Cpu, Gamepad2, Gauge, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
+import { Icon3d, type Icon3dName } from "@/components/ui/icon-3d";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
@@ -26,10 +27,10 @@ export const metadata: Metadata = {
   },
 };
 
-const GROUP_ICONS: Record<OverTunerIcon, LucideIcon> = {
-  gpu: Gauge,
-  game: Gamepad2,
-  system: Cpu,
+const GROUP_ICONS: Record<OverTunerIcon, Icon3dName> = {
+  gpu: "gpu",
+  game: "gamepad",
+  system: "bios",
 };
 
 /** Sold through a Discord ticket, like every manual order on the site. The
@@ -53,7 +54,6 @@ export default async function OverTunerPage() {
   const price = formatPrice(OVERTUNER.yearlyPrice, currency);
   const charged = chargedNote(OVERTUNER.yearlyPrice, currency);
   const [gpu, ...rest] = OVERTUNER.groups;
-  const GpuIcon = GROUP_ICONS[gpu.icon];
 
   return (
     <>
@@ -72,9 +72,6 @@ export default async function OverTunerPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <Reveal className="min-w-0">
-            <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">
-              {OVERTUNER.eyebrow}
-            </span>
 
             <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
               <MaskReveal as="span" innerClassName="text-gradient">
@@ -157,7 +154,7 @@ export default async function OverTunerPage() {
                   className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full"
                   style={{ background: "radial-gradient(circle, oklch(0.5 0.24 300 / 0.35), transparent 70%)" }}
                 />
-                <GpuIcon className="h-7 w-7 text-electric" />
+                <Icon3d name={GROUP_ICONS[gpu.icon]} size={88} className="-ml-2" />
                 <h3 className="mt-5 font-display text-2xl font-bold">{gpu.title}</h3>
                 <p className="mt-2 text-muted-foreground">{gpu.body}</p>
                 <ul className="mt-8 grid gap-4">
@@ -173,11 +170,10 @@ export default async function OverTunerPage() {
 
             <div className="grid min-w-0 gap-5">
               {rest.map((group, i) => {
-                const Icon = GROUP_ICONS[group.icon];
                 return (
                   <Reveal key={group.title} delay={0.08 * (i + 1)} className="min-w-0">
                     <div className="glass spotlight-card hover-lift h-full rounded-3xl p-7">
-                      <Icon className="h-6 w-6 text-electric" />
+                      <Icon3d name={GROUP_ICONS[group.icon]} size={64} className="-ml-1.5" />
                       <h3 className="mt-4 font-display text-xl font-bold">{group.title}</h3>
                       <p className="mt-1.5 text-sm text-muted-foreground">{group.body}</p>
                       <ul className="mt-5 grid gap-2.5">

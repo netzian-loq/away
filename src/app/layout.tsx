@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
     default: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
-    template: `%s — ${SITE.name}`,
+    template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
   applicationName: SITE.name,

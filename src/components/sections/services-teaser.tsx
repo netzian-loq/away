@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon3d } from "@/components/ui/icon-3d";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
@@ -29,9 +30,6 @@ export function ServicesTeaser({ currency = BASE_CURRENCY }: { currency?: Displa
     <section id="services-teaser" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">
-            Services
-          </span>
           <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
             <MaskReveal as="span" innerClassName="text-gradient">
               Pick it. Start today.
@@ -105,7 +103,6 @@ function ServiceCard({
   service: Service;
   currency: DisplayCurrency;
 }) {
-  const Icon = service.icon;
   const charged = chargedNote(service.priceValue, currency);
 
   return (
@@ -114,9 +111,7 @@ function ServiceCard({
       className="hover-lift glass spotlight-card group flex h-full flex-col rounded-2xl border border-white/5 p-6 transition-colors duration-300 hover:border-electric/40"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-electric/30 bg-electric/10">
-          <Icon className="h-5 w-5 text-electric" strokeWidth={2} />
-        </div>
+        <Icon3d name={service.icon} size={60} className="-mt-1 -ml-1" />
         <span className="text-right">
           <span className="block font-mono text-lg font-semibold text-electric">
             {formatPrice(service.priceValue, currency)}

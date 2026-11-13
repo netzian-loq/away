@@ -1,15 +1,4 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  MonitorCog,
-  Sparkles,
-  MemoryStick,
-  Cpu,
-  Wifi,
-  Settings2,
-  Zap,
-  HardDrive,
-  Rocket,
-} from "lucide-react";
+import type { Icon3dName } from "@/components/ui/icon-3d";
 
 export interface ServiceImage {
   src: string;
@@ -31,7 +20,7 @@ export interface Service {
   category: ServiceCategory;
   priceLabel: string;
   priceValue: number;
-  icon: LucideIcon;
+  icon: Icon3dName;
   /**
    * Short badge beside the title, e.g. "XOC" for extreme overclocking. Kept
    * separate from the title so the descriptive name still carries the page
@@ -50,7 +39,7 @@ export const SERVICE_CATEGORIES: { id: ServiceCategory; label: string; note: str
   {
     id: "overclocking",
     label: "Overclocking",
-    note: "Hardware pushed properly — CPU, GPU, RAM and the BIOS underneath them.",
+    note: "Hardware pushed properly, CPU, GPU, RAM and the BIOS underneath them.",
   },
   {
     id: "windows",
@@ -67,11 +56,11 @@ export const SERVICES: Service[] = [
     tag: "XOC",
     priceLabel: "50€",
     priceValue: 50,
-    icon: MemoryStick,
+    icon: "ram",
     summary:
-      "Tight timings and a stable high-frequency memory profile — fixing crashes and unlocking real FPS gains without sacrificing stability.",
+      "Tight timings and a stable high-frequency memory profile, fixing crashes and unlocking real FPS gains without sacrificing stability.",
     description:
-      "Memory tuning is where hidden FPS lives. We find a stable profile for your exact kit — Samsung B-die, D-die, Hynix or Micron — tightening primary, secondary and tertiary timings, tuning frequency and voltages, then validating for hours so you get lower latency and higher, more consistent frame rates with zero crashes.",
+      "Memory tuning is where hidden FPS lives. We find a stable profile for your exact kit, Samsung B-die, D-die, Hynix or Micron, tightening primary, secondary and tertiary timings, tuning frequency and voltages, then validating for hours so you get lower latency and higher, more consistent frame rates with zero crashes.",
     features: [
       "Primary + sub-timing tuning",
       "Frequency and voltage tuning",
@@ -88,11 +77,11 @@ export const SERVICES: Service[] = [
     tag: "XOC",
     priceLabel: "27€",
     priceValue: 27,
-    icon: Cpu,
+    icon: "cpu",
     summary:
       "Unlock a completely different experience with ultra-low latency and maximum stability through an aggressive and safe overclock.",
     description:
-      "No risk with professionals — just pure performance intake. Aggressive yet safe per-core curves, PBO and Curve Optimizer (AMD) or voltage / frequency scaling (Intel) tuned to your specific silicon for ultra-low latency and maximum stability.",
+      "No risk with professionals, just pure performance intake. Aggressive yet safe per-core curves, PBO and Curve Optimizer (AMD) or voltage / frequency scaling (Intel) tuned to your specific silicon for ultra-low latency and maximum stability.",
     features: [
       "Per-core curve / ratio tuning",
       "PBO + Curve Optimizer (AMD)",
@@ -109,11 +98,11 @@ export const SERVICES: Service[] = [
     tag: "XOC",
     priceLabel: "18€",
     priceValue: 18,
-    icon: Sparkles,
+    icon: "gpu",
     summary:
-      "Get the most out of the most expensive product in your PC — max responsiveness and visual smoothness with higher FPS overall.",
+      "Get the most out of the most expensive product in your PC, max responsiveness and visual smoothness with higher FPS overall.",
     description:
-      "Unlock what you really paid for with professional GPU overclocking. Max responsiveness and visual smoothness with higher FPS overall — core and memory offsets, power limits, and fan curves dialed for sustained boost under real game loads.",
+      "Unlock what you really paid for with professional GPU overclocking. Max responsiveness and visual smoothness with higher FPS overall, core and memory offsets, power limits, and fan curves dialed for sustained boost under real game loads.",
     features: [
       "Core and memory offset tuning",
       "Power and voltage limit tuning",
@@ -129,11 +118,11 @@ export const SERVICES: Service[] = [
     category: "overclocking",
     priceLabel: "15€",
     priceValue: 15,
-    icon: Settings2,
+    icon: "bios",
     summary:
-      "Tuning all BIOS settings — hidden and visible — for extra-low latency, a smooth system, and a 100–300 FPS boost in most cases.",
+      "Tuning all BIOS settings, hidden and visible, for extra-low latency, a smooth system, and a 100–300 FPS boost in most cases.",
     description:
-      "Your BIOS is where real performance starts. We tune your specific board — ASUS, MSI, Gigabyte, ASRock — enabling the features that matter and disabling the ones that cost latency, including the hidden menus your board never shows you.",
+      "Your BIOS is where real performance starts. We tune your specific board, ASUS, MSI, Gigabyte, ASRock, enabling the features that matter and disabling the ones that cost latency, including the hidden menus your board never shows you.",
     features: [
       "Hidden + visible setting audit",
       "Resizable BAR / Above 4G",
@@ -149,9 +138,9 @@ export const SERVICES: Service[] = [
     category: "windows",
     priceLabel: "27€",
     priceValue: 27,
-    icon: HardDrive,
+    icon: "disk",
     summary:
-      "A clean install of our own custom gaming OS, tuned on arrival — the fastest way to a system with nothing in the way.",
+      "A clean install of our own custom gaming OS, tuned on arrival, the fastest way to a system with nothing in the way.",
     description:
       "We install AwayOS, our custom gaming build of Windows, and run the full Windows tune on top of it. Nothing carried over, nothing left behind: no bloat, no telemetry, no vendor services you never asked for. Ships with Away Utility pre-installed so you control drivers, wallpapers, game fixes and system tools from one clean interface.",
     features: [
@@ -163,7 +152,7 @@ export const SERVICES: Service[] = [
       "Custom AwayOS wallpapers + dark UI theme",
     ],
     highlight:
-      "Our most popular single service — a fresh system and a full tune for 2€ more than the tune alone.",
+      "Our most popular single service, a fresh system and a full tune for 2€ more than the tune alone.",
   },
   {
     slug: "away-os-extreme-windows-tuning",
@@ -171,9 +160,9 @@ export const SERVICES: Service[] = [
     category: "windows",
     priceLabel: "32€",
     priceValue: 32,
-    icon: Rocket,
+    icon: "rocket",
     summary:
-      "The custom OS with the extreme tune on top — everything stripped, everything tuned, nothing between you and the frames.",
+      "The custom OS with the extreme tune on top, everything stripped, everything tuned, nothing between you and the frames.",
     description:
       "AwayOS installed clean, then taken as far as it goes: the extreme tune digs into the kernel, the scheduler, dxgkrnl and the driver stack, strips services and scheduled tasks the standard tune leaves alone, and configures the system per game rather than in general.",
     features: [
@@ -191,13 +180,13 @@ export const SERVICES: Service[] = [
     category: "windows",
     priceLabel: "25€",
     priceValue: 25,
-    icon: MonitorCog,
+    icon: "monitor",
     summary:
-      "A complete tune of the Windows you already run — bloat stripped, registry and services configured, no reinstall needed.",
+      "A complete tune of the Windows you already run, bloat stripped, registry and services configured, no reinstall needed.",
     description:
       "Keep your install, your files and your games exactly where they are. We strip bloat, telemetry and ads, configure the registry, services and scheduled tasks, tune drivers and peripherals, and leave you with a system that feels like different hardware.",
     features: [
-      "No reinstall — your files stay put",
+      "No reinstall, your files stay put",
       "Bloat, telemetry and ad removal",
       "Registry + services configuration",
       "Scheduled task and device trim",
@@ -211,9 +200,9 @@ export const SERVICES: Service[] = [
     category: "windows",
     priceLabel: "30€",
     priceValue: 30,
-    icon: Zap,
+    icon: "bolt",
     summary:
-      "The tune taken to the limit on your existing install — kernel, scheduler and dxgkrnl, configured per game.",
+      "The tune taken to the limit on your existing install, kernel, scheduler and dxgkrnl, configured per game.",
     description:
       "Everything in the standard tune, then the layer underneath it: kernel and dxgkrnl registry tuning, scheduler behaviour, an aggressive pass on services and scheduled tasks, and configuration done per game rather than in general. For people who already know what a tuned system feels like and want the rest of it.",
     features: [
@@ -231,7 +220,7 @@ export const SERVICES: Service[] = [
     category: "windows",
     priceLabel: "10€",
     priceValue: 10,
-    icon: Wifi,
+    icon: "network",
     summary:
       "Tune your network adapter for the lowest jitter and latency, lower CPU overhead, and the lowest ISR/DPC latency available.",
     description:

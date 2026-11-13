@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check, Coins, Cpu, Gauge, Layers, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, Check, Coins } from "lucide-react";
+import { Icon3d, type Icon3dName } from "@/components/ui/icon-3d";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { buttonVariants } from "@/components/ui/button";
@@ -19,17 +20,17 @@ export const metadata: Metadata = {
   description: UEFI_KOMPILE.description,
   alternates: { canonical: `${SITE.url}${PATH}` },
   openGraph: {
-    title: `${UEFI_KOMPILE.name} — ${SITE.name}`,
+    title: `${UEFI_KOMPILE.name} | ${SITE.name}`,
     description: UEFI_KOMPILE.description,
     url: `${SITE.url}${PATH}`,
   },
 };
 
-const FEATURE_ICONS: Record<UefiKompileIcon, LucideIcon> = {
-  depth: Layers,
-  presets: Cpu,
-  latency: Gauge,
-  safe: ShieldCheck,
+const FEATURE_ICONS: Record<UefiKompileIcon, Icon3dName> = {
+  depth: "layers",
+  presets: "cpu",
+  latency: "gauge",
+  safe: "shield",
 };
 
 /** Buyers get the tool through a Discord ticket, the same path every manual
@@ -81,9 +82,6 @@ export default async function UefiKompilePage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
           <Reveal className="min-w-0">
-            <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">
-              {UEFI_KOMPILE.eyebrow}
-            </span>
 
             <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
               {/* Accent on the name only: one word of gradient is emphasis, a
@@ -202,15 +200,12 @@ export default async function UefiKompilePage() {
 
           <ul className="min-w-0 divide-y divide-white/10 border-y border-white/10">
             {UEFI_KOMPILE.features.map((feature, i) => {
-              const Icon = FEATURE_ICONS[feature.icon];
               // The <li> stays the list's direct child with Reveal inside it:
               // a div between a ul and its li is invalid markup.
               return (
                 <li key={feature.title}>
                   <Reveal delay={i * 0.06} className="flex gap-4 py-6">
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.03]">
-                      <Icon className="h-5 w-5 text-electric" strokeWidth={2} aria-hidden="true" />
-                    </span>
+                    <Icon3d name={FEATURE_ICONS[feature.icon]} size={52} />
                     <span className="min-w-0">
                       <span className="block font-display text-lg font-semibold">{feature.title}</span>
                       <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{feature.body}</span>

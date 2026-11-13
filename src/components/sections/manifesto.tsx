@@ -1,5 +1,5 @@
 import { Parallax } from "@/components/motion/parallax";
-import { Reveal } from "@/components/motion/reveal";
+
 import { ScrollWordReveal } from "@/components/motion/scroll-word-reveal";
 
 const MANIFESTO_TEXT =
@@ -15,13 +15,10 @@ export function Manifesto() {
       </Parallax>
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <Reveal>
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-electric">The Away method</span>
-        </Reveal>
         <ScrollWordReveal
           text={MANIFESTO_TEXT}
           highlights={["BIOS", "overclock", "CPU", "GPU", "RAM", "you"]}
-          className="mt-6 font-display text-3xl font-bold leading-[1.15] tracking-tight sm:text-5xl"
+          className="font-display text-3xl font-bold leading-[1.15] tracking-tight sm:text-5xl"
         />
       </div>
     </section>

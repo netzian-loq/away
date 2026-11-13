@@ -13,7 +13,7 @@ export const SITE = {
   name: "Away Tweaks",
   url: "https://www.awaytweaks.com",
   description:
-    "Private, professional PC optimization for competitive gamers — custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
+    "Private, professional PC optimization for competitive gamers, custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
   // Lowercase deliberately. Resend's pre-domain-verification check ("you can
   // only send to your own address") compares the recipient byte-for-byte
   // against the account address, so a capitalised local part is rejected even

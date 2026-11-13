@@ -77,9 +77,6 @@ export default async function JesterfvPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
           <Reveal className="min-w-0">
-            <span className="glass inline-flex items-center rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.18em] text-electric">
-              {JESTERFV.eyebrow}
-            </span>
 
             <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
               <MaskReveal as="span">Play like</MaskReveal>

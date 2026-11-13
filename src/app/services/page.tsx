@@ -9,14 +9,14 @@ import { SITE } from "@/content/site";
 
 const TITLE = "Services & Pricing";
 const DESCRIPTION =
-  "Windows tuning, custom gaming OS, CPU/GPU/RAM overclocking, network and BIOS tuning — every Away Tweaks service in detail, with pricing.";
+  "Windows tuning, custom gaming OS, CPU/GPU/RAM overclocking, network and BIOS tuning, every Away Tweaks service in detail, with pricing.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/services` },
   openGraph: {
-    title: `${TITLE} — ${SITE.name}`,
+    title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/services`,
   },
@@ -32,7 +32,6 @@ export default async function ServicesPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">Services</span>
             <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">
               Every tune we run, in detail.
             </h1>

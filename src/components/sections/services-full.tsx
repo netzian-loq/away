@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Icon3d } from "@/components/ui/icon-3d";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
@@ -21,14 +22,11 @@ export function ServicesFull({ currency = BASE_CURRENCY }: { currency?: DisplayC
           </Reveal>
 
           {servicesIn(category.id).map((service, i) => {
-        const Icon = service.icon;
         return (
           <Reveal key={service.slug} delay={i * 0.04}>
             <article className="glass rounded-3xl border border-white/5 p-6 sm:p-10">
               <div className="flex flex-wrap items-center gap-3">
-                <div className="grid h-12 w-12 place-items-center rounded-xl border border-electric/40 bg-gradient-to-br from-electric/25 to-cyan-accent/10">
-                  <Icon className="h-5 w-5 text-electric" strokeWidth={2} />
-                </div>
+                <Icon3d name={service.icon} size={64} />
                 <h3 className="font-display text-2xl font-bold">{service.title}</h3>
                 {service.tag && (
                   <span className="rounded-full border border-cyan-accent/40 bg-cyan-accent/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-accent">

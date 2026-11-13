@@ -1,4 +1,4 @@
-import { Sparkles, Check, Disc } from "lucide-react";
+import { Check, Disc } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { MaskReveal } from "@/components/motion/mask-reveal";
 import { ScrollScale } from "@/components/motion/scroll-scale";
@@ -20,10 +20,7 @@ export function FreeUtility() {
           <div className="grid items-center gap-10 p-8 sm:p-12 lg:grid-cols-2 lg:gap-12 lg:p-16">
             <Reveal>
               <div>
-                <span className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-mono uppercase tracking-[0.18em] text-electric">
-                  <Sparkles className="h-3 w-3" /> {FREE_UTILITY.eyebrow}
-                </span>
-                <h2 className="mt-5 font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+                <h2 className="font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
                   <MaskReveal as="span" innerClassName="text-gradient">
                     {FREE_UTILITY.title}
                   </MaskReveal>

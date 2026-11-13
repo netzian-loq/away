@@ -9,14 +9,14 @@ import { SITE } from "@/content/site";
 
 const TITLE = "About";
 const DESCRIPTION =
-  "Away Tweaks is a private PC optimization service for competitive gamers — our mission, method, and results.";
+  "Away Tweaks is a private PC optimization service for competitive gamers, our mission, method, and results.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/about` },
   openGraph: {
-    title: `${TITLE} — ${SITE.name}`,
+    title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/about`,
   },
@@ -30,7 +30,6 @@ export default function AboutPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
-            <span className="font-mono text-xs uppercase tracking-[0.18em] text-electric">{ABOUT.eyebrow}</span>
             <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">{ABOUT.heroTitle}</h1>
             <p className="mt-5 leading-relaxed text-muted-foreground">{ABOUT.heroBody}</p>
           </Reveal>

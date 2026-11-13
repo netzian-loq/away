@@ -20,9 +20,6 @@ export function WhyUs() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-4">
-            <span className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-              Why Away Tweaks
-            </span>
             <h2 className="mt-5 font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-balance sm:text-4xl">
               Deep professional knowledge. Delivered fast.
             </h2>
