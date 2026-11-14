@@ -20,7 +20,10 @@ export const SITE = {
   // though it's the same mailbox.
   email: "mattiaarminante77@gmail.com",
   discordServerUrl: "https://discord.gg/de5aXtGJ9a",
-  discordVouchesUrl: "https://discord.gg/29Swpe8rM",
+  /** The dedicated vouches invite (29Swpe8rM) expired, Discord answers
+   *  "Unknown Invite" for it, so this points at the main server until the
+   *  owner supplies a new permanent one. */
+  discordVouchesUrl: "https://discord.gg/de5aXtGJ9a",
   /** Where buyers open a ticket after paying — linked from the receipt email. */
   discordSupportUrl: "https://discord.gg/md6hAnSrBE",
   /**

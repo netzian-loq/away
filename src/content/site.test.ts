@@ -5,7 +5,7 @@ describe("SITE", () => {
   it("preserves the exact contact information", () => {
     expect(SITE.email).toBe("mattiaarminante77@gmail.com");
     expect(SITE.discordServerUrl).toBe("https://discord.gg/de5aXtGJ9a");
-    expect(SITE.discordVouchesUrl).toBe("https://discord.gg/29Swpe8rM");
+    expect(SITE.discordVouchesUrl).toBe("https://discord.gg/de5aXtGJ9a");
   });
 
   // Resend rejects a recipient that differs from the account address by case
