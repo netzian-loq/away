@@ -403,3 +403,75 @@ for name, build in ICONS.items():
     for obj in doomed:
         bpy.data.objects.remove(obj, do_unlink=True)
     print("rendered", name)
+
+
+# ── social marks ─────────────────────────────────────────────────────────
+# Discord, X and YouTube for the footer. The outlines are the same Simple
+# Icons paths the site already ships (tools/icons/brand_paths.json, taken from
+# src/components/partner/brand-icons.tsx), imported as curves and given depth,
+# so each mark is the real logo shape rather than a redrawn lookalike. It sits
+# raised on a lacquer tile, lit like the rest of the set.
+import json
+import os
+import tempfile
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(HERE, "brand_paths.json"), encoding="utf-8") as handle:
+    BRAND_PATHS = json.load(handle)
+
+
+def brand_mark(name):
+    svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="{BRAND_PATHS[name]}"/></svg>'
+    path = os.path.join(tempfile.gettempdir(), f"away_brand_{name}.svg")
+    with open(path, "w", encoding="utf-8") as handle:
+        handle.write(svg)
+    before = set(bpy.data.objects)
+    bpy.ops.import_curve.svg(filepath=path)
+    curves = [o for o in bpy.data.objects if o not in before and o.type == "CURVE"]
+    for obj in bpy.context.selected_objects:
+        obj.select_set(False)
+    for obj in curves:
+        for coll in list(obj.users_collection):
+            coll.objects.unlink(obj)
+        scene.collection.objects.link(obj)
+        obj.data.extrude = 0.0006
+        obj.data.bevel_depth = 0.00012
+        obj.data.bevel_resolution = 2
+        obj.data.fill_mode = "BOTH"
+        obj.data.materials.clear()
+        obj.data.materials.append(GLOW)
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = curves[0]
+    bpy.ops.object.convert(target="MESH")
+    if len(curves) > 1:
+        bpy.ops.object.join()
+    mark = bpy.context.view_layer.objects.active
+    bpy.ops.object.origin_set(type="ORIGIN_GEOMETRY", center="BOUNDS")
+    size = max(mark.dimensions.x, mark.dimensions.y)
+    factor = 1.6 / size
+    mark.scale = (factor, factor, factor)
+    # The SVG lies in XY; stand it up to face the camera, proud of the tile.
+    mark.rotation_euler = (math.radians(90), 0, 0)
+    mark.location = (0, -0.3, 0)
+    for obj in bpy.context.selected_objects:
+        obj.select_set(False)
+    mark.parent = ROOT
+    box((2.3, 0.42, 2.3), (0, 0, 0), BODY, 0.42)
+    box((2.02, 0.03, 2.02), (0, -0.2, 0), DARK, 0.3)
+    # Turned only slightly: these are shown at about 48px, where a strong
+    # turn squeezes the mark into a blob.
+    return (math.radians(6), 0, math.radians(8))
+
+
+for social in ("discord", "x", "youtube"):
+    out_name = "social-" + social
+    if ONLY and out_name not in ONLY:
+        continue
+    ROOT = bpy.data.objects.new("root_" + out_name, None)
+    scene.collection.objects.link(ROOT)
+    ROOT.rotation_euler = brand_mark(social)
+    scene.render.filepath = f"{OUT}/{out_name}.png"
+    bpy.ops.render.render(write_still=True)
+    for obj in [ROOT] + list(ROOT.children_recursive):
+        bpy.data.objects.remove(obj, do_unlink=True)
+    print("rendered", out_name)

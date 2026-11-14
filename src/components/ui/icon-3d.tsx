@@ -15,7 +15,10 @@ export type Icon3dName =
   | "gauge"
   | "gamepad"
   | "layers"
-  | "shield";
+  | "shield"
+  | "social-discord"
+  | "social-x"
+  | "social-youtube";
 
 /**
  * One of the site's own icons: a small object modelled and rendered in

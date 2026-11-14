@@ -20,7 +20,7 @@ describe("JsonLd", () => {
     const data = JSON.parse(container.querySelector('script[type="application/ld+json"]')!.innerHTML);
     const business = data["@graph"][1];
     expect(business["@type"]).toBe("OnlineBusiness");
-    expect(business.sameAs).toBeUndefined();
+    expect(business.sameAs).toEqual([SITE.xUrl, SITE.youtubeUrl]);
     const urls = business.hasOfferCatalog.itemListElement.map((offer: { url: string }) => offer.url);
     expect(urls).toEqual([
       ...PRICING_TIERS.map((tier) => `${SITE.url}/checkout?item=${tier.slug}`),

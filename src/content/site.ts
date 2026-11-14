@@ -19,6 +19,8 @@ export const SITE = {
   // against the account address, so a capitalised local part is rejected even
   // though it's the same mailbox.
   email: "mattiaarminante77@gmail.com",
+  xUrl: "https://x.com/AwayTweaks",
+  youtubeUrl: "https://www.youtube.com/@AwayTweaks",
   discordServerUrl: "https://discord.gg/de5aXtGJ9a",
   /** The dedicated vouches invite (29Swpe8rM) expired, Discord answers
    *  "Unknown Invite" for it, so this points at the main server until the

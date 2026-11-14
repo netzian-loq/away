@@ -25,6 +25,8 @@ export function JsonLd() {
         description: SITE.description,
         logo: `${SITE.url}/logo-mark.png`,
         image: `${SITE.url}/opengraph-image.png`,
+        // Real profile pages only; a Discord invite is not a profile.
+        sameAs: [SITE.xUrl, SITE.youtubeUrl],
         priceRange: "€€",
         areaServed: { "@type": "Place", name: "Worldwide" },
         hasOfferCatalog: {
