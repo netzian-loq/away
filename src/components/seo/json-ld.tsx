@@ -15,7 +15,10 @@ export function JsonLd() {
         inLanguage: "en",
       },
       {
-        "@type": "ProfessionalService",
+        // OnlineBusiness rather than ProfessionalService: the latter is a
+        // LocalBusiness subtype, which implies an address and opening hours
+        // a remote-only service does not have.
+        "@type": "OnlineBusiness",
         "@id": `${SITE.url}/#business`,
         name: SITE.name,
         url: SITE.url,
@@ -24,7 +27,6 @@ export function JsonLd() {
         image: `${SITE.url}/opengraph-image.png`,
         priceRange: "€€",
         areaServed: { "@type": "Place", name: "Worldwide" },
-        sameAs: [SITE.discordServerUrl],
         hasOfferCatalog: {
           "@type": "OfferCatalog",
           name: "PC Optimization Services",
@@ -33,6 +35,7 @@ export function JsonLd() {
               "@type": "Offer",
               priceCurrency: "EUR",
               price: String(tier.price),
+              url: `${SITE.url}/checkout?item=${tier.slug}`,
               itemOffered: {
                 "@type": "Service",
                 name: `${tier.name} package`,
@@ -43,6 +46,7 @@ export function JsonLd() {
               "@type": "Offer",
               priceCurrency: "EUR",
               price: String(service.priceValue),
+              url: `${SITE.url}/checkout?item=${service.slug}`,
               itemOffered: { "@type": "Service", name: service.title, description: service.summary },
             })),
           ],

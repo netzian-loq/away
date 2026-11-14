@@ -9,7 +9,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { SoftwareJsonLd } from "@/components/seo/software-json-ld";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { OVERTUNER, type OverTunerIcon } from "@/content/overtuner";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 import { chargedNote, formatPrice } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -17,13 +17,16 @@ import { cn } from "@/lib/utils";
 const PATH = OVERTUNER.path;
 
 export const metadata: Metadata = {
-  title: `${OVERTUNER.name}: Nvidia GPU Overclocking and Game Optimization App`,
-  description: OVERTUNER.description,
+  title: `${OVERTUNER.name}: Nvidia GPU Overclocking & Tuning App`,
+  description: OVERTUNER.metaDescription,
   alternates: { canonical: `${SITE.url}${PATH}` },
   openGraph: {
-    title: `${OVERTUNER.name} - ${SITE.name}`,
-    description: OVERTUNER.description,
+    ...OG_BASE,
+    title: `${OVERTUNER.name} | ${SITE.name}`,
+    description: OVERTUNER.metaDescription,
     url: `${SITE.url}${PATH}`,
+    // The app itself says more about an app than the site-wide card.
+    images: [{ url: "/overtuner/main.webp", width: 1919, height: 1032, alt: "OverTuner: overclocking and game optimization windows" }],
   },
 };
 
@@ -65,6 +68,7 @@ export default async function OverTunerPage() {
         image="/overtuner/main.webp"
         price={OVERTUNER.yearlyPrice}
         priceNote="Per year"
+        billingDuration="P1Y"
       />
 
       {/* Hero: the pitch on the left, the real app on the right. */}
@@ -72,8 +76,7 @@ export default async function OverTunerPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
           <Reveal className="min-w-0">
-
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
+            <h1 className="font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
               <MaskReveal as="span" innerClassName="text-gradient">
                 {OVERTUNER.name}
               </MaskReveal>

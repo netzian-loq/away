@@ -13,7 +13,7 @@ export const SITE = {
   name: "Away Tweaks",
   url: "https://www.awaytweaks.com",
   description:
-    "Private, professional PC optimization for competitive gamers, custom gaming OS, CPU/GPU/RAM overclocking, BIOS, network and latency tuning for higher FPS and lower input delay.",
+    "PC optimization for competitive gamers: Windows and BIOS tuning, CPU/GPU/RAM overclocking and network tuning for more FPS and lower input delay.",
   // Lowercase deliberately. Resend's pre-domain-verification check ("you can
   // only send to your own address") compares the recipient byte-for-byte
   // against the account address, so a capitalised local part is rejected even
@@ -40,21 +40,6 @@ export const SITE = {
     accountHolder: "Carmela Bazzi",
     iban: "IT52G3608105138219694619732",
   },
-  /** Search phrases the site should be found for. All are things it sells. */
-  keywords: [
-    "PC optimization service",
-    "gaming PC optimization",
-    "FPS boost",
-    "reduce input delay",
-    "Windows optimization for gaming",
-    "CPU overclocking service",
-    "GPU overclocking service",
-    "RAM overclocking service",
-    "BIOS tuning",
-    "custom gaming OS",
-    "Fortnite PC optimization",
-    "Valorant PC optimization",
-  ],
   stats: [
     { value: 140, suffix: "+", label: "Rigs tuned" },
     { value: 99, suffix: "%", label: "Client retention" },
@@ -69,4 +54,30 @@ export const SITE = {
     { label: "About", href: "/about" },
     { label: "Free Tool", href: "/#utility" },
   ] as NavLink[],
+};
+
+/**
+ * The home page's full title. Also the layout default, so a page without its
+ * own title still gets one. Written out in full rather than through the
+ * `%s | Away Tweaks` template because the brand already closes it.
+ */
+export const HOME_TITLE = `Gaming PC Optimization Service: FPS & Input Delay | ${SITE.name}`;
+
+/**
+ * Open Graph fields every page shares. Next merges metadata shallowly, so a
+ * page that sets its own `openGraph` replaces the root layout's whole object
+ * and would drop the site name, locale and image. Pages spread this first.
+ */
+export const OG_BASE = {
+  type: "website" as const,
+  siteName: SITE.name,
+  locale: "en_US",
+  images: [
+    {
+      url: "/opengraph-image.png",
+      width: 1200,
+      height: 630,
+      alt: "Away Tweaks: PC optimization for competitive gamers",
+    },
+  ],
 };

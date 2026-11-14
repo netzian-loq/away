@@ -20,6 +20,14 @@ describe("sitemap", () => {
     expect(urls).not.toContain(`${SITE.url}/checkout`);
   });
 
+  // A build-time timestamp on every entry claimed every page changed on
+  // every deploy; the entries carry the URL and nothing else.
+  it("lists bare URLs with no lastModified, changeFrequency or priority", () => {
+    for (const entry of sitemap()) {
+      expect(Object.keys(entry)).toEqual(["url"]);
+    }
+  });
+
   // Nothing on the site links to /contact any more, so advertising it to
   // crawlers would send them to a page no visitor can navigate to.
   it("drops the retired contact page", () => {

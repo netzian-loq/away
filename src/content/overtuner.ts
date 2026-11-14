@@ -21,10 +21,13 @@ export interface OverTunerGroup {
 export const OVERTUNER = {
   name: "OverTuner",
   path: "/overtuner",
-  eyebrow: "Low-level tuning app",
   tagline: "Past where a full optimization stops.",
   heroSubtitle:
     "One app that reaches the surfaces a normal optimization leaves alone: Nvidia limits, clocks and voltage, kernel tracing, devices and the game you are running.",
+  /** Short form for the meta and Open Graph description; `description` stays
+   *  the long one for llms.txt and the JSON-LD. */
+  metaDescription:
+    "Unlocks Nvidia GPU limits, auxiliary clocks and rail voltage offset, with fan curves and live game optimization. 40€ per year.",
   description:
     "OverTuner is a low-level tuning app for Nvidia GPUs and Windows: unlocked limits, auxiliary clocks, rail voltage offset, fan curves, fewer kernel ETW sessions and live game optimization. 40€ per year.",
   /** Euros per year. Monthly and lifetime are agreed in a Discord ticket. */

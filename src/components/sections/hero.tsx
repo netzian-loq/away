@@ -70,11 +70,12 @@ export function Hero() {
               <Image
                 src="/logo.png"
                 alt="Away Tweaks"
-                width={1024}
-                height={1024}
+                // Its rendered size (h-28 = 112px), so the srcset tops out at
+                // 224px instead of shipping the 1024px source. Not prioritised:
+                // the headline is the largest paint here, not this mark.
+                width={112}
+                height={112}
                 className="h-full w-full object-cover"
-                priority
-                fetchPriority="high"
               />
             </span>
 

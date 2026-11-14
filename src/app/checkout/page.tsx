@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Reveal } from "@/components/motion/reveal";
 import { CheckoutClient } from "@/components/checkout/checkout-client";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 import { generateOrderReference } from "@/lib/order-reference";
 import { findDiscount } from "@/lib/discounts";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
@@ -29,7 +29,7 @@ const METHODS = [
   i === 0 ? method : i === all.length - 1 ? `${sentence} or ${method}` : `${sentence}, ${method}`,
 );
 
-const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS}, no ticket needed.`;
+const DESCRIPTION = `Pick your Away Tweaks optimization package and pay securely by ${METHODS}. No ticket needed.`;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,6 +38,7 @@ export const metadata: Metadata = {
   // A transactional page with no standalone content worth indexing.
   robots: { index: false, follow: true },
   openGraph: {
+    ...OG_BASE,
     title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/checkout`,

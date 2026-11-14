@@ -24,7 +24,9 @@ export function ServicesFull({ currency = BASE_CURRENCY }: { currency?: DisplayC
           {servicesIn(category.id).map((service, i) => {
         return (
           <Reveal key={service.slug} delay={i * 0.04}>
-            <article className="glass rounded-3xl border border-white/5 p-6 sm:p-10">
+            {/* The slug as id gives every service a stable deep link
+                (/services#ram-overclocking) for other pages to point at. */}
+            <article id={service.slug} className="glass scroll-mt-28 rounded-3xl border border-white/5 p-6 sm:p-10">
               <div className="flex flex-wrap items-center gap-3">
                 <Icon3d name={service.icon} size={64} />
                 <h3 className="font-display text-2xl font-bold">{service.title}</h3>

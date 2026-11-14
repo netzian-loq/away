@@ -3,17 +3,21 @@ import { Mail, Disc, HardDrive } from "lucide-react";
 import { Reveal } from "@/components/motion/reveal";
 import { ContactForm } from "@/components/sections/contact-form";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 
 const TITLE = "Contact";
 const DESCRIPTION =
-  "Tell Away Tweaks about your rig and what you play, get a tailored PC optimization plan within 24 hours.";
+  "Tell Away Tweaks about your rig and what you play and get a tailored PC optimization plan within 24 hours.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/contact` },
+  // Off the nav and the sitemap since the form gave way to Discord; still
+  // reachable, but not a page to rank.
+  robots: { index: false, follow: true },
   openGraph: {
+    ...OG_BASE,
     title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/contact`,
@@ -30,7 +34,7 @@ export default function ContactPage() {
         <Reveal className="glass-strong rounded-3xl border border-white/10 p-8 sm:p-14">
           <div className="grid gap-10 lg:grid-cols-5">
             <div className="lg:col-span-2">
-              <h1 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">
+              <h1 className="font-display text-3xl font-bold text-gradient sm:text-4xl">
                 Ready to maximize your gaming performance?
               </h1>
               <p className="mt-4 text-muted-foreground">

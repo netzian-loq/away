@@ -22,7 +22,6 @@ export interface CreatorPillar {
 }
 
 export const JESTERFV = {
-  eyebrow: "Jesterfv1 × Away Tweaks",
   heroTitle: "Play like Jesterfv1.",
   /** Hero subtext. Kept under 20 words so the CTA sits above the fold. */
   heroSubtitle:

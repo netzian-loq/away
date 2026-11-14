@@ -9,20 +9,23 @@ import { buttonVariants } from "@/components/ui/button";
 import { SoftwareJsonLd } from "@/components/seo/software-json-ld";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { UEFI_KOMPILE, type UefiKompileIcon } from "@/content/uefi-kompile";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 import { chargedNote, formatPrice } from "@/lib/money";
 
 const PATH = UEFI_KOMPILE.path;
 
 export const metadata: Metadata = {
-  title: `${UEFI_KOMPILE.name}: Automated BIOS Optimization Tool for AM4, AM5 and Intel`,
-  description: UEFI_KOMPILE.description,
+  title: `${UEFI_KOMPILE.name}: BIOS Tuning Tool for AM4, AM5 & Intel`,
+  description: UEFI_KOMPILE.metaDescription,
   alternates: { canonical: `${SITE.url}${PATH}` },
   openGraph: {
+    ...OG_BASE,
     title: `${UEFI_KOMPILE.name} | ${SITE.name}`,
-    description: UEFI_KOMPILE.description,
+    description: UEFI_KOMPILE.metaDescription,
     url: `${SITE.url}${PATH}`,
+    // The app itself says more about an app than the site-wide card.
+    images: [{ url: "/uefi-kompile/main-v2.webp", width: 1919, height: 1031, alt: "Uefi-Kompile: the main window and the Preset Manager" }],
   },
 };
 
@@ -82,8 +85,7 @@ export default async function UefiKompilePage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14">
           <Reveal className="min-w-0">
-
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
+            <h1 className="font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl">
               {/* Accent on the name only: one word of gradient is emphasis, a
                   whole gradient headline is the large saturated fill this
                   brand rejects. */}

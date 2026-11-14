@@ -36,7 +36,7 @@ export function VideoShowcase() {
             </MaskReveal>
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            A 25-second look at the custom gaming OS — stripped, tuned, and built for frames.
+            A 25-second look at the custom gaming OS: stripped, tuned, and built for frames.
           </p>
         </Reveal>
 

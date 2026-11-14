@@ -20,7 +20,7 @@ export const WHY_REASONS: WhyReason[] = [
   },
   {
     title: "Custom Configurations",
-    description: "No copy-paste presets, every config tailored to your hardware.",
+    description: "No copy-paste presets: every config tailored to your hardware.",
   },
   {
     title: "Competitive Focus",

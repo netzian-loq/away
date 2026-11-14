@@ -6,18 +6,22 @@ import { ServicesTeaser } from "@/components/sections/services-teaser";
 import { WhyUs } from "@/components/sections/why-us";
 import { PricingTable } from "@/components/sections/pricing-table";
 import { VouchesCTA } from "@/components/sections/vouches-cta";
+import { SoftwareLinks } from "@/components/sections/software-links";
 import { FreeUtility } from "@/components/sections/free-utility";
 import { FinalCTA } from "@/components/sections/final-cta";
 import { JsonLd } from "@/components/seo/json-ld";
-import { SITE } from "@/content/site";
+import { HOME_TITLE, OG_BASE, SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 
 export const metadata: Metadata = {
-  title: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
+  // Absolute: HOME_TITLE already ends in the brand, the layout template would
+  // add it a second time.
+  title: { absolute: HOME_TITLE },
   description: SITE.description,
   alternates: { canonical: SITE.url },
   openGraph: {
-    title: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
+    ...OG_BASE,
+    title: HOME_TITLE,
     description: SITE.description,
     url: SITE.url,
   },
@@ -53,6 +57,7 @@ export default async function HomePage() {
       <VideoShowcase />
       <WhyUs />
       <VouchesCTA />
+      <SoftwareLinks />
       <FreeUtility />
       <FinalCTA />
     </>

@@ -1,10 +1,9 @@
 import { Parallax } from "@/components/motion/parallax";
-
 import { ScrollWordReveal } from "@/components/motion/scroll-word-reveal";
 
 const MANIFESTO_TEXT =
   "Your rig is capable of more. We strip Windows down to the metal, unlock the BIOS, " +
-  "overclock the CPU, GPU and RAM, and validate every change for hours — until the only " +
+  "overclock the CPU, GPU and RAM, and validate every change for hours, until the only " +
   "limit left in your setup is you.";
 
 export function Manifesto() {

@@ -46,7 +46,7 @@ export function Nav() {
         >
           <Link href="/" className="flex min-h-11 shrink-0 items-center gap-2.5">
             <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-full ring-1 ring-white/15">
-              <Image src="/logo-mark.png" alt="Away Tweaks logo" width={512} height={512} className="h-full w-full object-cover" />
+              <Image src="/logo-mark.png" alt="Away Tweaks logo" width={40} height={40} className="h-full w-full object-cover" />
             </span>
             <span className="font-display text-lg font-bold tracking-tight">
               Away<span className="text-electric"> Tweaks</span>

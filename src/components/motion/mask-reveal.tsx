@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { domAnimation, LazyMotion, m } from "framer-motion";
 import type { ReactNode } from "react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -50,8 +50,10 @@ export function MaskReveal({
   duration = 1.1,
   as = "div",
 }: MaskRevealProps) {
-  const Wrapper = as === "span" ? motion.span : motion.div;
-  const Inner = as === "span" ? motion.span : motion.div;
+  // `m` + LazyMotion rather than `motion`, as in Reveal: only the in-view
+  // animation features end up in the client bundle.
+  const Wrapper = as === "span" ? m.span : m.div;
+  const Inner = as === "span" ? m.span : m.div;
 
   // The in-view trigger has to sit on the *outer* wrapper, not the inner
   // element: the inner starts translated fully below the mask, so
@@ -60,32 +62,34 @@ export function MaskReveal({
   // stay hidden forever. The wrapper is never clipped, so it observes
   // reliably and hands the variant down to the inner element.
   return (
-    <Wrapper
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.4 }}
-      style={{
-        overflow: "hidden",
-        display: as === "span" ? "inline-block" : "block",
-        paddingBottom: DESCENDER_PAD,
-        marginBottom: `-${DESCENDER_PAD}`,
-        verticalAlign: as === "span" ? "bottom" : undefined,
-      }}
-    >
-      {/* No `will-change` here. It was pinned on permanently, which holds a
-          compositor layer for the life of the page for an animation that runs
-          once; framer sets and — importantly — releases it around the actual
-          transition. */}
-      <Inner
-        className={innerClassName}
-        style={{ display: as === "span" ? "inline-block" : "block" }}
-        variants={{ hidden: { y: TRAVEL }, visible: { y: "0%" } }}
-        transition={{ duration, delay, ease: EASE }}
+    <LazyMotion features={domAnimation}>
+      <Wrapper
+        className={className}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.4 }}
+        style={{
+          overflow: "hidden",
+          display: as === "span" ? "inline-block" : "block",
+          paddingBottom: DESCENDER_PAD,
+          marginBottom: `-${DESCENDER_PAD}`,
+          verticalAlign: as === "span" ? "bottom" : undefined,
+        }}
       >
-        {children}
-      </Inner>
-    </Wrapper>
+        {/* No `will-change` here. It was pinned on permanently, which holds a
+            compositor layer for the life of the page for an animation that runs
+            once; framer sets and — importantly — releases it around the actual
+            transition. */}
+        <Inner
+          className={innerClassName}
+          style={{ display: as === "span" ? "inline-block" : "block" }}
+          variants={{ hidden: { y: TRAVEL }, visible: { y: "0%" } }}
+          transition={{ duration, delay, ease: EASE }}
+        >
+          {children}
+        </Inner>
+      </Wrapper>
+    </LazyMotion>
   );
 }
 

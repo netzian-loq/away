@@ -9,10 +9,10 @@ export function VouchesCTA() {
     <section id="vouches" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
         <Reveal>
-          <h2 className="mt-4 font-display text-3xl font-bold text-gradient sm:text-4xl">The proof is in the Discord.</h2>
+          <h2 className="font-display text-3xl font-bold text-gradient sm:text-4xl">The proof is in the Discord.</h2>
           <p className="mt-4 text-muted-foreground">
-            No staged testimonials here. Every vouch is written by a real client in our server —
-            read them all, raw and unfiltered, then decide for yourself.
+            No staged testimonials here. Every vouch is written by a real client in our server.
+            Read them all, raw and unfiltered, then decide for yourself.
           </p>
         </Reveal>
         <Reveal delay={0.1}>

@@ -5,17 +5,18 @@ import { Reveal } from "@/components/motion/reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { ABOUT } from "@/content/about";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 
 const TITLE = "About";
 const DESCRIPTION =
-  "Away Tweaks is a private PC optimization service for competitive gamers, our mission, method, and results.";
+  "Away Tweaks is a private PC optimization service for competitive gamers. Our mission, our method and how every tune is validated.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/about` },
   openGraph: {
+    ...OG_BASE,
     title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/about`,
@@ -30,7 +31,7 @@ export default function AboutPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Reveal>
-            <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">{ABOUT.heroTitle}</h1>
+            <h1 className="font-display text-4xl font-bold text-gradient sm:text-5xl">{ABOUT.heroTitle}</h1>
             <p className="mt-5 leading-relaxed text-muted-foreground">{ABOUT.heroBody}</p>
           </Reveal>
         </div>

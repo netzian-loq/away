@@ -4,18 +4,20 @@ import { ServicesFull } from "@/components/sections/services-full";
 import { getDisplayCurrency } from "@/lib/currency.server";
 import { PricingTable } from "@/components/sections/pricing-table";
 import { FinalCTA } from "@/components/sections/final-cta";
+import { Faq } from "@/components/sections/faq";
 import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 
-const TITLE = "Services & Pricing";
+const TITLE = "PC Optimization Services & Prices";
 const DESCRIPTION =
-  "Windows tuning, custom gaming OS, CPU/GPU/RAM overclocking, network and BIOS tuning, every Away Tweaks service in detail, with pricing.";
+  "Every Away Tweaks service with prices: Windows tuning, custom gaming OS, CPU/GPU/RAM overclocking, BIOS and network tuning.";
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `${SITE.url}/services` },
   openGraph: {
+    ...OG_BASE,
     title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/services`,
@@ -32,7 +34,7 @@ export default async function ServicesPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
           <Reveal>
-            <h1 className="mt-4 font-display text-4xl font-bold text-gradient sm:text-5xl">
+            <h1 className="font-display text-4xl font-bold text-gradient sm:text-5xl">
               Every tune we run, in detail.
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
@@ -50,6 +52,7 @@ export default async function ServicesPage() {
       </section>
 
       <PricingTable />
+      <Faq />
       <FinalCTA />
     </>
   );

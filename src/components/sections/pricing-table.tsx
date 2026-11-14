@@ -12,12 +12,12 @@ export function PricingTable({ currency = BASE_CURRENCY }: { currency?: DisplayC
     <section id="pricing" className="relative py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+          <h2 className="font-display text-3xl font-bold sm:text-4xl">
             <MaskReveal as="span" innerClassName="text-gradient">
               Bundles that save you more.
             </MaskReveal>
           </h2>
-          <p className="mt-4 text-muted-foreground">Stack services and pay less. Need something custom? Just ask — we build to spec.</p>
+          <p className="mt-4 text-muted-foreground">Stack services and pay less. Need something custom? Just ask and we build to spec.</p>
           <p className="mt-3 text-sm text-muted-foreground">
             Every package can be upgraded to {EXTREME_UPGRADE.name} at checkout for{" "}
             <span className="text-electric">

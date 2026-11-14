@@ -20,7 +20,7 @@ export function WhyUs() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-4">
-            <h2 className="mt-5 font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-balance sm:text-4xl">
+            <h2 className="font-display text-3xl leading-[1.05] font-bold tracking-[-0.02em] text-balance sm:text-4xl">
               Deep professional knowledge. Delivered fast.
             </h2>
           </Reveal>

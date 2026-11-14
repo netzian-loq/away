@@ -14,7 +14,7 @@ import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { JESTERFV } from "@/content/jesterfv";
 import { PRICING_TIERS } from "@/content/pricing";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 import { applyDiscount, JESTER_DISCOUNT } from "@/lib/discounts";
 import { chargedNote, formatIn, formatPrice } from "@/lib/money";
@@ -33,7 +33,8 @@ export const metadata: Metadata = {
   // the sitemap; `follow` still lets the links on it pass value.
   robots: { index: false, follow: true },
   openGraph: {
-    title: `${TITLE} × ${SITE.name}`,
+    ...OG_BASE,
+    title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}/jesterfv1`,
   },
@@ -77,8 +78,7 @@ export default async function JesterfvPage() {
         <div aria-hidden="true" className="stage" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16">
           <Reveal className="min-w-0">
-
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
+            <h1 className="font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
               <MaskReveal as="span">Play like</MaskReveal>
               {/* A space AND a <br>, not a `block` class. MaskReveal pins
                   `display: inline-block` as an inline style on span masks,

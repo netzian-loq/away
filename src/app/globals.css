@@ -296,7 +296,7 @@ html[data-scroll="fast"] .cursor-glow {
    short, one-shot, user-initiated transitions rather than ambient motion. */
 @media (prefers-reduced-motion: reduce) {
   .curtain {
-    animation-duration: 0.75s !important;
+    animation-duration: 0.55s !important;
   }
   .route-curtain-in,
   .route-curtain-in > *,
@@ -304,7 +304,7 @@ html[data-scroll="fast"] .cursor-glow {
     animation-duration: 0.5s !important;
   }
   .route-curtain-out {
-    animation-duration: 0.6s !important;
+    animation-duration: 0.45s !important;
   }
 }
 
@@ -431,7 +431,7 @@ body:has(.theme-1p) .cursor-glow {
   pointer-events: none;
   border-radius: 0 0 44px 44px;
   background: oklch(0.085 0.04 300);
-  animation: curtain-out 0.75s cubic-bezier(0.76, 0, 0.24, 1) 0.5s both;
+  animation: curtain-out 0.55s cubic-bezier(0.76, 0, 0.24, 1) 0.15s both;
 }
 /* Page-change transition (see RouteCurtain): the cover wipes up from the
    foot of the old page, holds while the route swaps underneath, then keeps
@@ -459,7 +459,7 @@ body:has(.theme-1p) .cursor-glow {
 .route-curtain-out {
   pointer-events: none;
   border-radius: 0 0 44px 44px;
-  animation: curtain-out 0.6s cubic-bezier(0.76, 0, 0.24, 1) 0.12s both;
+  animation: curtain-out 0.45s cubic-bezier(0.76, 0, 0.24, 1) 0s both;
 }
 .route-curtain-in > * {
   animation: curtain-mark 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;

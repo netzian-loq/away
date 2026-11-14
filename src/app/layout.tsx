@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
-import { SITE } from "@/content/site";
+import { HOME_TITLE, OG_BASE, SITE } from "@/content/site";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { AmbientBackground } from "@/components/layout/ambient-background";
@@ -24,28 +24,29 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
+  // Only small labels use the mono face, none of them above the fold, so it
+  // should not compete with the display and body fonts for the first paint.
+  preload: false,
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name}: PC Optimization Service for Gaming, More FPS and Lower Input Delay`,
+    default: HOME_TITLE,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
   applicationName: SITE.name,
   authors: [{ name: SITE.name }],
-  keywords: SITE.keywords,
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  openGraph: {
-    type: "website",
-    siteName: SITE.name,
-    locale: "en_US",
-  },
+  // No title or description here: a page without its own openGraph then has
+  // Next fill both from that page's own title and description, instead of
+  // every such page announcing itself as the home page.
+  openGraph: OG_BASE,
   twitter: {
     card: "summary_large_image",
   },
@@ -77,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* A plain img: this has to paint with the very first frame, and
               next/image would add a lazy-loading wrapper around it. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-mark.png" alt="" width={96} height={96} className="h-24 w-24 rounded-3xl" />
+          <img src="/logo-mark-192.webp" alt="" width={96} height={96} className="h-24 w-24 rounded-3xl" />
         </div>
         <RouteCurtain />
         <SmoothScroll />

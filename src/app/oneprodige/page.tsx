@@ -24,7 +24,7 @@ import { BreadcrumbJsonLd } from "@/components/seo/breadcrumb-json-ld";
 import { VisitBeacon } from "@/components/analytics/visit-beacon";
 import { ONE_PRODIGE } from "@/content/oneprodige";
 import { PRICING_TIERS } from "@/content/pricing";
-import { SITE } from "@/content/site";
+import { OG_BASE, SITE } from "@/content/site";
 import { getDisplayCurrency } from "@/lib/currency.server";
 import { applyDiscount, ONE_PRODIGE_DISCOUNT } from "@/lib/discounts";
 import { chargedNote, formatIn, formatPrice } from "@/lib/money";
@@ -45,7 +45,8 @@ export const metadata: Metadata = {
   // kept out of the nav and the sitemap; `follow` still passes link value.
   robots: { index: false, follow: true },
   openGraph: {
-    title: `${TITLE} × ${SITE.name}`,
+    ...OG_BASE,
+    title: `${TITLE} | ${SITE.name}`,
     description: DESCRIPTION,
     url: `${SITE.url}${PATH}`,
   },

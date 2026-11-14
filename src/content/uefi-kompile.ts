@@ -69,7 +69,7 @@ export const UEFI_KOMPILE = {
       audience: "For your own PC",
       summary: "The accessible way in: test your own BIOS and max it out.",
       points: [
-        "Tunes this PC's BIOS only, the machine you activate",
+        "Tunes this PC's BIOS only (the machine you activate)",
         "Every preset: AM4, AM5, Intel and X3D",
         "25 coins included",
       ],
@@ -90,14 +90,17 @@ export const UEFI_KOMPILE = {
   upgrade: {
     price: 21,
     title: "Normal → Pro",
-    line: "Already on Normal? Same PC, same account, we switch your plan and the app shows PRO within about a minute.",
+    line: "Already on Normal? Same PC, same account: we switch your plan and the app shows PRO within about a minute.",
   },
   freeCoins: 25,
   coinPack: { coins: 30, price: 10 },
-  eyebrow: "BIOS optimization tool",
   tagline: "A low-level, automated tool for BIOS optimization.",
   heroSubtitle:
     "400–500 BIOS settings tuned in depth for extra low latency and smoothness, built to lift your 1% and 0.1% lows. Fully automated, so anyone can use it.",
+  /** Short form for the meta and Open Graph description; `description` stays
+   *  the long one for llms.txt and the JSON-LD. */
+  metaDescription:
+    "Automated BIOS optimization tool: 400–500 settings tuned for low latency, presets for AM4, AM5, Intel and X3D. From 25€.",
   description:
     "Uefi-Kompile is a low-level, automated BIOS optimization tool: 400–500 settings tuned for low latency and smoother frames, automated presets for AM4, AM5, Intel and X3D, and 25 coins included. Normal 25€ for your own PC, Pro 45€ for any PC's BIOS.",
 
@@ -105,7 +108,7 @@ export const UEFI_KOMPILE = {
   updates: [
     {
       title: "Choose Normal or Pro",
-      body: "Normal is for your own PC, the more accessible price, for testing your BIOS and maxing it out. Pro costs a little more and is made for tweaking: it works on any PC's BIOS.",
+      body: "Normal is for your own PC: the more accessible price, for testing your BIOS and maxing it out. Pro costs a little more and is made for tweaking: it works on any PC's BIOS.",
     },
     {
       title: "X3D preset added",
@@ -126,7 +129,7 @@ export const UEFI_KOMPILE = {
     {
       icon: "depth",
       title: "In-depth BIOS tuning",
-      body: "400–500 settings: idle and power states, latency, link speeds, memory and more, the low-level layer that decides how smooth a game feels.",
+      body: "400–500 settings: idle and power states, latency, link speeds, memory and more. It is the low-level layer that decides how smooth a game feels.",
     },
     {
       icon: "presets",
@@ -147,14 +150,14 @@ export const UEFI_KOMPILE = {
 
   presetsTitle: "Pick a preset. Review it. Write it.",
   presetsBody:
-    "Choose your platform, AM4, AM5, Intel or X3D, and every switch and tweak is set for you on screen. Nothing is applied until you press Write.",
+    "Choose your platform (AM4, AM5, Intel or X3D) and every switch and tweak is set for you on screen. Nothing is applied until you press Write.",
 
   coinsTitle: "Comes with 25 free coins.",
   coinsBody: "Every Save or Export uses one coin, and you start with 25.",
 
   pricingTitle: "Two versions, coins included.",
   pricingBody:
-    "Normal keeps it simple and affordable: your own PC, every preset, maxed out. Pro is a little higher and made for tweaking, it opens and tunes BIOS exports from any PC.",
+    "Normal keeps it simple and affordable: your own PC, every preset, maxed out. Pro is a little higher and made for tweaking: it opens and tunes BIOS exports from any PC.",
   coinPackLine: "Top up whenever you need to. Each Save or Export uses one coin.",
 
   steps: [

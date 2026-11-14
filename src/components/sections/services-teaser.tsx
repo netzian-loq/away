@@ -30,14 +30,14 @@ export function ServicesTeaser({ currency = BASE_CURRENCY }: { currency?: Displa
     <section id="services-teaser" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <h2 className="mt-4 font-display text-3xl font-bold sm:text-4xl">
+          <h2 className="font-display text-3xl font-bold sm:text-4xl">
             <MaskReveal as="span" innerClassName="text-gradient">
               Pick it. Start today.
             </MaskReveal>
           </h2>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Every service, priced up front. Tap one and you land on checkout with it already
-            chosen — no forms, no quote, no waiting on a reply.
+            chosen. No forms, no quote, no waiting on a reply.
           </p>
         </Reveal>
 
@@ -122,14 +122,17 @@ function ServiceCard({
         </span>
       </div>
 
-      <h4 className="mt-4 flex flex-wrap items-center gap-2 font-display font-semibold">
-        {service.title}
+      {/* The badge sits beside the heading, not inside it, so the heading
+          reads as the service name alone ("RAM Overclocking", not
+          "RAM OverclockingXOC") to screen readers and search engines. */}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <h4 className="font-display font-semibold">{service.title}</h4>
         {service.tag && (
           <span className="rounded-full border border-cyan-accent/40 bg-cyan-accent/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-cyan-accent">
             {service.tag}
           </span>
         )}
-      </h4>
+      </div>
 
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{service.summary}</p>
 
